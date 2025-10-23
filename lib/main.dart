@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flame/game.dart';
 import 'dart:math' as math;
 
 import 'package:sungka/splashscreen.dart';
@@ -37,14 +36,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  late SungkaGameWorld gameWorld;
-
-  @override
-  void initState() {
-    super.initState();
-    gameWorld = SungkaGameWorld();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,10 +44,10 @@ class _MainScreenState extends State<MainScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Spacer(),
-            Spacer(),
-            TitleAnimationWidget(),
-            Spacer(),
+            const Spacer(),
+            const Spacer(),
+            const TitleAnimationWidget(),
+            const Spacer(),
             SizedBox(
               height: 200,
               width: MediaQuery.of(context).size.width * 0.9,
@@ -81,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
                     padding: const EdgeInsets.only(top: 16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         AnimatedPitWidget(delay: 0),
                         Gap(60),
                         AnimatedPitWidget(delay: 1),
@@ -92,9 +83,8 @@ class _MainScreenState extends State<MainScreen> {
                       ],
                     ),
                   ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(top: 18.0, left: 18),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 18.0, left: 18),
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: Row(
@@ -102,9 +92,8 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                     ),
                   ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(top: 18.0, right: 18),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 18.0, right: 18),
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: Row(
@@ -113,12 +102,11 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0, left: 40),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
+                      children: const [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -143,7 +131,7 @@ class _MainScreenState extends State<MainScreen> {
                     padding: const EdgeInsets.only(bottom: 20, right: 40),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
+                      children: const [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -164,7 +152,7 @@ class _MainScreenState extends State<MainScreen> {
                       ],
                     ),
                   ),
-                  Positioned(top: 30, child: AnimatedPlayButton()),
+                  const Positioned(top: 30, child: AnimatedPlayButton()),
                 ],
               ),
             ),
@@ -196,15 +184,12 @@ class _TitleAnimationWidgetState extends State<TitleAnimationWidget>
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+    _fadeAnimation = Tween<double>(begin: 0, end: 1)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
+    );
 
     _controller.forward();
   }
@@ -259,10 +244,8 @@ class _AnimatedPitWidgetState extends State<AnimatedPitWidget>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    );
+    _controller =
+        AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
 
     _scaleAnimation = Tween<double>(begin: 0.7, end: 1).animate(
       CurvedAnimation(
@@ -272,10 +255,7 @@ class _AnimatedPitWidgetState extends State<AnimatedPitWidget>
     );
 
     _glowAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Interval(0.6, 1, curve: Curves.easeInOut),
-      ),
+      CurvedAnimation(parent: _controller, curve: const Interval(0.6, 1, curve: Curves.easeInOut)),
     );
 
     _controller.repeat(reverse: true);
@@ -302,9 +282,7 @@ class _AnimatedPitWidgetState extends State<AnimatedPitWidget>
               borderRadius: BorderRadius.circular(50),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(
-                    0xFFE53935,
-                  ).withOpacity(_glowAnimation.value * 0.6),
+                  color: const Color(0xFFE53935).withOpacity(_glowAnimation.value * 0.6),
                   blurRadius: 15 * _glowAnimation.value,
                   spreadRadius: 2 * _glowAnimation.value,
                 ),
@@ -334,15 +312,11 @@ class _AnimatedLargePitWidgetState extends State<AnimatedLargePitWidget>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 2000),
-      vsync: this,
-    );
+    _controller =
+        AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
 
-    _glowAnimation = Tween<double>(
-      begin: 0.3,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _glowAnimation = Tween<double>(begin: 0.3, end: 1)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.repeat(reverse: true);
   }
@@ -366,9 +340,7 @@ class _AnimatedLargePitWidgetState extends State<AnimatedLargePitWidget>
             borderRadius: BorderRadius.circular(50),
             boxShadow: [
               BoxShadow(
-                color: const Color(
-                  0xFFE53935,
-                ).withOpacity(_glowAnimation.value * 0.8),
+                color: const Color(0xFFE53935).withOpacity(_glowAnimation.value * 0.8),
                 blurRadius: 25 * _glowAnimation.value,
                 spreadRadius: 4 * _glowAnimation.value,
               ),
@@ -398,25 +370,14 @@ class _AnimatedGamePieceState extends State<AnimatedGamePiece>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 2000),
-      vsync: this,
-    );
+    _controller =
+        AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
 
-    _floatAnimation = Tween<Offset>(
-      begin: const Offset(0, 0),
-      end: const Offset(0, -8),
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
+    _floatAnimation = Tween<Offset>(begin: const Offset(0, 0), end: const Offset(0, -8))
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    _rotateAnimation = Tween<double>(
-      begin: 0,
-      end: 2 * math.pi,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
+    _rotateAnimation = Tween<double>(begin: 0, end: 2 * math.pi)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
 
     _controller.repeat(reverse: true);
   }
@@ -453,7 +414,6 @@ class _AnimatedGamePieceState extends State<AnimatedGamePiece>
   }
 }
 
-
 class AnimatedPlayButton extends StatefulWidget {
   const AnimatedPlayButton({super.key});
 
@@ -470,20 +430,14 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      vsync: this,
-    );
+    _controller =
+        AnimationController(duration: const Duration(milliseconds: 1200), vsync: this);
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.9,
-      end: 1.05,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticInOut));
+    _scaleAnimation =
+        Tween<double>(begin: 0.9, end: 1.05).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticInOut));
 
-    _glowAnimation = Tween<double>(
-      begin: 0.4,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _glowAnimation =
+        Tween<double>(begin: 0.4, end: 1).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.repeat(reverse: true);
   }
@@ -510,9 +464,7 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton>
               ),
               padding: const EdgeInsets.symmetric(horizontal: 45, vertical: 18),
               elevation: 12 * _glowAnimation.value,
-              shadowColor: const Color(
-                0xFFE53935,
-              ).withOpacity(_glowAnimation.value),
+              shadowColor: const Color(0xFFE53935).withOpacity(_glowAnimation.value),
             ),
             child: Text(
               "Play",
@@ -526,12 +478,5 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton>
         },
       ),
     );
-  }
-}
-
-class SungkaGameWorld extends FlameGame {
-  @override
-  Future<void> onLoad() async {
-    super.onLoad();
   }
 }
