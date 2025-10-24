@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sungka/auth/google_connect_screen.dart';
 import 'package:sungka/main.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:sungka/screens/start_game_screen.dart';
 
 class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});
@@ -23,7 +25,7 @@ class _SplashscreenState extends State<Splashscreen> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const MainScreen()),
+          MaterialPageRoute(builder: (_) => const GoogleConnectScreen()),
         );
       }
     });
