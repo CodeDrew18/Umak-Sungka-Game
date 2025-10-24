@@ -25,7 +25,7 @@ class _SplashscreenState extends State<Splashscreen> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const GoogleConnectScreen()),
+          MaterialPageRoute(builder: (_) => GoogleConnectScreen()),
         );
       }
     });

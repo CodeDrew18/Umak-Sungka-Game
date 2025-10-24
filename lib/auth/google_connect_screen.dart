@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sungka/screens/start_game_screen.dart';
 
 class GoogleConnectScreen extends StatelessWidget {
-  const GoogleConnectScreen({super.key});
+  GoogleConnectScreen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,11 @@ class GoogleConnectScreen extends StatelessWidget {
           ),
           Gap(25),
           TextButton(
-            onPressed: () {},
+            onPressed:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => MainScreen()),
+                ),
             child: Text(
               "Continue as Guest",
               style: GoogleFonts.poppins(
