@@ -22,7 +22,7 @@ class PlayerTile extends StatelessWidget {
 
     if (changeRating != 0 && changeRating > 0) {
       text = "$name (${rating + changeRating} +$changeRating)";
-    } else {
+    } else if(changeRating != 0 && changeRating < 0) {
       text = "$name (${rating + changeRating} $changeRating)";
     }
 

@@ -41,6 +41,20 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
             return const Center(child: Text("No match data."));
           }
 
+          final rematchOf = matchData['rematchOf'];
+          final status = matchData['status'];
+
+          if (status == 'playing' && rematchOf != null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => OnlineGameScreen(matchId: widget.matchId),
+                ),
+              );
+            });
+          }
+
           final player1Id = matchData['player1Id'];
           final player1Name = matchData['player1Name'] ?? 'Player 1';
           final player1Rating = matchData['player1Rating'] ?? 0;
@@ -51,8 +65,9 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
           final player2Rating = matchData['player2Rating'] ?? 0;
           final player2Score = matchData['player2Score'];
 
+          final playerAskingRematch = matchData['playerAskingRematch'];
+
           final winner = matchData['winner'];
-          final loser = matchData['loser'];
 
           String player1Status = "";
           String player2Status = "";
@@ -72,8 +87,8 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
             player1Status = "Loser";
             player2Status = "Winner";
 
-            player1ChangeRating = matchData['newLoserRating'] - player1Rating;
-            player2ChangeRating = matchData['newWinnerRating'] - player2Rating;
+            player1ChangeRating = matchData['loserNewRating'] - player1Rating;
+            player2ChangeRating = matchData['winnerNewRating'] - player2Rating;
           }
 
           if (winner != null) {
@@ -99,7 +114,31 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
                     onPressed: () => Navigator.pop(context),
                     child: const Text("Back to Menu"),
                   ),
-                  ElevatedButton(onPressed: null, child: Text("Rematch")),
+                  if (playerAskingRematch != null &&
+                      playerAskingRematch != currentUser!.uid)
+                    Column(
+                      children: [
+                        Text(
+                          playerAskingRematch == player1Id
+                              ? "$player1Name is asking for rematch..."
+                              : "$player2Name is asking for rematch...",
+                        ),
+                        ElevatedButton(
+                          onPressed: () => acceptRematch(widget.matchId),
+                          child: Text("Accept Rematch"),
+                        ),
+                      ],
+                    )
+                  else
+                    ElevatedButton(
+                      onPressed:
+                          () => showAskRematchDialog(
+                            widget.matchId,
+                            player1Rating + player1ChangeRating,
+                            player2Rating + player2ChangeRating,
+                          ),
+                      child: Text("Rematch"),
+                    ),
                 ],
               ),
             );
@@ -235,5 +274,118 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
         1 / (1 + pow(10, (opponentRating - yourRating) / 400));
 
     return (yourRating + K * (actualScore - expectedScore)).round();
+  }
+
+  void showAskRematchDialog(
+    String previousMatchId,
+    int player1NewRating,
+    int player2NewRating,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Game Rematch"),
+          content: Text("Are you sure you want a rematch?"),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed:
+                  () => askRematch(
+                    previousMatchId,
+                    player1NewRating,
+                    player2NewRating,
+                  ),
+              child: Text("Rematch"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void askRematch(
+    String previousMatchId,
+    int player1NewRating,
+    int player2NewRating,
+  ) async {
+    Navigator.of(context).pop();
+
+    final user = FirebaseAuth.instance.currentUser;
+
+    await firestoreService.askRematch(matchId: previousMatchId, uid: user!.uid);
+    final rematch = await firestoreService.rematch(
+      previousMatchId,
+      player1NewRating,
+      player2NewRating,
+    );
+
+    final rematchId = rematch.id;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StreamBuilder(
+          stream: firestoreService.getMatch(matchId: rematchId),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final data = snapshot.data!.data() as Map<String, dynamic>?;
+
+              if (data?['status'] == 'playing') {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.of(context).pop();
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => OnlineGameScreen(matchId: rematchId),
+                    ),
+                  );
+                });
+              }
+            }
+            return AlertDialog(
+              content: Column(
+                children: const [
+                  CircularProgressIndicator(),
+                  Text("Waiting for opponent to accept..."),
+                ],
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () async {
+                    await firestoreService.askRematch(
+                      matchId: previousMatchId,
+                      uid: null,
+                    );
+                    await firestoreService.cancelMatch(matchId: rematchId);
+
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Cancel"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void acceptRematch(String previousMatchId) async {
+    final rematch = await firestoreService.findRematch(
+      previousMatchId: previousMatchId,
+    );
+
+    if (rematch.docs.isNotEmpty) {
+      final rematchId = rematch.docs.first.id;
+      await firestoreService.acceptRematch(rematchId: rematchId);
+    }
   }
 }
