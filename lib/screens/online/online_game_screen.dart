@@ -110,6 +110,10 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
                               : "$player2Name is asking for rematch...",
                         ),
                         ElevatedButton(
+                          onPressed: () => declineRematch(widget.matchId),
+                          child: Text("Decline Rematch"),
+                        ),
+                        ElevatedButton(
                           onPressed: () => acceptRematch(widget.matchId),
                           child: Text("Accept Rematch"),
                         ),
@@ -324,7 +328,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
               final data = snapshot.data!.data() as Map<String, dynamic>?;
 
               if (data?['status'] == 'playing') {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
+                Future.microtask(() {
                   Navigator.of(context).pop();
 
                   Navigator.pushReplacement(
@@ -377,6 +381,19 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
         context,
         MaterialPageRoute(builder: (_) => OnlineGameScreen(matchId: rematchId)),
       );
+    }
+  }
+
+  void declineRematch(String previousMatchId) async {
+    await firestoreService.askRematch(matchId: previousMatchId, uid: null);
+
+    final rematch = await firestoreService.findRematch(
+      previousMatchId: previousMatchId,
+    );
+
+    if (rematch.docs.isNotEmpty) {
+      final rematchId = rematch.docs.first.id;
+      await firestoreService.cancelMatch(matchId: rematchId);
     }
   }
 }

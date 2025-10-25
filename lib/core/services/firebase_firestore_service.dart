@@ -139,9 +139,7 @@ class FirebaseFirestoreService {
         .get();
   }
 
-  Future<void> acceptRematch({
-    required String rematchId,
-  }) async {
+  Future<void> acceptRematch({required String rematchId}) async {
     await firestore.collection('matches').doc(rematchId).update({
       'status': 'playing',
     });
@@ -170,7 +168,7 @@ class FirebaseFirestoreService {
       'player2Score': data['player2Score'],
       'winnerNewRating': null,
       'loserNewRating': null,
-      'playerAskingRematch': data['playerAskingRematch'],
+      'playerAskingRematch': null,
       'rematchOf': previousMatchId,
       'createdAt': FieldValue.serverTimestamp(),
     });
