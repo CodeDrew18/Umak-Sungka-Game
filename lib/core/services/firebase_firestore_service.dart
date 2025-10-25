@@ -145,6 +145,18 @@ class FirebaseFirestoreService {
     });
   }
 
+  Future<void> declineRematch({required String rematchId}) async {
+    await firestore.collection('matches').doc(rematchId).update({
+      'status': 'declined',
+    });
+  }
+
+  Future<void> cancelRematch({required String rematchId}) async {
+    await firestore.collection('matches').doc(rematchId).update({
+      'status': 'canceled',
+    });
+  }
+
   Future<DocumentReference> rematch(
     String previousMatchId,
     int player1NewRating,

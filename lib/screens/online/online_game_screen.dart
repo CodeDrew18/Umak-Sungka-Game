@@ -324,22 +324,52 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
         return StreamBuilder(
           stream: firestoreService.getMatch(matchId: rematchId),
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final data = snapshot.data!.data() as Map<String, dynamic>?;
-
-              if (data?['status'] == 'playing') {
-                Future.microtask(() {
-                  Navigator.of(context).pop();
-
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => OnlineGameScreen(matchId: rematchId),
-                    ),
-                  );
-                });
-              }
+            if (!snapshot.hasData || !snapshot.data!.exists) {
+              return const AlertDialog(
+                content: Column(
+                  children: [
+                    CircularProgressIndicator(),
+                    Text("Preparing rematch..."),
+                  ],
+                ),
+              );
             }
+
+            final data = snapshot.data!.data() as Map<String, dynamic>?;
+            final status = data?['status'];
+
+            if (status == 'declined') {
+              Future.microtask(() {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Your rematch request was declined."),
+                  ),
+                );
+              });
+            }
+
+            if (status == 'playing') {
+              Future.microtask(() {
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => OnlineGameScreen(matchId: rematchId),
+                  ),
+                );
+              });
+            }
+
+            if (status == 'canceled') {
+              Future.microtask(() {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("You canceled the rematch.")),
+                );
+              });
+            }
+
             return AlertDialog(
               content: Column(
                 children: const [
@@ -385,15 +415,15 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
   }
 
   void declineRematch(String previousMatchId) async {
-    await firestoreService.askRematch(matchId: previousMatchId, uid: null);
-
     final rematch = await firestoreService.findRematch(
       previousMatchId: previousMatchId,
     );
 
     if (rematch.docs.isNotEmpty) {
       final rematchId = rematch.docs.first.id;
-      await firestoreService.cancelMatch(matchId: rematchId);
+      await firestoreService.declineRematch(rematchId: rematchId);
     }
+
+    await firestoreService.askRematch(matchId: previousMatchId, uid: null);
   }
 }
