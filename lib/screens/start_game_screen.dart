@@ -1,20 +1,88 @@
 import 'dart:math' as math;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sungka/auth/google_connect_screen.dart';
+import 'package:sungka/core/services/firebase_auth_service.dart';
+import 'package:sungka/core/services/firebase_firestore_service.dart';
+import 'package:sungka/screens/auth_screen.dart';
+import 'package:sungka/screens/battle_mode_screen.dart';
+import 'package:sungka/screens/widgets/name_input_dialog.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+class StartGameScreen extends StatefulWidget {
+  const StartGameScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<StartGameScreen> createState() => _StartGameScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _StartGameScreenState extends State<StartGameScreen> {
+  final authService = FirebaseAuthService();
+  final firestoreService = FirebaseFirestoreService();
+  final nameCtlr = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator(color: Colors.white));
+        }
+
+        if (!snapshot.hasData || snapshot.data == null) {
+          return AuthScreen();
+        }
+
+        final user = snapshot.data!;
+
+        return FutureBuilder(
+          future: firestoreService.getUser(user: user),
+          builder: (context, userSnapshot) {
+            if (userSnapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
+              return AuthScreen();
+            }
+
+            final userData = userSnapshot.data!.data() as Map<String, dynamic>;
+            final userName = userData['name'];
+
+            if (userName == null || userName.toString().trim().isEmpty) {
+              return Scaffold(
+                body: NameInputDialog(
+                  controller: nameCtlr,
+                  cancel: () => cancel(),
+                  save: () => saveUsername(user: user),
+                ),
+              );
+            }
+
+            return _buildGameScreenContent();
+          },
+        );
+      },
+    );
+  }
+
+  void saveUsername({required User user}) {
+    final name = nameCtlr.text.trim();
+    if (name.isNotEmpty) {
+      firestoreService.saveUser(user.uid, name);
+      setState(() {});
+    }
+  }
+
+  void cancel() {
+    authService.logout();
+    setState(() {});
+  }
+
+  Widget _buildGameScreenContent() {
     return Scaffold(
       backgroundColor: const Color(0xFF1E1E1E),
       body: Center(
@@ -161,12 +229,15 @@ class _TitleAnimationWidgetState extends State<TitleAnimationWidget>
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(begin: 0, end: 1)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+    _fadeAnimation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
 
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.8,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     _controller.forward();
   }
@@ -221,8 +292,10 @@ class _AnimatedPitWidgetState extends State<AnimatedPitWidget>
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
 
     _scaleAnimation = Tween<double>(begin: 0.7, end: 1).animate(
       CurvedAnimation(
@@ -232,7 +305,10 @@ class _AnimatedPitWidgetState extends State<AnimatedPitWidget>
     );
 
     _glowAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: const Interval(0.6, 1, curve: Curves.easeInOut)),
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.6, 1, curve: Curves.easeInOut),
+      ),
     );
 
     _controller.repeat(reverse: true);
@@ -259,7 +335,9 @@ class _AnimatedPitWidgetState extends State<AnimatedPitWidget>
               borderRadius: BorderRadius.circular(50),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFE53935).withOpacity(_glowAnimation.value * 0.6),
+                  color: const Color(
+                    0xFFE53935,
+                  ).withOpacity(_glowAnimation.value * 0.6),
                   blurRadius: 15 * _glowAnimation.value,
                   spreadRadius: 2 * _glowAnimation.value,
                 ),
@@ -289,11 +367,15 @@ class _AnimatedLargePitWidgetState extends State<AnimatedLargePitWidget>
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    );
 
-    _glowAnimation = Tween<double>(begin: 0.3, end: 1)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _glowAnimation = Tween<double>(
+      begin: 0.3,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.repeat(reverse: true);
   }
@@ -317,7 +399,9 @@ class _AnimatedLargePitWidgetState extends State<AnimatedLargePitWidget>
             borderRadius: BorderRadius.circular(50),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFE53935).withOpacity(_glowAnimation.value * 0.8),
+                color: const Color(
+                  0xFFE53935,
+                ).withOpacity(_glowAnimation.value * 0.8),
                 blurRadius: 25 * _glowAnimation.value,
                 spreadRadius: 4 * _glowAnimation.value,
               ),
@@ -347,14 +431,20 @@ class _AnimatedGamePieceState extends State<AnimatedGamePiece>
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    );
 
-    _floatAnimation = Tween<Offset>(begin: const Offset(0, 0), end: const Offset(0, -8))
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _floatAnimation = Tween<Offset>(
+      begin: const Offset(0, 0),
+      end: const Offset(0, -8),
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    _rotateAnimation = Tween<double>(begin: 0, end: 2 * math.pi)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
+    _rotateAnimation = Tween<double>(
+      begin: 0,
+      end: 2 * math.pi,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
 
     _controller.repeat(reverse: true);
   }
@@ -407,14 +497,20 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton>
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(duration: const Duration(milliseconds: 1200), vsync: this);
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
 
-    _scaleAnimation =
-        Tween<double>(begin: 0.9, end: 1.05).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticInOut));
+    _scaleAnimation = Tween<double>(
+      begin: 0.9,
+      end: 1.05,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticInOut));
 
-    _glowAnimation =
-        Tween<double>(begin: 0.4, end: 1).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _glowAnimation = Tween<double>(
+      begin: 0.4,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.repeat(reverse: true);
   }
@@ -433,7 +529,11 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton>
         animation: _glowAnimation,
         builder: (context, child) {
           return ElevatedButton(
-            onPressed: ()=> Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=> GoogleConnectScreen())),
+            onPressed: () {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => BattleModeScreen()));
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFE53935),
               shape: RoundedRectangleBorder(
@@ -441,7 +541,9 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton>
               ),
               padding: const EdgeInsets.symmetric(horizontal: 45, vertical: 18),
               elevation: 12 * _glowAnimation.value,
-              shadowColor: const Color(0xFFE53935).withOpacity(_glowAnimation.value),
+              shadowColor: const Color(
+                0xFFE53935,
+              ).withOpacity(_glowAnimation.value),
             ),
             child: Text(
               "Play",

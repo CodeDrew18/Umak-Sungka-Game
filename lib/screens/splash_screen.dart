@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sungka/auth/google_connect_screen.dart';
+import 'package:sungka/core/constants/app_colors.dart';
+import 'package:sungka/screens/auth_screen.dart';
 import 'package:sungka/main.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -25,7 +26,7 @@ class _SplashscreenState extends State<Splashscreen> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => GoogleConnectScreen()),
+          MaterialPageRoute(builder: (_) => AuthScreen()),
         );
       }
     });
@@ -47,17 +48,17 @@ class _SplashscreenState extends State<Splashscreen> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.black, Colors.black],
+            colors: [AppColors.black, AppColors.black],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
         child: Center(
           child: Image.asset(
-            "assets/loading.webp",
-            height: 250,
-            fit: BoxFit.contain,
-          )
+                "assets/loading.webp",
+                height: 250,
+                fit: BoxFit.contain,
+              )
               .animate()
               .fadeIn(duration: 800.ms)
               .scale(duration: 1000.ms, curve: Curves.easeOutBack),

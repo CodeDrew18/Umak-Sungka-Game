@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sungka/core/services/firebase_auth_service.dart';
+import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/start_game_screen.dart';
 
-class GoogleConnectScreen extends StatelessWidget {
-  GoogleConnectScreen({super.key});
+class AuthScreen extends StatefulWidget {
+  AuthScreen({super.key});
 
+  @override
+  State<AuthScreen> createState() => _AuthScreenState();
+}
+
+class _AuthScreenState extends State<AuthScreen> {
+  final authService = FirebaseAuthService();
+  final firestoreService = FirebaseFirestoreService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF1E1E1E),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -33,7 +41,9 @@ class GoogleConnectScreen extends StatelessWidget {
             child: Container(
               height: 60,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  authService.logout();
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -54,11 +64,7 @@ class GoogleConnectScreen extends StatelessWidget {
           ),
           Gap(25),
           TextButton(
-            onPressed:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => MainScreen()),
-                ),
+            onPressed: signInAsGuest,
             child: Text(
               "Continue as Guest",
               style: GoogleFonts.poppins(
@@ -70,5 +76,23 @@ class GoogleConnectScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void signInAsGuest() async {
+    try {
+      final userCredential = await authService.signInAsGuest();
+      final user = userCredential.user;
+
+      if (user != null) {
+        await firestoreService.saveUser(user.uid, null);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => StartGameScreen()),
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }
