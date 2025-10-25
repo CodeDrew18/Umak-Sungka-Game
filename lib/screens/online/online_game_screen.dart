@@ -41,20 +41,6 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
             return const Center(child: Text("No match data."));
           }
 
-          final rematchOf = matchData['rematchOf'];
-          final status = matchData['status'];
-
-          if (status == 'playing' && rematchOf != null) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => OnlineGameScreen(matchId: widget.matchId),
-                ),
-              );
-            });
-          }
-
           final player1Id = matchData['player1Id'];
           final player1Name = matchData['player1Name'] ?? 'Player 1';
           final player1Rating = matchData['player1Rating'] ?? 0;
@@ -386,6 +372,11 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
     if (rematch.docs.isNotEmpty) {
       final rematchId = rematch.docs.first.id;
       await firestoreService.acceptRematch(rematchId: rematchId);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => OnlineGameScreen(matchId: rematchId)),
+      );
     }
   }
 }
