@@ -55,11 +55,11 @@ class FirebaseFirestoreService {
     required int userRating,
   }) async {
     return await firestore.collection('matches').add({
-      'isDraw': false,
       'player1Id': userId,
       'player1Name': userName,
       'player1Rating': userRating,
       'player2Id': null,
+      'player2Name': null,
       'player2Rating': null,
       'status': 'waiting',
       'winner': null,
@@ -68,6 +68,7 @@ class FirebaseFirestoreService {
       'player2Score': 0,
       'winnerNewRating': null,
       'loserNewRating': null,
+      'playerAskingRematch': null,
       'rematchOf': null,
       'createdAt': FieldValue.serverTimestamp(),
     });
@@ -117,6 +118,71 @@ class FirebaseFirestoreService {
     await firestore.collection('users').doc(uid).update({
       'rating': newRating,
       'losses': FieldValue.increment(1),
+    });
+  }
+
+  Future<void> askRematch({
+    required String matchId,
+    required String? uid,
+  }) async {
+    await FirebaseFirestore.instance.collection('matches').doc(matchId).update({
+      'playerAskingRematch': uid,
+    });
+  }
+
+  Future<QuerySnapshot> findRematch({required String previousMatchId}) async {
+    return await FirebaseFirestore.instance
+        .collection('matches')
+        .where('rematchOf', isEqualTo: previousMatchId)
+        .where('status', isEqualTo: 'rematch_pending')
+        .limit(1)
+        .get();
+  }
+
+  Future<void> acceptRematch({required String rematchId}) async {
+    await firestore.collection('matches').doc(rematchId).update({
+      'status': 'playing',
+    });
+  }
+
+  Future<void> declineRematch({required String rematchId}) async {
+    await firestore.collection('matches').doc(rematchId).update({
+      'status': 'declined',
+    });
+  }
+
+  Future<void> cancelRematch({required String rematchId}) async {
+    await firestore.collection('matches').doc(rematchId).update({
+      'status': 'canceled',
+    });
+  }
+
+  Future<DocumentReference> rematch(
+    String previousMatchId,
+    int player1NewRating,
+    int player2NewRating,
+  ) async {
+    final previousMatch =
+        await firestore.collection('matches').doc(previousMatchId).get();
+    final data = previousMatch.data()!;
+
+    return firestore.collection('matches').add({
+      'player1Id': data['player1Id'],
+      'player1Name': data['player1Name'],
+      'player1Rating': player1NewRating,
+      'player2Id': data['player2Id'],
+      'player2Name': data['player2Name'],
+      'player2Rating': player2NewRating,
+      'status': 'rematch_pending',
+      'winner': null,
+      'loser': null,
+      'player1Score': data['player1Score'],
+      'player2Score': data['player2Score'],
+      'winnerNewRating': null,
+      'loserNewRating': null,
+      'playerAskingRematch': null,
+      'rematchOf': previousMatchId,
+      'createdAt': FieldValue.serverTimestamp(),
     });
   }
 }
