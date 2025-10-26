@@ -4,8 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/core/services/firebase_auth_service.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/home_screen.dart';
-import 'package:sungka/screens/start_game_screen.dart';
-import 'package:sungka/screens/username_screen.dart';
+
 
 class AuthScreen extends StatefulWidget {
   AuthScreen({super.key});

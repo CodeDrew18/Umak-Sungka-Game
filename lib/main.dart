@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:sungka/core/theme/app_theme.dart';
 import 'package:sungka/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:sungka/screens/start_game_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {

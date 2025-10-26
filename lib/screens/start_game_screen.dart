@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -8,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/core/services/firebase_auth_service.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/auth_screen.dart';
-import 'package:sungka/screens/battle_mode_screen.dart';
 import 'package:sungka/screens/home_screen.dart';
 import 'package:sungka/screens/widgets/name_input_dialog.dart';
 
