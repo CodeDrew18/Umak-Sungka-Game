@@ -72,8 +72,8 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
             player1Status = "Loser";
             player2Status = "Winner";
 
-            player1ChangeRating = matchData['newLoserRating'] - player1Rating;
-            player2ChangeRating = matchData['newWinnerRating'] - player2Rating;
+            player1ChangeRating = matchData['loserNewRating'] - player1Rating;
+            player2ChangeRating = matchData['winnerNewRating'] - player2Rating;
           }
 
           if (winner != null) {
