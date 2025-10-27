@@ -26,21 +26,18 @@ class AuthGame extends FlameGame {
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // Add particle background
     particleBackground = ParticleBackground();
     add(particleBackground);
 
-    // Wait a frame to ensure size is available
     await Future.delayed(const Duration(milliseconds: 50));
 
-    // Add animated title
     titleComponent = AnimatedTitle();
     add(titleComponent!);
 
-    // Gap between buttons
+
     const double gap = 90;
 
-    // Add Google Sign-In button
+
     googleButton = GameButton(
       position: Vector2(size.x / 2, size.y * 0.65),
       width: 280,
@@ -54,7 +51,6 @@ class AuthGame extends FlameGame {
     );
     add(googleButton!);
 
-    // Add Guest Sign-In button below Google button
     guestButton = GameButton(
       position: Vector2(size.x / 2, size.y * 0.65 + gap),
       width: 280,
@@ -72,7 +68,6 @@ class AuthGame extends FlameGame {
   void onGameResize(Vector2 newSize) {
     super.onGameResize(newSize);
 
-    // Reposition elements when the window resizes
     const double gap = 90;
 
     titleComponent?.position = Vector2(newSize.x / 2, newSize.y * 0.25);

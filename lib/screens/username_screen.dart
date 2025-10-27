@@ -16,7 +16,6 @@ class UsernameScreen extends StatelessWidget {
         children: [
           Stack(
             children: [
-              // Big title text
               Align(
                 alignment: Alignment.topCenter,
                 child: Text(
@@ -33,7 +32,6 @@ class UsernameScreen extends StatelessWidget {
                 ),
               ),
           
-              // 🪵 Board image pinned to bottom
           
             ],
           ),

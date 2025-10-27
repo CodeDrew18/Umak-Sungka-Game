@@ -120,32 +120,4 @@ class GameButton extends PositionComponent {
       anchor: Anchor.center,
     );
   }
-
-  @override
-  void onHoverEnter() {
-    targetScale = 1.08;
-    isHovered = true;
-  }
-
-  @override
-  void onHoverExit() {
-    targetScale = 1.0;
-    isHovered = false;
-  }
-
-  @override
-  void onTapDown(TapDownEvent event) {
-    targetScale = 0.95;
-  }
-
-  @override
-  void onTapUp(TapUpEvent event) {
-    targetScale = isHovered ? 1.08 : 1.0;
-    onPressed();
-  }
-
-  @override
-  void onTapCancel(TapCancelEvent event) {
-    targetScale = isHovered ? 1.08 : 1.0;
-  }
 }
