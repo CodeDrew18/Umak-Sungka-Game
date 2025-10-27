@@ -17,6 +17,8 @@ void main() async {
     DeviceOrientation.landscapeLeft,
   ]);
 
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
   runApp(const Main());
 }
 
@@ -33,8 +35,9 @@ class Main extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if(snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator());
             }
+
 
             if(snapshot.hasData) {
               return StartGameScreen();

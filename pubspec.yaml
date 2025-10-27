@@ -42,12 +42,6 @@ dependencies:
   google_sign_in: ^7.2.0
 
 dev_dependencies:
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
@@ -68,6 +62,11 @@ flutter:
     - assets/bg-mc.wav
     - assets/rmbg.png
     - assets/google.png
+    - assets/board1.png
+    - assets/audio/move.mp3
+    - assets/audio/sunngka_music.mp3
+    - assets/audio/win.mp3
+    - assets/empty_board.png
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
