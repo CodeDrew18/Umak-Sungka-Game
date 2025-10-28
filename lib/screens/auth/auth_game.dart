@@ -1,18 +1,19 @@
-
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:sungka/screens/auth/components/animated_title.dart';
-import 'package:sungka/screens/auth/components/game_button.dart';
-import 'package:sungka/screens/auth/components/particle_background.dart';
+import 'package:sungka/screens/components/animated_title.dart';
+import 'package:sungka/screens/components/game_button.dart';
+import 'package:sungka/screens/components/particle_background.dart';
+import 'package:sungka/screens/components/water_effect.dart';
 
 class AuthGame extends FlameGame {
   final VoidCallback onGoogleSignIn;
   final VoidCallback onGuestSignIn;
 
-  late ParticleBackground particleBackground;
+  ParticleBackground? particleBackground;
   AnimatedTitle? titleComponent;
   GameButton? googleButton;
   GameButton? guestButton;
+  WaterEffect? waterEffect;
 
   AuthGame({
     required this.onGoogleSignIn,
@@ -20,26 +21,24 @@ class AuthGame extends FlameGame {
   });
 
   @override
-  Color backgroundColor() => const Color(0xFF1a1a2e);
+  Color backgroundColor() => const Color(0xFF1E1E1E);
 
   @override
   Future<void> onLoad() async {
-    await super.onLoad();
+    waterEffect = WaterEffect();
+    add(waterEffect!);
 
+    // Add particle background
     particleBackground = ParticleBackground();
-    add(particleBackground);
+    add(particleBackground!);
 
-    await Future.delayed(const Duration(milliseconds: 50));
-
+    // Add animated title
     titleComponent = AnimatedTitle();
     add(titleComponent!);
 
-
-    const double gap = 90;
-
-
+    // Add Google Sign-In button
     googleButton = GameButton(
-      position: Vector2(size.x / 2, size.y * 0.65),
+      position: Vector2(size.x / 2, size.y * 0.55),
       width: 280,
       height: 70,
       label: 'Continue with Google',
@@ -51,13 +50,14 @@ class AuthGame extends FlameGame {
     );
     add(googleButton!);
 
+    // Add Guest Sign-In button
     guestButton = GameButton(
-      position: Vector2(size.x / 2, size.y * 0.65 + gap),
+      position: Vector2(size.x / 2, size.y * 0.78),
       width: 280,
       height: 70,
       label: 'Continue as Guest',
       backgroundColor: const Color(0xFFE6B428),
-      textColor: Colors.black,
+      textColor: Colors.white,
       onPressed: onGuestSignIn,
       hasIcon: false,
     );
@@ -67,11 +67,9 @@ class AuthGame extends FlameGame {
   @override
   void onGameResize(Vector2 newSize) {
     super.onGameResize(newSize);
-
-    const double gap = 90;
-
-    titleComponent?.position = Vector2(newSize.x / 2, newSize.y * 0.25);
+    // Reposition buttons on resize
     googleButton?.position = Vector2(newSize.x / 2, newSize.y * 0.65);
-    guestButton?.position = Vector2(newSize.x / 2, newSize.y * 0.65 + gap);
+    guestButton?.position = Vector2(newSize.x / 2, newSize.y * 0.78);
+    titleComponent?.position = Vector2(newSize.x / 2, newSize.y * 0.25);
   }
 }

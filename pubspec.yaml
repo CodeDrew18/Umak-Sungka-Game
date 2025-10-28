@@ -61,7 +61,7 @@ flutter:
     - assets/loading.webp
     - assets/bg-mc.wav
     - assets/rmbg.png
-    - assets/google.png
+    - assets/images/assets/google.png
     - assets/board1.png
     - assets/audio/move.mp3
     - assets/audio/sunngka_music.mp3

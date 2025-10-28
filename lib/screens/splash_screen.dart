@@ -70,11 +70,9 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:sungka/core/constants/app_colors.dart';
 import 'package:sungka/screens/auth/auth_screen.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/particles.dart';
 import 'package:flame/components.dart';
@@ -106,9 +104,13 @@ class _SplashscreenState extends State<Splashscreen> {
     });
   }
 
-  Future<void> _playMusic() async {
+Future<void> _playMusic() async {
+  try {
     await _audioPlayer.play(AssetSource('bg-mc.wav'));
+  } catch (e, stack) {
+    debugPrint('Audio error: $e');
   }
+}
 
   @override
   void dispose() {

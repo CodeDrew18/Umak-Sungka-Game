@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=C:\FLUTTER FILE\flutter"
-export "FLUTTER_APPLICATION_PATH=C:\Users\drewm\OneDrive\Desktop\sungkatest\sungka"
+export "FLUTTER_APPLICATION_PATH=C:\Users\drewm\OneDrive\Desktop\updatedsungka\Umak-Sungka-Game"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib\main.dart"
 export "FLUTTER_BUILD_DIR=build"

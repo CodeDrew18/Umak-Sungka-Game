@@ -1,14 +1,12 @@
 import 'dart:math' as math;
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/core/services/firebase_auth_service.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/auth/auth_screen.dart';
-import 'package:sungka/screens/battle_mode_screen.dart';
 import 'package:sungka/screens/home_screen.dart';
 import 'package:sungka/screens/widgets/name_input_dialog.dart';
 
@@ -439,7 +437,7 @@ class _AnimatedGamePieceState extends State<AnimatedGamePiece>
 
     _floatAnimation = Tween<Offset>(
       begin: const Offset(0, 0),
-      end: const Offset(0, -8),
+      end: const Offset(0, 0),
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _rotateAnimation = Tween<double>(
@@ -531,9 +529,13 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton>
         builder: (context, child) {
           return ElevatedButton(
             onPressed: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (_) => HomeScreen()));
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => GameWidget(
+                        game: HomeGame(),
+                      ),
+                    ),
+                  );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFE53935),
