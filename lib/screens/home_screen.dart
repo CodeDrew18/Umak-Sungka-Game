@@ -599,7 +599,7 @@ class HomeGame extends FlameGame {
   WaterEffect? waterEffect;
   List<HomeGameButton>? modeButtons;
 
-  late final AudioPlayer _audioPlayer;
+  // late final AudioPlayer _audioPlayer;
 
   @override
   Color backgroundColor() => const Color(0xFF1E1E1E);
@@ -608,24 +608,24 @@ class HomeGame extends FlameGame {
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // 🎵 Initialize background music
-    _audioPlayer = AudioPlayer();
-    await _audioPlayer.setReleaseMode(ReleaseMode.loop);
-    await _audioPlayer.play(AssetSource('audio/sunngka_music.mp3'));
 
-    // 🌊 Water effect
+    // _audioPlayer = AudioPlayer();
+    // await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+    // await _audioPlayer.play(AssetSource('audio/sunngka_music.mp3'));
+
+
     waterEffect = WaterEffect();
     add(waterEffect!);
 
-    // ✨ Particle background
+
     particleBackground = ParticleBackground();
     add(particleBackground!);
 
-    // 🎯 Title
+
     titleComponent = AnimatedTitle(title: 'Choose Your Battle Mode');
     add(titleComponent!);
 
-    // 🕹️ Mode buttons
+
     modeButtons = [
       HomeGameButton(
         position: Vector2.zero(),
@@ -661,7 +661,6 @@ class HomeGame extends FlameGame {
       ),
     ];
 
-    // Add buttons to the game
     for (var button in modeButtons!) {
       add(button);
     }
@@ -680,12 +679,10 @@ class HomeGame extends FlameGame {
   }
 
   void _updateLayout(Vector2 currentSize) {
-    // Title centered
     if (titleComponent != null) {
       titleComponent!.position = Vector2(currentSize.x / 2, currentSize.y * 0.18);
     }
 
-    // Arrange buttons horizontally
     if (modeButtons != null && modeButtons!.isNotEmpty) {
       const buttonWidth = 160.0;
       const spacing = 30.0;
@@ -704,11 +701,10 @@ class HomeGame extends FlameGame {
     debugPrint('Selected mode: $mode');
   }
 
-  @override
-  void onRemove() {
-    // Stop and dispose of background music when leaving the screen
-    _audioPlayer.stop();
-    _audioPlayer.dispose();
-    super.onRemove();
-  }
+  // @override
+  // void onRemove() {
+  //   _audioPlayer.stop();
+  //   _audioPlayer.dispose();
+  //   super.onRemove();
+  // }
 }

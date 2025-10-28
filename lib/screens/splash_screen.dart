@@ -95,12 +95,10 @@ class _SplashscreenState extends State<Splashscreen> {
 
     Future.delayed(const Duration(seconds: 3), () async {
       await _audioPlayer.stop();
-      if (mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) =>  AuthScreen()),
         );
-      }
     });
   }
 

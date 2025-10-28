@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,31 @@ class _StartGameScreenState extends State<StartGameScreen> {
   final authService = FirebaseAuthService();
   final firestoreService = FirebaseFirestoreService();
   final nameCtlr = TextEditingController();
+
+  late final AudioPlayer _audioPlayer;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _initMusic();
+  }
+
+  Future<void> _initMusic() async {
+    _audioPlayer = AudioPlayer();
+    await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+    await _audioPlayer.play(
+      AssetSource('audio/sunngka_music.mp3'),
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _audioPlayer.stop();
+    _audioPlayer.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -529,13 +555,9 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton>
         builder: (context, child) {
           return ElevatedButton(
             onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => GameWidget(
-                        game: HomeGame(),
-                      ),
-                    ),
-                  );
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => GameWidget(game: HomeGame())),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFE53935),

@@ -60,10 +60,9 @@ class HomeGameButton extends PositionComponent {
     super.update(dt);
     animationTime += dt;
 
-    // Smooth scale animation
     hoverScale += (targetScale - hoverScale) * 0.1;
 
-    // Pulsing glow effect
+
     glowIntensity = (sin(animationTime * 2) + 1) / 2;
   }
 
