@@ -1,4 +1,6 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:sungka/screens/play_with_friends/on_match/sungka_game.dart';
 
 class OnMatchScreen extends StatelessWidget {
   const OnMatchScreen({super.key});
@@ -6,8 +8,8 @@ class OnMatchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text("Match Game"),
+      body: GameWidget(
+        game: SungkaGame(),
       ),
     );
   }
