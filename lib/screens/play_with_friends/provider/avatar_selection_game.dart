@@ -20,15 +20,24 @@ class AvatarSelectionGame extends FlameGame with TapCallbacks, HoverCallbacks {
   int selectedIndex = 0;
 
   final List<Map<String, dynamic>> avatars = [
-    {"name": "Classic", "color": const Color(0xFFFFA500), "icon": Icons.person},
-    {"name": "King", "color": const Color(0xFF8B8000), "icon": Icons.emoji_events},
-    {"name": "Happy", "color": const Color(0xFF2ECC71), "icon": Icons.sentiment_satisfied},
-    {"name": "Shadow", "color": const Color(0xFFB19CD9), "icon": Icons.dark_mode},
-    {"name": "Love", "color": const Color(0xFFFF1493), "icon": Icons.favorite},
-    {"name": "Star", "color": const Color(0xFF1E90FF), "icon": Icons.star},
-    {"name": "Thunder", "color": const Color(0xFFFFD700), "icon": Icons.flash_on},
-    {"name": "Warrior", "color": const Color(0xFF5F7C8A), "icon": Icons.shield},
-  ];
+    // {"name": "Classic", "color": const Color(0xFFFFA500), "icon": Icons.person},
+    // {"name": "King", "color": const Color(0xFF8B8000), "icon": Icons.emoji_events},
+    // {"name": "Happy", "color": const Color(0xFF2ECC71), "icon": Icons.sentiment_satisfied},
+    // {"name": "Shadow", "color": const Color(0xFFB19CD9), "icon": Icons.dark_mode},
+    // {"name": "Love", "color": const Color(0xFFFF1493), "icon": Icons.favorite},
+    // {"name": "Star", "color": const Color(0xFF1E90FF), "icon": Icons.star},
+    // {"name": "Thunder", "color": const Color(0xFFFFD700), "icon": Icons.flash_on},
+    // {"name": "Warrior", "color": const Color(0xFF5F7C8A), "icon": Icons.shield},
+  {"name": "Classic", "color": const Color(0xFFFFB84D), "icon": Icons.person},
+  {"name": "King", "color": const Color(0xFFFFD700), "icon": Icons.emoji_events},
+  {"name": "Happy", "color": const Color(0xFF00FF99), "icon": Icons.sentiment_satisfied},
+  {"name": "Shadow", "color": const Color(0xFF9B59FF), "icon": Icons.dark_mode},
+  {"name": "Love", "color": const Color(0xFFFF66B2), "icon": Icons.favorite},
+  {"name": "Star", "color": const Color(0xFF33CCFF), "icon": Icons.star},
+  {"name": "Thunder", "color": const Color(0xFFFFFF66), "icon": Icons.flash_on},
+  {"name": "Warrior", "color": const Color(0xFF00FFFF), "icon": Icons.shield},
+];
+
 
   AvatarSelectionGame(this.context);
 
@@ -66,10 +75,8 @@ class AvatarSelectionGame extends FlameGame with TapCallbacks, HoverCallbacks {
     );
     add(subtitle);
 
-    // Create avatar icons
     _createAvatarIcons();
 
-    // Continue button
     final button = AvatarSelectionButton(
       label: "CONTINUE",
       onPressed: _onContinue,

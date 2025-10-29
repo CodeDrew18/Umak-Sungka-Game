@@ -93,7 +93,7 @@ class _SplashscreenState extends State<Splashscreen> {
     super.initState();
     _playMusic();
 
-    Future.delayed(const Duration(seconds: 3), () async {
+    Future.delayed(const Duration(seconds: 4), () async {
       await _audioPlayer.stop();
         Navigator.pushReplacement(
           context,

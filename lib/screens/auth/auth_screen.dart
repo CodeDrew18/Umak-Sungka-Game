@@ -4,6 +4,7 @@ import 'package:sungka/core/services/firebase_auth_service.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/auth/auth_game.dart';
 import 'package:sungka/screens/start_game_screen.dart';
+import 'package:sungka/screens/username_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -46,9 +47,14 @@ class _AuthScreenState extends State<AuthScreen> {
       if (user != null) {
         await firestoreService.saveUser(user.uid, null);
 
-          Navigator.pushReplacement(
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => StartGameScreen()),
+          // );
+
+                    Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => StartGameScreen()),
+            MaterialPageRoute(builder: (context) => UsernameScreen()),
           );
 
       }

@@ -250,7 +250,6 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
     particleBackground = ParticleBackground();
     add(particleBackground!);
 
-    // Add title
     titleComponent = AnimatedTitle(title: 'Choose Your Battle Mode');
     add(titleComponent!);
 
@@ -264,7 +263,6 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
     backButton!.position = Vector2(20, 20);
     add(backButton!);
 
-    // Create buttons
     modeButtons = [
       HomeGameButton(
         position: Vector2.zero(),
@@ -348,19 +346,19 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
   }
 
     void _onModeSelected(String mode) {
-    // Use Flutter’s UI thread for navigation
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       switch (mode) {
-        // case 'pvp':
+        case 'pvp':
         //   Navigator.push(
         //     context,
         //     MaterialPageRoute(builder: (_) => const OnlineGameScreen()),
         //   );
-        //   break;
+          break;
         case 'adventure':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => const AdventureScreen()),
+            MaterialPageRoute(builder: (_) => const SungkaAdventureScreen()),
           );
           break;
         case 'friends':
@@ -370,7 +368,6 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
           );
           break;
         case 'bot':
-          // Replace with your bot screen when ready
           // Navigator.push(context, MaterialPageRoute(builder: (_) => const BotScreen()));
           break;
       }

@@ -1,11 +1,8 @@
 class GameState {
-  // Sungka board: 7 pits per side + 1 store per side
-  // Player 1: pits 0-6, store at index 7
-  // Player 2: pits 8-14, store at index 15
   late List<int> pits;
-  late int currentPlayer; // 1 or 2
+  late int currentPlayer;
   late bool gameOver;
-  late int winner; // 0 = draw, 1 = player1, 2 = player2
+  late int winner;
 
   GameState() {
     initializeGame();
@@ -20,24 +17,22 @@ class GameState {
   void initializeGame() {
     pits = List<int>.filled(16, 0);
 
-    // Player 1 pits
+
     for (int i = 0; i < 7; i++) {
       pits[i] = 7;
     }
-    pits[7] = 0; // Player 1 store
+    pits[7] = 0;
 
-    // Player 2 pits
     for (int i = 8; i < 15; i++) {
       pits[i] = 7;
     }
-    pits[15] = 0; // Player 2 store
+    pits[15] = 0;
 
     currentPlayer = 1;
     gameOver = false;
     winner = 0;
   }
 
-  /// Distribute stones counter-clockwise including opponent’s store
   bool distributeStones(int pitIndex) {
     if (!isValidPitSelection(pitIndex)) return false;
 
@@ -51,12 +46,10 @@ class GameState {
       stones--;
     }
 
-    // Capture rule
     if (canCapture(currentIndex)) {
       captureStones(currentIndex);
     }
 
-    // Game over check
     if (isGameOver()) {
       endGame();
     } else {
@@ -66,9 +59,8 @@ class GameState {
     return true;
   }
 
-  /// Move counter-clockwise
   int getNextPit(int currentIndex) {
-    // Counter-clockwise: subtract 1, wrap around
+
     return (currentIndex - 1 + 16) % 16;
   }
 
@@ -83,9 +75,8 @@ class GameState {
     return pits[pitIndex] > 0;
   }
 
-  /// Check if capture is possible (landing in empty pit on own side)
   bool canCapture(int landingIndex) {
-    if (pits[landingIndex] != 1) return false; // must land in empty pit
+    if (pits[landingIndex] != 1) return false; 
 
     if (currentPlayer == 1 && landingIndex >= 0 && landingIndex <= 6) {
       int opposite = getOppositePit(landingIndex);
@@ -123,7 +114,6 @@ class GameState {
 
   void endGame() {
     gameOver = true;
-    // Collect remaining stones
     for (int i = 0; i < 7; i++) {
       pits[7] += pits[i];
       pits[i] = 0;
