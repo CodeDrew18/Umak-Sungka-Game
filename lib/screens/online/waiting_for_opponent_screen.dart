@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
+import 'package:sungka/screens/online/game_match/player_vs_opponent.dart';
 import 'package:sungka/screens/online/online_game_screen.dart';
 
 class WaitingForOpponentScreen extends StatefulWidget {
@@ -43,7 +44,7 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => OnlineGameScreen(matchId: widget.matchId),
+                  builder: (_) => PlayerVsOpponent(matchId: widget.matchId),
                 ),
               );
             });

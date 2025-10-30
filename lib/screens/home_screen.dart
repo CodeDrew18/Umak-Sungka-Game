@@ -223,6 +223,7 @@ import 'package:sungka/screens/components/water_effect.dart';
 import 'package:sungka/screens/online/online_game_screen.dart';
 import 'package:sungka/screens/online/waiting_for_opponent_screen.dart';
 import 'package:sungka/screens/play_with_friends/play_with_friends_screen.dart';
+import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
 import 'package:sungka/screens/start_game_screen.dart';
 
 class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
@@ -368,7 +369,7 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
           );
           break;
         case 'bot':
-          // Navigator.push(context, MaterialPageRoute(builder: (_) => const BotScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => const SelectionMode()));
           break;
       }
     });

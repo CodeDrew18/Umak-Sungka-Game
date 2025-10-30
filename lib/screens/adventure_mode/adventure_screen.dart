@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/core/constants/app_colors.dart';
-import 'package:sungka/screens/components/game_back_button.dart';
-import 'package:sungka/screens/components/particle_background.dart';
-import 'package:sungka/screens/components/water_effect.dart';
-import 'package:sungka/screens/home_screen.dart';
 import 'package:sungka/screens/start_game_screen.dart';
 
 class SungkaAdventureScreen extends StatefulWidget {

@@ -47,7 +47,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
           final player1Score = matchData['player1Score'];
 
           final player2Id = matchData['player2Id'];
-          final player2Name = matchData['player2Name'] ?? 'WPlayer 2';
+          final player2Name = matchData['player2Name'] ?? 'Player 2';
           final player2Rating = matchData['player2Rating'] ?? 0;
           final player2Score = matchData['player2Score'];
 
