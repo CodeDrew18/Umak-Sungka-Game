@@ -47,15 +47,15 @@ class _AuthScreenState extends State<AuthScreen> {
       if (user != null) {
         await firestoreService.saveUser(user.uid, null);
 
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => StartGameScreen()),
-          // );
-
-                    Navigator.pushReplacement(
+          Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => UsernameScreen()),
+            MaterialPageRoute(builder: (context) => StartGameScreen()),
           );
+
+          //           Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => UsernameScreen()),
+          // );
 
       }
     } catch (e) {
