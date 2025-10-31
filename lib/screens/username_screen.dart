@@ -28,7 +28,6 @@ class _UsernameScreenState extends State<UsernameScreen>
   }
 
   void _initializeAnimations() {
-    // Title animation
     _titleAnimationController = AnimationController(
       duration: const Duration(milliseconds: 2500),
       vsync: this,
@@ -46,7 +45,6 @@ class _UsernameScreenState extends State<UsernameScreen>
       CurvedAnimation(parent: _titleAnimationController, curve: Curves.easeInOut),
     );
 
-    // Particle animation
     _particleAnimationController = AnimationController(
       duration: const Duration(seconds: 20),
       vsync: this,
@@ -114,17 +112,16 @@ class _UsernameScreenState extends State<UsernameScreen>
       backgroundColor: const Color(0xFF0F0F1E),
       body: Stack(
         children: [
-          // Animated particle background
+
           _buildAnimatedParticleBackground(),
 
-          // Main content
           SingleChildScrollView(
             child: SizedBox(
               height: screenSize.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Top section with title
+
                   Padding(
                     padding: EdgeInsets.only(
                       top: screenSize.height * 0.08,
@@ -134,7 +131,6 @@ class _UsernameScreenState extends State<UsernameScreen>
                     child: _buildTitleSection(),
                   ),
 
-                  // Middle section with input and button
                   Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenSize.width * 0.08,
@@ -143,7 +139,6 @@ class _UsernameScreenState extends State<UsernameScreen>
                     child: _buildInputSection(screenSize),
                   ),
 
-                  // Bottom decorative element
                   _buildBottomDecoration(screenSize),
                 ],
               ),
@@ -164,28 +159,6 @@ class _UsernameScreenState extends State<UsernameScreen>
             opacity: _titleOpacity.value,
             child: Column(
               children: [
-                // Glow effect container
-                // Container(
-                //   width: 50,
-                //   height: 50,
-                //   decoration: BoxDecoration(
-                //     shape: BoxShape.circle,
-                //     boxShadow: [
-                //       BoxShadow(
-                //         color: const Color(0xFFFF6B35).withOpacity(_glowIntensity.value * 0.6),
-                //         blurRadius: 60,
-                //         spreadRadius: 30,
-                //       ),
-                //       BoxShadow(
-                //         color: const Color(0xFFFF4500).withOpacity(_glowIntensity.value * 0.3),
-                //         blurRadius: 40,
-                //         spreadRadius: 15,
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                // const SizedBox(height: 20),
-                // Main title
                 ShaderMask(
                   shaderCallback: (bounds) {
                     return LinearGradient(

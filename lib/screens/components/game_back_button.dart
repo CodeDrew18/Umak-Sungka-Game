@@ -125,8 +125,6 @@ canvas.drawLine(
 );
 
 
-  // Lower diagonal (bottom-left)
-
 }
 
 

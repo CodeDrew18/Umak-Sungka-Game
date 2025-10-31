@@ -350,12 +350,6 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       switch (mode) {
-        case 'pvp':
-        //   Navigator.push(
-        //     context,
-        //     MaterialPageRoute(builder: (_) => const OnlineGameScreen()),
-        //   );
-          break;
         case 'adventure':
           Navigator.push(
             context,
