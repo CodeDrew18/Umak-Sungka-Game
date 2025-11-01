@@ -3,14 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 class PlayerVsOpponentCard extends StatelessWidget {
   final String name;
-  // final IconData icon;
-  // final Color color;
 
   const PlayerVsOpponentCard({
     super.key,
     required this.name,
-    // required this.icon,
-    // required this.color,
   });
 
   @override

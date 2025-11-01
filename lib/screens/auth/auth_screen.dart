@@ -4,7 +4,6 @@ import 'package:sungka/core/services/firebase_auth_service.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/auth/auth_game.dart';
 import 'package:sungka/screens/start_game_screen.dart';
-import 'package:sungka/screens/username_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -56,7 +55,6 @@ class _AuthScreenState extends State<AuthScreen> {
           //   context,
           //   MaterialPageRoute(builder: (context) => UsernameScreen()),
           // );
-
       }
     } catch (e) {
       print('Guest Sign-In Error: $e');

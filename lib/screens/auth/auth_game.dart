@@ -1,5 +1,6 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:sungka/core/constants/app_colors.dart';
 import 'package:sungka/screens/components/animated_title.dart';
 import 'package:sungka/screens/components/game_button.dart';
 import 'package:sungka/screens/components/particle_background.dart';
@@ -52,8 +53,8 @@ class AuthGame extends FlameGame {
       width: 280,
       height: 70,
       label: 'Continue as Guest',
-      backgroundColor: const Color(0xFFE6B428),
-      textColor: Colors.white,
+      backgroundColor: AppColors.gamebuttonPrimary,
+      textColor: AppColors.white,
       onPressed: onGuestSignIn,
       hasIcon: false,
     );

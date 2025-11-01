@@ -203,7 +203,6 @@ class _UsernameScreenState extends State<UsernameScreen>
   Widget _buildInputSection(Size screenSize) {
     return Column(
       children: [
-        // Username input field
         Focus(
           onFocusChange: (hasFocus) {
             setState(() => _isInputFocused = hasFocus);

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/core/constants/app_sizes.dart';
 
 class NameInputDialog extends StatelessWidget {

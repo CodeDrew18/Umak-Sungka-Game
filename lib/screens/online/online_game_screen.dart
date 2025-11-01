@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';

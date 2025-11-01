@@ -62,71 +62,59 @@ class GameBackButton extends PositionComponent with TapCallbacks, HoverCallbacks
     final centerY = size.y / 2;
     final radius = (size.x / 2) - (borderWidth / 2);
 
-    // Draw shadow
     canvas.drawCircle(
       Offset(centerX + 2, centerY + 3),
       radius + 2,
       shadowPaint,
     );
 
-    // Draw gradient background
     canvas.drawCircle(
       Offset(centerX, centerY),
       radius,
       gradientPaint,
     );
 
-    // Draw border
     canvas.drawCircle(
       Offset(centerX, centerY),
       radius,
       borderPaint,
     );
 
-    // Draw back arrow icon
     _drawArrowIcon(canvas, centerX, centerY);
 
-    // Draw hover glow effect
     if (isHovered) {
       _drawGlowEffect(canvas, centerX, centerY, radius);
     }
   }
 
-void _drawArrowIcon(Canvas canvas, double centerX, double centerY) {
-  final arrowPaint = Paint()
-    ..color = Colors.white
-    ..strokeWidth = 2.5
-    ..strokeCap = StrokeCap.round
-    ..strokeJoin = StrokeJoin.round
-    ..style = PaintingStyle.stroke;
+  void _drawArrowIcon(Canvas canvas, double centerX, double centerY) {
+    final arrowPaint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 2.5
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..style = PaintingStyle.stroke;
 
-  const arrowSize = 14.0;
+    const arrowSize = 14.0;
 
-  // Shaft of the arrow (horizontal line)
-// Shaft (horizontal line)
-canvas.drawLine(
-  Offset(centerX + 5, centerY),
-  Offset(centerX - 10, centerY),
-  arrowPaint,
-);
+    canvas.drawLine(
+      Offset(centerX + 5, centerY),
+      Offset(centerX - 10, centerY),
+      arrowPaint,
+    );
 
-// Lower diagonal (bottom-left)
-canvas.drawLine(
-  Offset(centerX - 10, centerY),
-  Offset(centerX - 10 + arrowSize / 2, centerY + arrowSize / 2),
-  arrowPaint,
-);
+    canvas.drawLine(
+      Offset(centerX - 10, centerY),
+      Offset(centerX - 10 + arrowSize / 2, centerY + arrowSize / 2),
+      arrowPaint,
+    );
 
-// Upper diagonal (top-left)
-canvas.drawLine(
-  Offset(centerX - 10, centerY),
-  Offset(centerX  - 10 +  arrowSize / 2, centerY - arrowSize / 2),
-  arrowPaint,
-);
-
-
-}
-
+    canvas.drawLine(
+      Offset(centerX - 10, centerY),
+      Offset(centerX - 10 + arrowSize / 2, centerY - arrowSize / 2),
+      arrowPaint,
+    );
+  }
 
   void _drawGlowEffect(Canvas canvas, double centerX, double centerY, double radius) {
     final glowPaint = Paint()
@@ -144,17 +132,14 @@ canvas.drawLine(
   @override
   void update(double dt) {
     super.update(dt);
-
-    // Smooth hover animation
     hoverScale = isHovered ? 1.1 : 1.0;
-
-    // Apply scale transform
     scale = Vector2.all(hoverScale * pressScale);
   }
 
   @override
   void onTapDown(TapDownEvent event) {
     pressScale = 0.95;
+    onPressed();
   }
 
   @override

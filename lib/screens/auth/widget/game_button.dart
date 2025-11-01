@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sungka/core/constants/app_colors.dart';
 
 class GameButton extends StatefulWidget {
   final String label;
@@ -73,9 +74,9 @@ class _GameButtonState extends State<GameButton>
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = widget.backgroundColor == Colors.white;
-    final primaryColor = widget.backgroundColor ?? const Color(0xFFE6B428);
-    final textColor = widget.textColor ?? Colors.white;
+    final isDarkMode = widget.backgroundColor == AppColors.white;
+    final primaryColor = widget.backgroundColor ?? AppColors.gamebuttonPrimary;
+    final textColor = widget.textColor ?? AppColors.white;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -127,13 +128,12 @@ class _GameButtonState extends State<GameButton>
                             ],
                     ),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.2),
+                      color: AppColors.white.withOpacity(0.2),
                       width: 1.5,
                     ),
                   ),
                   child: Stack(
                     children: [
-                      // Shimmer effect on hover
                       if (_isHovered)
                         Positioned(
                           top: -50,
@@ -145,14 +145,13 @@ class _GameButtonState extends State<GameButton>
                               shape: BoxShape.circle,
                               gradient: RadialGradient(
                                 colors: [
-                                  Colors.white.withOpacity(0.3),
-                                  Colors.white.withOpacity(0),
+                                  AppColors.white.withOpacity(0.3),
+                                  AppColors.white.withOpacity(0),
                                 ],
                               ),
                             ),
                           ),
                         ),
-                      // Main button content
                       Center(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -162,7 +161,7 @@ class _GameButtonState extends State<GameButton>
                                 width: 28,
                                 height: 28,
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.15),
+                                  color: AppColors.white.withOpacity(0.15),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Image.asset(

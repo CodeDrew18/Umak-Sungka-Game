@@ -46,14 +46,12 @@ class PebbleAnimation {
 
     final heightOffset = math.sin(progress * math.pi) * 40;
 
-    // Shadow
     canvas.drawCircle(
       Offset(currentX, currentY - heightOffset + 1.5),
       6,
       Paint()..color = Colors.black.withOpacity(0.15),
     );
 
-    // Stone
     final stoneColor = stoneColors[colorIndex % stoneColors.length];
     canvas.drawCircle(
       Offset(currentX, currentY - heightOffset),
@@ -61,7 +59,6 @@ class PebbleAnimation {
       Paint()..color = stoneColor,
     );
 
-    // Highlight
     canvas.drawCircle(
       Offset(currentX - 2, currentY - heightOffset - 2),
       2,

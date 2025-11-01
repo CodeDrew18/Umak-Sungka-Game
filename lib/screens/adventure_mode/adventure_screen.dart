@@ -1,6 +1,8 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/core/constants/app_colors.dart';
+import 'package:sungka/screens/home_screen.dart';
 import 'package:sungka/screens/start_game_screen.dart';
 
 class SungkaAdventureScreen extends StatefulWidget {
@@ -86,7 +88,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
   }
 
   LinearGradient _lockedGradientFallback() => LinearGradient(
-        colors: [Colors.grey.shade800, Colors.grey.shade700],
+        colors: [AppColors.grey800, AppColors.grey700],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
@@ -96,13 +98,9 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF1E1E1E),
+      backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          // If you have widget versions for these backgrounds, add them here:
-          // Positioned.fill(child: const WaterEffect()),
-          // Positioned.fill(child: const ParticleBackground()),
-
           SafeArea(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -122,7 +120,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => const StartGameScreen(),
+                                builder: (_) =>   GameWidget(game: HomeGame(context)),
                               ),
                             );
                           }),
@@ -224,7 +222,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.35),
+              color: AppColors.black.withOpacity(0.35),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -232,7 +230,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
         ),
         child: const Icon(
           Icons.arrow_back,
-          color: Colors.white,
+          color: AppColors.white,
           size: 20,
         ),
       ),
@@ -254,7 +252,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.4),
+            color: AppColors.black.withOpacity(0.4),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -266,7 +264,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
           Text(
             "LEVEL ${level["number"]}",
             style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.9),
+              color: AppColors.white.withOpacity(0.9),
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
@@ -275,7 +273,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
           Text(
             level["name"],
             style: GoogleFonts.poppins(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: 20,
               fontWeight: FontWeight.w800,
             ),
@@ -284,19 +282,19 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
           Text(
             level["desc"],
             style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.95),
+              color: AppColors.white.withOpacity(0.95),
               fontSize: 13,
               height: 1.35,
             ),
           ),
           const SizedBox(height: 12),
-          Divider(color: Colors.white.withOpacity(0.25)),
+          Divider(color: AppColors.white.withOpacity(0.25)),
           Text(
             "RULES",
             style: GoogleFonts.poppins(
               fontSize: 12,
               fontWeight: FontWeight.w700,
-              color: Colors.white.withOpacity(0.95),
+              color: AppColors.white.withOpacity(0.95),
               letterSpacing: 1.1,
             ),
           ),
@@ -312,7 +310,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
                     child: Text(
                       level["rules"][i],
                       style: GoogleFonts.poppins(
-                        color: Colors.white.withOpacity(0.9),
+                        color: AppColors.white.withOpacity(0.9),
                         fontSize: 12,
                         height: 1.25,
                       ),
@@ -341,7 +339,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.35),
+              color: AppColors.black.withOpacity(0.35),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -351,7 +349,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
           child: Text(
             unlocked ? "START MATCH" : "LOCKED",
             style: GoogleFonts.poppins(
-              color: Colors.white,
+              color: AppColors.white,
               fontWeight: FontWeight.w700,
               letterSpacing: 1.2,
               fontSize: 15,

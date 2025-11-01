@@ -37,7 +37,7 @@ class HandAnimation {
   }
 
   void _drawHand(Canvas canvas, double x, double y) {
-    // Hand shadow
+
     canvas.drawCircle(
       Offset(x, y),
       13,
@@ -46,14 +46,12 @@ class HandAnimation {
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2),
     );
 
-    // Hand palm
     canvas.drawCircle(
       Offset(x, y),
       12,
       Paint()..color = const Color(0xFFD4A574),
     );
 
-    // Fingers
     final fingerOffsets = [
       Offset(x - 8, y - 10),
       Offset(x - 2, y - 12),
@@ -69,7 +67,6 @@ class HandAnimation {
       );
     }
 
-    // Highlight
     canvas.drawCircle(
       Offset(x - 3, y - 3),
       3,

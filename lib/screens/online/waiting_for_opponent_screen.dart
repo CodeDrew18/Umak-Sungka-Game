@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/online/game_match/player_vs_opponent.dart';
-import 'package:sungka/screens/online/online_game_screen.dart';
 
 class WaitingForOpponentScreen extends StatefulWidget {
   const WaitingForOpponentScreen({super.key, required this.matchId});

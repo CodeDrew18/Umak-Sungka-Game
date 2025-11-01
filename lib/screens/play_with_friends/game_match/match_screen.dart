@@ -125,7 +125,6 @@ Widget build(BuildContext context) {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      // Player 1
                       SlideTransition(
                         position: _player1Slide,
                         child: FadeTransition(
@@ -138,7 +137,6 @@ Widget build(BuildContext context) {
                         ),
                       ),
 
-                      // VS Text
                       ScaleTransition(
                         scale: _vsScale,
                         child: Text(
@@ -152,7 +150,6 @@ Widget build(BuildContext context) {
                         ),
                       ),
 
-                      // Player 2
                       SlideTransition(
                         position: _player2Slide,
                         child: FadeTransition(
@@ -168,21 +165,6 @@ Widget build(BuildContext context) {
                   ),
                 ),
               ),
-
-              Expanded(
-                child: Center(
-                  child: FadeTransition(
-                    opacity: Tween<double>(begin: 1.0, end: 0.0).animate(_fadeOut),
-                    child: Image.asset(
-                      "assets/empty_board.png",
-                      width: 500,
-                      height: 500,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
-              const Gap(20),
             ],
           ),
         ),

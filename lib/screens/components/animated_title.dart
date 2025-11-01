@@ -19,34 +19,10 @@ class AnimatedTitle extends PositionComponent with HasGameRef {
     position = Vector2(gameRef.size.x / 2, gameRef.size.y * 0.25);
     size = Vector2(600, 150);
     anchor = Anchor.center;
-
-    // Main golden title style
-    // textPaint = TextPaint(
-    //   textDirection: TextDirection.ltr,
-    //   style: const TextStyle(
-    //     color: Color.fromARGB(255, 255, 255, 255), // gold color
-    //     fontSize: 45,
-    //     fontWeight: FontWeight.w800,
-    //     fontFamily: 'Poppins',
-    //     shadows: [
-    //       Shadow(
-    //         offset: Offset(0, 4),
-    //         blurRadius: 12,
-    //         color: Color.fromARGB(255, 230, 34, 34), // warm orange glow
-    //       ),
-    //       Shadow(
-    //         offset: Offset(0, 6),
-    //         blurRadius: 20,
-    //         color: Color(0xFFE67E22),
-    //       ),
-    //     ],
-    //   ),
-    // );
-
     textPaint = TextPaint(
   textDirection: TextDirection.ltr,
   style: const TextStyle(
-    color: Color(0xFFFFD700), // classic royal gold
+    color: Color(0xFFFFD700),
     fontSize: 45,
     fontWeight: FontWeight.w800,
     fontFamily: 'Poppins',
@@ -54,19 +30,16 @@ class AnimatedTitle extends PositionComponent with HasGameRef {
       Shadow(
         offset: Offset(0, 4),
         blurRadius: 10,
-        color: Color(0xFFB8860B), // antique gold shadow
+        color: Color(0xFFB8860B),
       ),
       Shadow(
         offset: Offset(0, 8),
         blurRadius: 20,
-        color: Color(0xFF8B4513), // deep bronze base
+        color: Color(0xFF8B4513),
       ),
     ],
   ),
 );
-
-
-    // Subtitle (simple white with soft opacity)
     subtitlePaint = TextPaint(
       textDirection: TextDirection.ltr,
       style: const TextStyle(
@@ -83,7 +56,6 @@ class AnimatedTitle extends PositionComponent with HasGameRef {
     super.update(dt);
     animationTime += dt;
 
-    // Pulsing glow intensity animation
     glowIntensity = (sin(animationTime * 2.5) + 1) / 2;
   }
 
@@ -91,7 +63,6 @@ class AnimatedTitle extends PositionComponent with HasGameRef {
   void render(Canvas canvas) {
     super.render(canvas);
 
-    // Glowing aura behind the text
     final glowPaint = Paint()
       ..color = const Color(0xFFE67E22).withOpacity(glowIntensity * 0.3)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 30);
@@ -102,7 +73,6 @@ class AnimatedTitle extends PositionComponent with HasGameRef {
       glowPaint,
     );
 
-    // Draw main title
     textPaint.render(
       canvas,
       title,
