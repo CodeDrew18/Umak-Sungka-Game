@@ -90,6 +90,7 @@ class _PlayerVsOpponentState extends State<PlayerVsOpponent>
 
   @override
   void dispose() {
+    _controller.removeStatusListener((_) {});
     _controller.dispose();
     super.dispose();
   }
@@ -134,68 +135,60 @@ class _PlayerVsOpponentState extends State<PlayerVsOpponent>
         final player1Rating = matchData['player1Rating'] ?? 0;
         final player2Rating = matchData['player2Rating'] ?? 0;
 
-        return AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            return Scaffold(
-              backgroundColor: Colors.black,
-              body: SafeArea(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Gap(20),
-
-                    FadeTransition(
-                      opacity: Tween<double>(begin: 1.0, end: 0.0).animate(_fadeOut),
-                      child: Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-
-                            SlideTransition(
-                              position: _player1Slide,
-                              child: FadeTransition(
-                                opacity: _fadeIn,
-                                child: PlayerVsOpponentCard(
-                                  name: player1Name,
-                                ),
-                              ),
-                            ),
-
-                            ScaleTransition(
-                              scale: _vsScale,
-                              child: Text(
-                                "VS",
-                                style: GoogleFonts.bebasNeue(
-                                  color: Colors.white,
-                                  fontSize: 70,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 4,
-                                ),
-                              ),
-                            ),
-
-                            SlideTransition(
-                              position: _player2Slide,
-                              child: FadeTransition(
-                                opacity: _fadeIn,
-                                child: PlayerVsOpponentCard(
-                                  name: player2Name,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+return AnimatedBuilder(
+  animation: _controller,
+  builder: (context, child) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Center(
+          child: FadeTransition(
+            opacity: Tween<double>(begin: 1.0, end: 0.0).animate(_fadeOut),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SlideTransition(
+                  position: _player1Slide,
+                  child: FadeTransition(
+                    opacity: _fadeIn,
+                    child: PlayerVsOpponentCard(
+                      name: player1Name,
                     ),
-
-                  ],
+                  ),
                 ),
-              ),
-            );
-          },
-        );
+                const SizedBox(width: 80),
+                ScaleTransition(
+                  scale: _vsScale,
+                  child: Text(
+                    "VS",
+                    style: GoogleFonts.bebasNeue(
+                      color: Colors.white,
+                      fontSize: 70,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 4,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 80),
+                SlideTransition(
+                  position: _player2Slide,
+                  child: FadeTransition(
+                    opacity: _fadeIn,
+                    child: PlayerVsOpponentCard(
+                      name: player2Name,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  },
+);
+
       },
     );
   }

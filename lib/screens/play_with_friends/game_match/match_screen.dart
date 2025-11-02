@@ -104,8 +104,7 @@ class _MatchScreenState extends State<MatchScreen>
     _controller.dispose();
     super.dispose();
   }
-
-  @override
+@override
 Widget build(BuildContext context) {
   return AnimatedBuilder(
     animation: _controller,
@@ -113,59 +112,52 @@ Widget build(BuildContext context) {
       return Scaffold(
         backgroundColor: Colors.black,
         body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Gap(20),
-
-              FadeTransition(
-                opacity: Tween<double>(begin: 1.0, end: 0.0).animate(_fadeOut),
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SlideTransition(
-                        position: _player1Slide,
-                        child: FadeTransition(
-                          opacity: _fadeIn,
-                          child: PlayerCard(
-                            name: widget.player1Name,
-                            icon: widget.player1Icon,
-                            color: widget.player1Color,
-                          ),
-                        ),
+          child: Center(
+            child: FadeTransition(
+              opacity: Tween<double>(begin: 1.0, end: 0.0).animate(_fadeOut),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SlideTransition(
+                    position: _player1Slide,
+                    child: FadeTransition(
+                      opacity: _fadeIn,
+                      child: PlayerCard(
+                        name: widget.player1Name,
+                        icon: widget.player1Icon,
+                        color: widget.player1Color,
                       ),
-
-                      ScaleTransition(
-                        scale: _vsScale,
-                        child: Text(
-                          "VS",
-                          style: GoogleFonts.bebasNeue(
-                            color: Colors.white,
-                            fontSize: 70,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 4,
-                          ),
-                        ),
-                      ),
-
-                      SlideTransition(
-                        position: _player2Slide,
-                        child: FadeTransition(
-                          opacity: _fadeIn,
-                          child: PlayerCard(
-                            name: widget.player2Name,
-                            icon: widget.player2Icon,
-                            color: widget.player2Color,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 80),
+                  ScaleTransition(
+                    scale: _vsScale,
+                    child: Text(
+                      "VS",
+                      style: GoogleFonts.bebasNeue(
+                        color: Colors.white,
+                        fontSize: 70,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 4,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 80),
+                  SlideTransition(
+                    position: _player2Slide,
+                    child: FadeTransition(
+                      opacity: _fadeIn,
+                      child: PlayerCard(
+                        name: widget.player2Name,
+                        icon: widget.player2Icon,
+                        color: widget.player2Color,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       );

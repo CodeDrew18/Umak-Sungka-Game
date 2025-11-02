@@ -6,24 +6,157 @@ import 'package:flutter/material.dart';
 import 'package:sungka/core/constants/app_colors.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/adventure_mode/adventure_screen.dart';
-import 'package:sungka/screens/components/animated_title.dart';
+import 'package:sungka/screens/components/animated_header.dart';
 import 'package:sungka/screens/components/game_back_button.dart';
-import 'package:sungka/screens/components/home_game_button.dart';
-import 'package:sungka/screens/components/particle_background.dart';
 import 'package:sungka/screens/components/settings_button.dart';
-import 'package:sungka/screens/components/water_effect.dart';
 import 'package:sungka/screens/online/online_game_screen.dart';
 import 'package:sungka/screens/online/waiting_for_opponent_screen.dart';
 import 'package:sungka/screens/play_with_friends/play_with_friends_screen.dart';
 import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
 import 'package:sungka/screens/settings/settings_screen.dart';
 import 'package:sungka/screens/start_game_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'dart:math';
+
+class HomeGameButton extends PositionComponent
+    with TapCallbacks, HoverCallbacks, HasGameRef {
+  final String label;
+  final String description;
+  final IconData icon;
+  final LinearGradient gradient;
+  final VoidCallback onPressed;
+
+  bool isHovered = false;
+  bool isPressed = false;
+  double baseScale = 1.0;
+  double hoverScale = 1.05;
+  double pressScale = 0.95;
+  double floatTimer = 0;
+
+  HomeGameButton({
+    required this.label,
+    required this.description,
+    required this.icon,
+    required this.gradient,
+    required this.onPressed,
+    required Vector2 position,
+  }) : super(
+          position: position,
+          size: Vector2(160, 200),
+          anchor: Anchor.center,
+        );
+
+  @override
+  void render(Canvas canvas) {
+    final rect = Rect.fromLTWH(0, 0, size.x, size.y);
+    final currentScale = isPressed
+        ? pressScale
+        : (isHovered ? hoverScale : baseScale);
+
+    canvas.save();
+    canvas.translate(size.x / 2, size.y / 2);
+    canvas.scale(currentScale);
+    canvas.translate(-size.x / 2, -size.y / 2);
+
+    final paint = Paint()
+      ..shader = gradient.createShader(rect)
+      ..maskFilter =
+          isHovered ? const MaskFilter.blur(BlurStyle.normal, 12) : null;
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, const Radius.circular(22)),
+      paint,
+    );
+
+    final borderPaint = Paint()
+      ..color = Colors.white.withOpacity(0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, const Radius.circular(22)),
+      borderPaint,
+    );
+
+    final iconPainter = TextPainter(
+      text: TextSpan(
+        text: String.fromCharCode(icon.codePoint),
+        style: TextStyle(
+          fontFamily: icon.fontFamily,
+          package: icon.fontPackage,
+          fontSize: 40,
+          color: Colors.white,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    iconPainter.layout();
+    iconPainter.paint(canvas, Offset(size.x / 2 - iconPainter.width / 2, 35));
+
+    final labelPainter = TextPainter(
+      text: TextSpan(
+        text: label,
+        style: GoogleFonts.poppins(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+    labelPainter.layout(maxWidth: size.x - 20);
+    labelPainter.paint(
+        canvas, Offset((size.x - labelPainter.width) / 2, 95));
+
+    final descPainter = TextPainter(
+      text: TextSpan(
+        text: description,
+        style: GoogleFonts.poppins(
+          fontSize: 12,
+          color: Colors.white70,
+        ),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+    descPainter.layout(maxWidth: size.x - 20);
+    descPainter.paint(
+        canvas, Offset((size.x - descPainter.width) / 2, 125));
+
+    canvas.restore();
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    floatTimer += dt;
+
+    position.y += sin(floatTimer * 2) * 0.2;
+
+
+  }
+
+  @override
+  void onTapDown(TapDownEvent event) {
+    isPressed = true;
+  }
+
+  @override
+  void onTapUp(TapUpEvent event) {
+    isPressed = false;
+    onPressed();
+  }
+
+  @override
+  void onTapCancel(TapCancelEvent event) {
+    isPressed = false;
+  }
+
+}
 
 class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
   final BuildContext context;
-  ParticleBackground? particleBackground;
-  AnimatedTitle? titleComponent;
-  WaterEffect? waterEffect;
+  SpriteComponent? backgroundImage;
+  AnimatedHeader? titleComponent;
   List<HomeGameButton>? modeButtons;
   GameBackButton? backButton;
   SettingsButton? settingsButton;
@@ -38,13 +171,14 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
   Future<void> onLoad() async {
     await super.onLoad();
 
-    waterEffect = WaterEffect();
-    add(waterEffect!);
+    backgroundImage = SpriteComponent()
+      ..sprite = await loadSprite('assets/traditional_bg.png')
+      ..size = size
+      ..anchor = Anchor.topLeft
+      ..priority = -1;
+    add(backgroundImage!);
 
-    particleBackground = ParticleBackground();
-    add(particleBackground!);
-
-    titleComponent = AnimatedTitle(title: 'Choose Your Battle Mode');
+    titleComponent = AnimatedHeader(title: 'Choose Your Battle Mode');
     add(titleComponent!);
 
     backButton = GameBackButton(
@@ -57,28 +191,25 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
       primaryColor: AppColors.titleColor,
       accentColor: AppColors.primary,
     );
-    backButton!.position = Vector2(20, 20);
     add(backButton!);
 
-      settingsButton = SettingsButton(
-        onPressed: () {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.push(
-              context,
-             MaterialPageRoute(
-                  builder: (_) => GameWidget(
-                    game: SettingsGame(context),
-                  ),
-                ),
-
-            );
-          });
-        },
-        primaryColor: AppColors.titleColor,
-        accentColor: AppColors.primary,
-        icon: Icons.settings,
-      );
-    settingsButton!.position = Vector2(70, 80);
+    settingsButton = SettingsButton(
+      onPressed: () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => GameWidget(
+                game: SettingsGame(context),
+              ),
+            ),
+          );
+        });
+      },
+      primaryColor: AppColors.titleColor,
+      accentColor: AppColors.primary,
+      icon: Icons.settings,
+    );
     add(settingsButton!);
 
     modeButtons = [
@@ -132,6 +263,9 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
   @override
   void onGameResize(Vector2 newSize) {
     super.onGameResize(newSize);
+    if (backgroundImage != null) {
+      backgroundImage!.size = newSize;
+    }
     _updateLayout(newSize);
   }
 
@@ -141,7 +275,7 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
     }
 
     if (settingsButton != null) {
-      settingsButton!.position = Vector2( currentSize.x - 70, 50);
+      settingsButton!.position = Vector2(currentSize.x - 70, 50);
     }
 
     if (titleComponent != null) {
@@ -171,10 +305,10 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       switch (mode) {
         case 'adventure':
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const SungkaAdventureScreen()),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (_) => const SungkaAdventureScreen()),
+          // );
           break;
         case 'friends':
           Navigator.push(
@@ -240,7 +374,8 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("$e")));
     }
   }
 }
