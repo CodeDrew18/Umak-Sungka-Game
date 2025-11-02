@@ -8,7 +8,9 @@ import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/adventure_mode/adventure_screen.dart';
 import 'package:sungka/screens/components/animated_header.dart';
 import 'package:sungka/screens/components/game_back_button.dart';
+import 'package:sungka/screens/components/leaderboard_button.dart';
 import 'package:sungka/screens/components/settings_button.dart';
+import 'package:sungka/screens/leaderboards/leaderboards_screen.dart';
 import 'package:sungka/screens/online/online_game_screen.dart';
 import 'package:sungka/screens/online/waiting_for_opponent_screen.dart';
 import 'package:sungka/screens/play_with_friends/play_with_friends_screen.dart';
@@ -160,6 +162,7 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
   List<HomeGameButton>? modeButtons;
   GameBackButton? backButton;
   SettingsButton? settingsButton;
+  LeaderboardButton? leaderboardButton;
   final firestoreService = FirebaseFirestoreService();
 
   HomeGame(this.context);
@@ -211,6 +214,23 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
       icon: Icons.settings,
     );
     add(settingsButton!);
+
+        leaderboardButton = LeaderboardButton(
+      onPressed: () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => LeaderboardScreen(),
+            ),
+          );
+        });
+      },
+      primaryColor: AppColors.titleColor,
+      accentColor: AppColors.primary,
+        icon: Icons.emoji_events,
+    );
+    add(leaderboardButton!);
 
     modeButtons = [
       HomeGameButton(
@@ -275,7 +295,11 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
     }
 
     if (settingsButton != null) {
-      settingsButton!.position = Vector2(currentSize.x - 70, 50);
+      settingsButton!.position = Vector2(currentSize.x - 50, 60);
+    }
+
+        if (leaderboardButton != null) {
+      leaderboardButton!.position = Vector2(currentSize.x - 120, 60);
     }
 
     if (titleComponent != null) {
