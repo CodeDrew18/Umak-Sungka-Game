@@ -1,9 +1,10 @@
 import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/widgets/player_tile.dart';
+import 'package:sungka/core/services/game_logic_service.dart';
+import 'package:sungka/screens/widgets/sungka_board.dart';
 
 class OnlineGameScreen extends StatefulWidget {
   const OnlineGameScreen({super.key, required this.matchId});
@@ -16,10 +17,15 @@ class OnlineGameScreen extends StatefulWidget {
 
 class _OnlineGameScreenState extends State<OnlineGameScreen> {
   final firestoreService = FirebaseFirestoreService();
+  final GameLogicService gameLogicService = GameLogicService();
 
   final currentUser = FirebaseAuth.instance.currentUser;
 
+  List<int> board = [4, 4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 4, 0];
+
   bool isResigning = false;
+  bool isPlayerTurn = false;
+  bool isGameOver = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +46,19 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
           if (matchData == null) {
             return const Center(child: Text("No match data."));
           }
+
+          final boardData = List<int>.from(
+            matchData['board'] ??
+                [4, 4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 4, 0],
+          );
+
+          final turnId = matchData['turnId'];
+          final isPlayerTurn = turnId == currentUser!.uid;
+          final isGameOver = matchData['isGameOver'] ?? false;
+
+          setState(() {
+            board = boardData;
+          });
 
           final player1Id = matchData['player1Id'];
           final player1Name = matchData['player1Name'] ?? 'Player 1';
@@ -141,6 +160,12 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
                 name: player1Name,
                 rating: player1Rating,
               ),
+              SungkaBoard(
+                board: board,
+                isPlayerTurn: isPlayerTurn,
+                isGameOver: isGameOver,
+                onPitTap: (pit) => onPlayerMove(pit, matchData),
+              ),
               PlayerTile(
                 score: player2Score,
                 name: player2Name,
@@ -165,6 +190,34 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
         },
       ),
     );
+  }
+
+  void onPlayerMove(int pit, Map<String, dynamic> matchData) async {
+    if (!isPlayerTurn || isGameOver || board[pit] == 0) {
+      return;
+    }
+
+    final newBoard = gameLogicService.makeMove(board, pit, true);
+    final gameOver = gameLogicService.checkEndGame(newBoard);
+
+    await firestoreService.updateBoardState(
+      matchId: widget.matchId,
+      board: newBoard,
+      nextTurnId: getOpponentId(matchData),
+      isGameOver: gameOver,
+    );
+
+    setState(() {
+      board = newBoard;
+      isPlayerTurn = false;
+      isGameOver = gameOver;
+    });
+  }
+
+  String getOpponentId(Map<String, dynamic> matchData) {
+    final player1Id = matchData['player1Id'];
+    final player2Id = matchData['player2Id'];
+    return currentUser!.uid == player1Id ? player2Id : player1Id;
   }
 
   void showResignDialog(

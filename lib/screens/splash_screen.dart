@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sungka/core/constants/app_colors.dart';
 import 'package:sungka/screens/auth_screen.dart';
-import 'package:sungka/main.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:sungka/screens/start_game_screen.dart';
 
 class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});

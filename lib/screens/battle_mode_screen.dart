@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sungka/core/services/firebase_auth_service.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
+import 'package:sungka/screens/bot/player_vs_bot_screen.dart';
+import 'package:sungka/screens/leaderboard_screen.dart';
 import 'package:sungka/screens/online/online_game_screen.dart';
 import 'package:sungka/screens/online/waiting_for_opponent_screen.dart';
 
@@ -24,6 +26,20 @@ class _BattleModeScreenState extends State<BattleModeScreen> {
           children: [
             Text("Choose Your Battle Mode"),
             ElevatedButton(onPressed: online, child: Text("Player VS Player")),
+            ElevatedButton(
+              onPressed:
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => PlayerVsBotScreen()),
+                  ),
+              child: Text("Player VS Bot"),
+            ),
+            ElevatedButton(
+              onPressed:
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => LeaderboardScreen()),
+                  ),
+              child: Text("Leaderboard"),
+            ),
             ElevatedButton(
               onPressed: () {
                 FirebaseAuthService().logout();
