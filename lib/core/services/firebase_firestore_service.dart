@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:sungka/screens/online/online_game_screen.dart';
 
 class FirebaseFirestoreService {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -55,6 +53,8 @@ class FirebaseFirestoreService {
     required int userRating,
   }) async {
     return await firestore.collection('matches').add({
+      'board': [4, 4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 4, 0],
+      'turnId': userId,
       'player1Id': userId,
       'player1Name': userName,
       'player1Rating': userRating,
@@ -70,6 +70,7 @@ class FirebaseFirestoreService {
       'loserNewRating': null,
       'playerAskingRematch': null,
       'rematchOf': null,
+      'isGameOver': false,
       'createdAt': FieldValue.serverTimestamp(),
     });
   }
@@ -184,5 +185,77 @@ class FirebaseFirestoreService {
       'rematchOf': previousMatchId,
       'createdAt': FieldValue.serverTimestamp(),
     });
+  }
+
+  Future<void> updateBoardState({
+    required String matchId,
+    required List<int> board,
+    required String nextTurnId,
+    required bool isGameOver,
+  }) async {
+    await FirebaseFirestore.instance.collection('matches').doc(matchId).update({
+      'board': board,
+      'turnId': nextTurnId,
+      'isGameOver': isGameOver,
+    });
+  }
+
+  Future<Map<String, dynamic>> getRankings(String userId) async {
+    final top100PlayersSnapshot =
+        await firestore
+            .collection('users')
+            .orderBy('rating', descending: true)
+            .orderBy('name')
+            .limit(100)
+            .get();
+
+    final top100Players =
+        top100PlayersSnapshot.docs.map((player) {
+          return {
+            'id': player.id,
+            'name': player['name'] ?? 'Unknown',
+            'rating': player['rating'] ?? 0,
+          };
+        }).toList();
+
+    final userDoc = await firestore.collection('users').doc(userId).get();
+    if (!userDoc.exists) {
+      return {'top100Players': top100Players, 'playerRank': -1};
+    }
+
+    final int userRating = userDoc['rating'] ?? 0;
+    final String playerName = userDoc['name'] ?? 'Unknown Player';
+    final int playerRating = userDoc['rating'] ?? 0;
+
+    final higherRated =
+        await firestore
+            .collection('users')
+            .where('rating', isGreaterThan: userRating)
+            .count()
+            .get();
+
+    final sameRatingSnapshot =
+        await firestore
+            .collection('users')
+            .where('rating', isEqualTo: userRating)
+            .orderBy(FieldPath.documentId)
+            .get();
+
+    int positionInTieGroup = sameRatingSnapshot.docs.indexWhere(
+      (doc) => doc.id == userId,
+    );
+
+    if (positionInTieGroup == -1) {
+      positionInTieGroup = 0;
+    }
+
+    int playerRank = higherRated.count! + positionInTieGroup + 1;
+
+    return {
+      'top100Players': top100Players,
+      'playerRank': playerRank,
+      'playerName': playerName,
+      'playerRating': playerRating,
+    };
   }
 }
