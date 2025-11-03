@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -6,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/core/services/firebase_auth_service.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/auth_screen.dart';
-import 'package:sungka/screens/battle_mode_screen.dart';
+import 'package:sungka/screens/home_screen.dart';
 import 'package:sungka/screens/widgets/name_input_dialog.dart';
 
 class StartGameScreen extends StatefulWidget {
@@ -256,7 +257,7 @@ class _TitleAnimationWidgetState extends State<TitleAnimationWidget>
           "Sungka Master",
           style: GoogleFonts.poppins(
             color: const Color(0xFFE0E0E0),
-            fontSize: 48,
+            fontSize: 65,
             fontWeight: FontWeight.w800,
             shadows: [
               Shadow(
@@ -530,7 +531,7 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton>
             onPressed: () {
               Navigator.of(
                 context,
-              ).push(MaterialPageRoute(builder: (_) => BattleModeScreen()));
+              ).push(MaterialPageRoute(builder: (_) => HomeScreen()));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFE53935),

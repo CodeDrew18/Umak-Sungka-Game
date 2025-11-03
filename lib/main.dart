@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:sungka/core/theme/app_theme.dart';
 import 'package:sungka/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:sungka/screens/start_game_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -16,6 +15,8 @@ void main() async {
     DeviceOrientation.landscapeRight,
     DeviceOrientation.landscapeLeft,
   ]);
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
   runApp(const Main());
 }
@@ -32,15 +33,18 @@ class Main extends StatelessWidget {
         home: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            }
+            // if(snapshot.connectionState == ConnectionState.waiting) {
+            //   return Splashscreen();
+            // }
 
-            if(snapshot.hasData) {
-              return StartGameScreen();
-            }
+
+            // if(snapshot.hasData) {
+            //   return StartGameScreen();
+            // }
 
             return Splashscreen();
+
+            
           }
         ),
       ),
