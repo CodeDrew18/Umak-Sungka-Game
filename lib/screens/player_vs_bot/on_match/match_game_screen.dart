@@ -19,10 +19,10 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
   late List<int> board;
   bool isPlayerTurn = true;
   bool gameEnded = false;
-  String winner = '';
   int? animatingPit;
   int? lastMove;
   Timer? _botTimer;
+  String winner = '';
 
   @override
   void initState() {
@@ -40,38 +40,104 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
     setState(() {});
   }
 
-  void _handlePitTap(int pit) {
-    if (gameEnded) return;
-    if (isPlayerTurn && (pit < 0 || pit > 6 || board[pit] == 0)) return;
-    if (!isPlayerTurn && (pit < 8 || pit > 14 || board[pit] == 0)) return;
+  // void _handlePitTap(int pit) {
+  //   if (gameEnded) return;
+  //   if (isPlayerTurn && (pit < 0 || pit > 6 || board[pit] == 0)) return;
+  //   if (!isPlayerTurn && (pit < 8 || pit > 14 || board[pit] == 0)) return;
 
+  //   setState(() {
+  //     animatingPit = pit;
+  //     lastMove = pit;
+  //   });
+
+  //   Future.delayed(const Duration(milliseconds: 240), () {
+  //     final newBoard = GameLogic.makeMove(board, pit, isPlayerTurn);
+  //     setState(() {
+  //       board = newBoard;
+  //       animatingPit = null;
+  //     });
+
+  //     final result = GameLogic.checkEndGame(newBoard);
+  //     if (result['isEnded'] as bool) {
+  //       setState(() {
+  //         board = List<int>.from(result['finalBoard'] as List<int>);
+  //         gameEnded = true;
+  //         winner = GameLogic.getWinner(board);
+  //       });
+  //     } else {
+  //       setState(() {
+  //         isPlayerTurn = !isPlayerTurn;
+  //       });
+  //       if (!isPlayerTurn) _scheduleBotMove();
+  //     }
+  //   });
+  // }
+
+
+
+void _handlePitTap(int pit) async {
+  if (gameEnded) return;
+  if (isPlayerTurn && (pit < 0 || pit > 6 || board[pit] == 0)) return;
+  if (!isPlayerTurn && (pit < 8 || pit > 14 || board[pit] == 0)) return;
+
+  setState(() {
+    animatingPit = pit;
+    lastMove = pit;
+  });
+
+  // Copy of board for animation
+  List<int> newBoard = List.from(board);
+  int stones = newBoard[pit];
+  newBoard[pit] = 0;
+  int index = pit;
+
+  // Animate distribution
+  for (int i = 0; i < stones; i++) {
+    await Future.delayed(const Duration(milliseconds: 180));
+    index = (index + 1) % newBoard.length;
+
+    // Skip opponent’s store
+    if (isPlayerTurn && index == 15) {
+      index = (index + 1) % newBoard.length;
+    } else if (!isPlayerTurn && index == 7) {
+      index = (index + 1) % newBoard.length;
+    }
+
+    newBoard[index] += 1;
+
+    // Update the UI per drop
     setState(() {
-      animatingPit = pit;
-      lastMove = pit;
-    });
-
-    Future.delayed(const Duration(milliseconds: 240), () {
-      final newBoard = GameLogic.makeMove(board, pit, isPlayerTurn);
-      setState(() {
-        board = newBoard;
-        animatingPit = null;
-      });
-
-      final result = GameLogic.checkEndGame(newBoard);
-      if (result['isEnded'] as bool) {
-        setState(() {
-          board = List<int>.from(result['finalBoard'] as List<int>);
-          gameEnded = true;
-          winner = GameLogic.getWinner(board);
-        });
-      } else {
-        setState(() {
-          isPlayerTurn = !isPlayerTurn;
-        });
-        if (!isPlayerTurn) _scheduleBotMove();
-      }
+      board = List.from(newBoard);
+      animatingPit = index;
     });
   }
+
+  await Future.delayed(const Duration(milliseconds: 300));
+
+  // After animation: finalize the move using your game logic
+  final resultBoard = GameLogic.makeMove(board, pit, isPlayerTurn);
+
+  setState(() {
+    board = List<int>.from(resultBoard);
+    animatingPit = null;
+  });
+
+  final result = GameLogic.checkEndGame(resultBoard);
+  if (result['isEnded'] as bool) {
+    setState(() {
+      board = List<int>.from(result['finalBoard'] as List<int>);
+      gameEnded = true;
+      winner = GameLogic.getWinner(board);
+    });
+  } else {
+    setState(() {
+      isPlayerTurn = !isPlayerTurn;
+    });
+    if (!isPlayerTurn) _scheduleBotMove();
+  }
+}
+
+
 
   void _scheduleBotMove() {
     _botTimer?.cancel();
@@ -259,7 +325,7 @@ Widget build(BuildContext context) {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  // ---------------- BACK BUTTON ----------------
+
                   ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
                     style: ElevatedButton.styleFrom(
@@ -278,86 +344,6 @@ Widget build(BuildContext context) {
 }
 
 }
-
-// ----------------------
-// Widgets
-// ----------------------
-
-// class PitWidget extends StatelessWidget {
-//   final int count;
-//   final double size;
-//   final bool isTop;
-//   final bool enabled;
-//   final bool animating;
-//   final bool lastMove;
-//   final VoidCallback onTap;
-
-//   const PitWidget(
-//       {Key? key,
-//       required this.count,
-//       required this.size,
-//       required this.isTop,
-//       required this.enabled,
-//       required this.animating,
-//       required this.lastMove,
-//       required this.onTap})
-//       : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final gradient = LinearGradient(
-//         colors: isTop
-//             ? [const Color(0xFF8B5CF6), const Color(0xFFFF4D67)]
-//             : [const Color(0xFFFF4D67), const Color(0xFF8B5CF6)],
-//         begin: Alignment.topLeft,
-//         end: Alignment.bottomRight);
-
-//     return Column(children: [
-//       if (isTop) CountBadge(count: count),
-//       GestureDetector(
-//         onTap: enabled ? onTap : null,
-//         child: AnimatedScale(
-//           scale: animating ? 1.08 : 1.0,
-//           duration: const Duration(milliseconds: 240),
-//           child: Container(
-//             width: size,
-//             height: size,
-//             decoration: BoxDecoration(
-//               shape: BoxShape.circle,
-//               gradient: gradient,
-//               boxShadow: [
-//                 BoxShadow(
-//                     color: (isTop ? const Color(0xFFFF4D67) : const Color(0xFF8B5CF6))
-//                         .withOpacity(0.35),
-//                     blurRadius: 12,
-//                     spreadRadius: 1)
-//               ],
-//             ),
-//             child: Center(
-//               child: Container(
-//                 margin: const EdgeInsets.all(6),
-//                 decoration: BoxDecoration(
-//                   shape: BoxShape.circle,
-//                   color: Colors.black.withOpacity(0.7),
-//                   boxShadow: lastMove
-//                       ? [
-//                           BoxShadow(
-//                               color:
-//                                   (isTop ? const Color(0xFF8B5CF6) : const Color(0xFFFF4D67))
-//                                       .withOpacity(0.8),
-//                               blurRadius: 8)
-//                         ]
-//                       : null,
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//       if (!isTop) CountBadge(count: count),
-//     ]);
-//   }
-// }
 
 
 class PitWidget extends StatelessWidget {
@@ -447,12 +433,12 @@ class PitWidget extends StatelessWidget {
   List<Widget> _buildPebbles() {
     final random = Random();
     final List<Widget> pebbles = [];
-    final maxPebbles = count.clamp(0, 10); // Limit max for visibility
+    final maxPebbles = count.clamp(0, 10);
 
     for (int i = 0; i < maxPebbles; i++) {
-      final dx = random.nextDouble() * 30 + 10; // random x position
-      final dy = random.nextDouble() * 30 + 10; // random y position
-      final size = random.nextDouble() * 6 + 4; // random size
+      final dx = random.nextDouble() * 30 + 10;
+      final dy = random.nextDouble() * 30 + 10;
+      final size = random.nextDouble() * 6 + 4;
       final rotation = random.nextDouble() * pi;
 
       pebbles.add(Positioned(

@@ -18,7 +18,7 @@ class PlayerCard extends StatelessWidget {
           radius: 60,
           backgroundColor: Colors.green.withOpacity(0.2),
           child: Icon(
-            Icons.people,
+            Icons.person,
             color: Colors.green,
             size: 70,
           ),

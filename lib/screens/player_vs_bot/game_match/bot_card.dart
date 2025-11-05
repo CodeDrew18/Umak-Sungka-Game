@@ -18,7 +18,7 @@ class BotCard extends StatelessWidget {
           radius: 60,
           backgroundColor: Colors.red.withOpacity(0.2),
           child: Icon(
-            Icons.android,
+            Icons.smart_toy,
             color: Colors.red,
             size: 70,
           ),
