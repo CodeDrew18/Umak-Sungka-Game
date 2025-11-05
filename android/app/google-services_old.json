@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "484169081903",
+    "project_id": "sungka-game-82b89",
+    "storage_bucket": "sungka-game-82b89.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:484169081903:android:bc1a78ce3abb15fc7d12da",
+        "android_client_info": {
+          "package_name": "com.example.sungka"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3w_94LrqF5e78nx_XuGF5RQyenjhqgeU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
