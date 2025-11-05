@@ -149,7 +149,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                             "LEADERBOARDS",
                             style: GoogleFonts.poppins(
                               color: FilipinoPalette.warmGold,
-                              fontSize: 48,
+                              fontSize: 42,
                               fontWeight: FontWeight.w800,
                               shadows: [
                                 Shadow(
