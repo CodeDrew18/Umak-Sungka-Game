@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "484169081903",
+    "firebase_url": "https://sungka-game-82b89-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "sungka-game-82b89",
     "storage_bucket": "sungka-game-82b89.firebasestorage.app"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.sungka"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "484169081903-6fe22p42c9kqdunuqg9016lu7tiq84c1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sungka",
+            "certificate_hash": "2a6cff0331c1eccea8939f1a82d1583833482849"
+          }
+        },
+        {
+          "client_id": "484169081903-hhp579hiee8s0p0kbu0e4cf5hnbkfapk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC3w_94LrqF5e78nx_XuGF5RQyenjhqgeU"
@@ -20,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "484169081903-6e1k29idj6l615f6t92ie2jd5kvtua6d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "484169081903-00evq4dprnfr7ocsilspb2ace8jtnbv3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sungka"
+              }
+            }
+          ]
         }
       }
     }
