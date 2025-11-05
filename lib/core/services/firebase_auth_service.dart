@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -6,6 +7,7 @@ class FirebaseAuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
   bool _isInitialized = false;
+  StreamSubscription<GoogleSignInAuthenticationEvent>? _authEventSubscription;
 
   // Web Client ID
   static const String _serverClientId =
@@ -28,22 +30,57 @@ class FirebaseAuthService {
 
       print('Starting Google Sign-In...');
 
-      // Try lightweight authentication first
-      GoogleSignInAccount? googleUser;
+      // Create a completer to handle async authentication
+      final Completer<GoogleSignInAccount?> completer = Completer();
+      
+      // Listen to authentication events
+      _authEventSubscription = _googleSignIn.authenticationEvents.listen(
+        (event) {
+          print('Auth event received: ${event.runtimeType}');
+          if (event is GoogleSignInAuthenticationEventSignIn) {
+            print('Sign-in event: ${event.user.email}');
+            if (!completer.isCompleted) {
+              completer.complete(event.user);
+            }
+          } else if (event is GoogleSignInAuthenticationEventSignOut) {
+            print('Sign-out event');
+            if (!completer.isCompleted) {
+              completer.complete(null);
+            }
+          }
+        },
+        onError: (error) {
+          print('Auth event error: $error');
+          if (!completer.isCompleted) {
+            completer.completeError(error);
+          }
+        },
+      );
 
+      // Trigger authentication
       try {
-        print('Attempting lightweight authentication...');
-        googleUser = await _googleSignIn.attemptLightweightAuthentication();
-        print('Lightweight auth result: ${googleUser?.email ?? "null"}');
+        await _googleSignIn.authenticate(scopeHint: ['email']);
       } catch (e) {
-        print('Lightweight auth failed: $e');
+        print('Authenticate call threw: $e');
+        // Don't fail here - wait for the event
       }
 
-      // If no user from lightweight auth, try full authentication
+      // Wait for the authentication event with timeout
+      final googleUser = await completer.future.timeout(
+        Duration(seconds: 30),
+        onTimeout: () {
+          print('Authentication timed out');
+          return null;
+        },
+      );
+
+      // Cancel subscription
+      await _authEventSubscription?.cancel();
+      _authEventSubscription = null;
+
       if (googleUser == null) {
-        print('Attempting full authentication...');
-        googleUser = await _googleSignIn.authenticate(scopeHint: ['email']);
-        print('Full auth completed: ${googleUser.email}');
+        print('No user from authentication');
+        return null;
       }
 
       print('Google user authenticated: ${googleUser.email}');
@@ -73,6 +110,8 @@ class FirebaseAuthService {
       return userCredential;
     } on GoogleSignInException catch (e) {
       print('Google Sign-In Exception: ${e.code} - ${e.description}');
+      await _authEventSubscription?.cancel();
+      _authEventSubscription = null;
       if (e.code == GoogleSignInExceptionCode.canceled) {
         print('User canceled the sign-in');
         return null; // User canceled
@@ -81,6 +120,8 @@ class FirebaseAuthService {
     } catch (e, stackTrace) {
       print('Error signing in with Google: $e');
       print('Stack trace: $stackTrace');
+      await _authEventSubscription?.cancel();
+      _authEventSubscription = null;
       rethrow;
     }
   }
