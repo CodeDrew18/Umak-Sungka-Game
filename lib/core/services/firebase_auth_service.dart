@@ -28,8 +28,24 @@ class FirebaseAuthService {
 
       print('Starting Google Sign-In...');
 
-      // Trigger the Google Sign-In flow
-      final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
+      // Try lightweight authentication first
+      GoogleSignInAccount? googleUser;
+
+      try {
+        print('Attempting lightweight authentication...');
+        googleUser = await _googleSignIn.attemptLightweightAuthentication();
+        print('Lightweight auth result: ${googleUser?.email ?? "null"}');
+      } catch (e) {
+        print('Lightweight auth failed: $e');
+      }
+
+      // If no user from lightweight auth, try full authentication
+      if (googleUser == null) {
+        print('Attempting full authentication...');
+        googleUser = await _googleSignIn.authenticate(scopeHint: ['email']);
+        print('Full auth completed: ${googleUser.email}');
+      }
+
       print('Google user authenticated: ${googleUser.email}');
 
       // Get the authorization with email scope
@@ -58,6 +74,7 @@ class FirebaseAuthService {
     } on GoogleSignInException catch (e) {
       print('Google Sign-In Exception: ${e.code} - ${e.description}');
       if (e.code == GoogleSignInExceptionCode.canceled) {
+        print('User canceled the sign-in');
         return null; // User canceled
       }
       rethrow;
