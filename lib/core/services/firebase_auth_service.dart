@@ -32,7 +32,7 @@ class FirebaseAuthService {
 
       // Create a completer to handle async authentication
       final Completer<GoogleSignInAccount?> completer = Completer();
-      
+
       // Listen to authentication events
       _authEventSubscription = _googleSignIn.authenticationEvents.listen(
         (event) {
