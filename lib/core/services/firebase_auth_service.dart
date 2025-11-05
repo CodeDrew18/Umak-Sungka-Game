@@ -26,8 +26,11 @@ class FirebaseAuthService {
     try {
       await _ensureInitialized();
 
+      print('Starting Google Sign-In...');
+
       // Trigger the Google Sign-In flow
       final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
+      print('Google user authenticated: ${googleUser.email}');
 
       // Get the authorization with email scope
       final GoogleSignInClientAuthorization? authorization = await googleUser
@@ -35,25 +38,32 @@ class FirebaseAuthService {
           .authorizationForScopes(['email']);
 
       if (authorization == null) {
+        print('Failed to get authorization');
         throw Exception('Failed to get authorization from Google');
       }
 
+      print('Got authorization token');
+      print('Access token length: ${authorization.accessToken.length}');
+
       final credential = GoogleAuthProvider.credential(
         accessToken: authorization.accessToken,
-        // The idToken is not directly available in the new API
-        // Firebase will handle the authentication with just the access token
       );
 
+      print('Signing in to Firebase with credential...');
       // Sign in to Firebase with the Google credential
-      return await auth.signInWithCredential(credential);
+      final userCredential = await auth.signInWithCredential(credential);
+      print('Firebase sign-in successful: ${userCredential.user?.email}');
+
+      return userCredential;
     } on GoogleSignInException catch (e) {
       print('Google Sign-In Exception: ${e.code} - ${e.description}');
       if (e.code == GoogleSignInExceptionCode.canceled) {
         return null; // User canceled
       }
       rethrow;
-    } catch (e) {
+    } catch (e, stackTrace) {
       print('Error signing in with Google: $e');
+      print('Stack trace: $stackTrace');
       rethrow;
     }
   }
