@@ -646,32 +646,36 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton>
         animation: _glowAnimation,
         builder: (context, child) {
       
-          return ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => GameWidget(game: HomeGame(context)),
+          return Container(
+            height: 80,
+            width: 150,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => GameWidget(game: HomeGame(context)),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFE53935),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFE53935),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
+                padding: const EdgeInsets.symmetric(horizontal: 45, vertical: 18),
+                elevation: 12 * _glowAnimation.value,
+                shadowColor: const Color(0xFFE53935).withOpacity(
+                  _glowAnimation.value,
+                ),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 45, vertical: 18),
-              elevation: 12 * _glowAnimation.value,
-              shadowColor: const Color(0xFFE53935).withOpacity(
-                _glowAnimation.value,
-              ),
-            ),
-            child: Text(
-              "PLAY",
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: 18,
-                letterSpacing: 1,
+              child: Text(
+                "PLAY",
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                  letterSpacing: 1,
+                ),
               ),
             ),
           );

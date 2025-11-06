@@ -4,6 +4,8 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:flutter/services.dart';
+
 class SungkaGame extends FlameGame with TapDetector {
   static const int pitsPerSide = 6;
   static const int initialStones = 4;
@@ -34,6 +36,10 @@ class SungkaGame extends FlameGame with TapDetector {
 
   @override
   Future<void> onLoad() async {
+    SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeRight,
+    DeviceOrientation.landscapeLeft,
+  ]);
     player1Pits = List.filled(pitsPerSide, initialStones);
     player2Pits = List.filled(pitsPerSide, initialStones);
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/screens/play_with_friends/game_match/player_card.dart';
@@ -39,6 +40,11 @@ class _MatchScreenState extends State<MatchScreen>
   @override
   void initState() {
     super.initState();
+
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeRight,
+    DeviceOrientation.landscapeLeft,
+  ]);
 
     _controller = AnimationController(
       vsync: this,
