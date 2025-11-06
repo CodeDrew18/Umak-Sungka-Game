@@ -65,7 +65,7 @@ class AuthGame extends FlameGame {
   void onGameResize(Vector2 newSize) {
     super.onGameResize(newSize);
     googleButton?.position = Vector2(newSize.x / 2, newSize.y * 0.55);
-    guestButton?.position = Vector2(newSize.x / 2, newSize.y * 0.78);
-    titleComponent?.position = Vector2(newSize.x / 2, newSize.y * 0.25);
+    guestButton?.position = Vector2(newSize.x / 2, newSize.y * 0.65);
+    titleComponent?.position = Vector2(newSize.x / 2, newSize.y * 0.40);
   }
 }

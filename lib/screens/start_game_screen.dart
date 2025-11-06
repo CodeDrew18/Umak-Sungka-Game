@@ -197,108 +197,121 @@ class _StartGameScreenState extends State<StartGameScreen> {
                     clipBehavior: Clip.none,
                     alignment: Alignment.center,
                     children: [
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          height: 160,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF3D2626),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(120),
-                              topRight: Radius.circular(120),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            AnimatedPitWidget(delay: 0),
-                            Gap(60),
-                            AnimatedPitWidget(delay: 1),
-                            Gap(60),
-                            AnimatedPitWidget(delay: 2),
-                            Gap(60),
-                            AnimatedPitWidget(delay: 3),
-                          ],
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 18.0, left: 18),
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Row(
-                            children: [AnimatedLargePitWidget(isLeft: true)],
-                          ),
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 18.0, right: 18),
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [AnimatedLargePitWidget(isLeft: false)],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20.0, left: 40),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: const [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                AnimatedGamePiece(delay: 0),
-                                Gap(6),
-                                AnimatedGamePiece(delay: 0.1),
-                              ],
-                            ),
-                            Gap(6),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                AnimatedGamePiece(delay: 0.2),
-                                Gap(6),
-                                AnimatedGamePiece(delay: 0.3),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20, right: 40),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: const [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                AnimatedGamePiece(delay: 0.4),
-                                Gap(6),
-                                AnimatedGamePiece(delay: 0.5),
-                              ],
-                            ),
-                            Gap(6),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                AnimatedGamePiece(delay: 0.6),
-                                Gap(6),
-                                AnimatedGamePiece(delay: 0.7),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Align(
+                      //   alignment: Alignment.bottomCenter,
+                      //   child: Container(
+                      //     height: 160,
+                      //     decoration: const BoxDecoration(
+                      //       color: Color(0xFF3D2626),
+                      //       borderRadius: BorderRadius.only(
+                      //         topLeft: Radius.circular(120),
+                      //         topRight: Radius.circular(120),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(top: 16.0),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: const [
+                      //       AnimatedPitWidget(delay: 0),
+                      //       Gap(60),
+                      //       AnimatedPitWidget(delay: 1),
+                      //       Gap(60),
+                      //       AnimatedPitWidget(delay: 2),
+                      //       Gap(60),
+                      //       AnimatedPitWidget(delay: 3),
+                      //     ],
+                      //   ),
+                      // ),
+                      // const Padding(
+                      //   padding: EdgeInsets.only(top: 18.0, left: 18),
+                      //   child: Align(
+                      //     alignment: Alignment.bottomCenter,
+                      //     child: Row(
+                      //       children: [AnimatedLargePitWidget(isLeft: true)],
+                      //     ),
+                      //   ),
+                      // ),
+                      // const Padding(
+                      //   padding: EdgeInsets.only(top: 18.0, right: 18),
+                      //   child: Align(
+                      //     alignment: Alignment.bottomCenter,
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.end,
+                      //       children: [AnimatedLargePitWidget(isLeft: false)],
+                      //     ),
+                      //   ),
+                      // ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(bottom: 20.0, left: 40),
+                      //   child: Column(
+                      //     mainAxisAlignment: MainAxisAlignment.end,
+                      //     children: const [
+                      //       Row(
+                      //         mainAxisAlignment: MainAxisAlignment.start,
+                      //         children: [
+                      //           AnimatedGamePiece(delay: 0),
+                      //           Gap(6),
+                      //           AnimatedGamePiece(delay: 0.1),
+                      //         ],
+                      //       ),
+                      //       Gap(6),
+                      //       Row(
+                      //         mainAxisAlignment: MainAxisAlignment.start,
+                      //         children: [
+                      //           AnimatedGamePiece(delay: 0.2),
+                      //           Gap(6),
+                      //           AnimatedGamePiece(delay: 0.3),
+                      //         ],
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(bottom: 20, right: 40),
+                      //   child: Column(
+                      //     mainAxisAlignment: MainAxisAlignment.end,
+                      //     children: const [
+                      //       Row(
+                      //         mainAxisAlignment: MainAxisAlignment.end,
+                      //         children: [
+                      //           AnimatedGamePiece(delay: 0.4),
+                      //           Gap(6),
+                      //           AnimatedGamePiece(delay: 0.5),
+                      //         ],
+                      //       ),
+                      //       Gap(6),
+                      //       Row(
+                      //         mainAxisAlignment: MainAxisAlignment.end,
+                      //         children: [
+                      //           AnimatedGamePiece(delay: 0.6),
+                      //           Gap(6),
+                      //           AnimatedGamePiece(delay: 0.7),
+                      //         ],
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       const Positioned(top: 30, child: AnimatedPlayButton()),
                     ],
                   ),
                 ),
                 const Spacer(),
+                                Spacer(),
+                const Spacer(),
+                Spacer(),
+                const Spacer(),
+                Spacer(),
+                const Spacer(),
+                Spacer(),
+                const Spacer(),
+                Spacer(),
+                                const Spacer(),
+                Spacer(),
+                const Spacer(),
+                Spacer(),
               ],
             ),
           ),
@@ -352,8 +365,10 @@ class _TitleAnimationWidgetState extends State<TitleAnimationWidget>
       opacity: _fadeAnimation,
       child: ScaleTransition(
         scale: _scaleAnimation,
-
+    
         child: Text(
+          textAlign: TextAlign.center
+          ,
           "Sungka Master",
           style: GoogleFonts.poppins(
             color: const Color(0xFFFFD700),
