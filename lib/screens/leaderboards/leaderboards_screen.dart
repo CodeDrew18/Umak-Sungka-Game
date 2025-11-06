@@ -95,183 +95,185 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     return const Icon(Icons.remove, color: Color(0xFF9E9E9E), size: 16);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: FilipinoPalette.darkBg,
+    appBar: AppBar(
       backgroundColor: FilipinoPalette.darkBg,
-      appBar: AppBar(
-        backgroundColor: FilipinoPalette.darkBg,
-      ),
-      body: FutureBuilder(
-        future: firestoreService.getRankings(currentUser!.uid),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: FilipinoPalette.warmGold,
-                strokeWidth: 3,
+    ),
+    body: FutureBuilder(
+      future: firestoreService.getRankings(currentUser!.uid),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: FilipinoPalette.warmGold,
+              strokeWidth: 3,
+            ),
+          );
+        }
+
+        if (!snapshot.hasData || snapshot.data == null) {
+          return Center(
+            child: Text(
+              'No leaderboard data available',
+              style: TextStyle(
+                color: FilipinoPalette.creamAccent.withOpacity(0.6),
+                fontSize: 16,
               ),
-            );
-          }
+            ),
+          );
+        }
 
-          if (!snapshot.hasData || snapshot.data == null) {
-            return Center(
-              child: Text(
-                'No leaderboard data available',
-                style: TextStyle(
-                  color: FilipinoPalette.creamAccent.withOpacity(0.6),
-                  fontSize: 16,
-                ),
-              ),
-            );
-          }
+        final data = snapshot.data!;
+        final top100Players = data['top100Players'] as List;
+        final playerRank = data['playerRank'];
+        final playerName = data['playerName'];
+        final playerRating = data['playerRating'];
 
-          final data = snapshot.data!;
-          final top100Players = data['top100Players'] as List;
-          final playerRank = data['playerRank'];
-          final playerName = data['playerName'];
-          final playerRating = data['playerRating'];
+        final top3 = top100Players.take(3).toList();
+        final rest = top100Players.skip(3).toList();
 
-          final top3 = top100Players.take(3).toList();
-          final rest = top100Players.skip(3).toList();
-
-          return Stack(
-            children: [
-              CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "LEADERBOARDS",
-                            style: GoogleFonts.poppins(
-                              color: FilipinoPalette.warmGold,
-                              fontSize: 42,
-                              fontWeight: FontWeight.w800,
-                              shadows: [
-                                Shadow(
-                                  offset: const Offset(0, 4),
-                                  blurRadius: 12,
-                                  color: const Color(0xFFE67E22).withOpacity(0.6),
-                                ),
-                                Shadow(
-                                  offset: const Offset(0, 8),
-                                  blurRadius: 20,
-                                  color: const Color(0xFFE67E22).withOpacity(0.3),
-                                ),
-                              ],
+        return Stack(
+          children: [
+            Column(
+              children: [
+                // --- Fixed Header Section ---
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "LEADERBOARDS",
+                        style: GoogleFonts.poppins(
+                          color: FilipinoPalette.warmGold,
+                          fontSize: 42,
+                          fontWeight: FontWeight.w800,
+                          shadows: [
+                            Shadow(
+                              offset: const Offset(0, 4),
+                              blurRadius: 12,
+                              color: const Color(0xFFE67E22).withOpacity(0.6),
                             ),
-                          ),
-                          const SizedBox(height: 24),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              if (top3.length > 1)
-                                _TopPlayerCard(
-                                  rank: 2,
-                                  playerName: top3[1]['name'] ?? 'Unknown',
-                                  subtitle: getTopPlayerSubtitle(2),
-                                  rating: top3[1]['rating'],
-                                  color: getTopPlayerColor(2),
-                                  size: 80,
-                                ),
-                              if (top3.isNotEmpty)
-                                _TopPlayerCard(
-                                  rank: 1,
-                                  playerName: top3[0]['name'] ?? 'Unknown',
-                                  subtitle: getTopPlayerSubtitle(1),
-                                  rating: top3[0]['rating'],
-                                  color: getTopPlayerColor(1),
-                                  size: 100,
-                                  isTopOne: true,
-                                ),
-                              if (top3.length > 2)
-                                _TopPlayerCard(
-                                  rank: 3,
-                                  playerName: top3[2]['name'] ?? 'Unknown',
-                                  subtitle: getTopPlayerSubtitle(3),
-                                  rating: top3[2]['rating'],
-                                  color: getTopPlayerColor(3),
-                                  size: 75,
-                                ),
-                            ],
-                          ),
-                          const SizedBox(height: 32),
-                          Text(
-                            textAlign: TextAlign.start,
-                            'ALL RANKINGS',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.5,
-                              color: FilipinoPalette.warmGold.withOpacity(0.8),
+                            Shadow(
+                              offset: const Offset(0, 8),
+                              blurRadius: 20,
+                              color: const Color(0xFFE67E22).withOpacity(0.3),
                             ),
-                          ),
-                          const SizedBox(height: 12),
-                        ],
-                      ),
-                    ),
-                  ),
-                  if (rest.isNotEmpty)
-                    SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final player = rest[index];
-                            final rank = index + 4;
-                            final isCurrent = player['id'] == currentUser!.uid;
-
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: _buildLeaderboardRow(
-                                rank: rank,
-                                playerName: player['name'] ?? 'Unknown',
-                                rating: player['rating'],
-                                isCurrentPlayer: isCurrent,
-                              ),
-                            );
-                          },
-                          childCount: rest.length,
+                          ],
                         ),
                       ),
-                    ),
-                  SliverToBoxAdapter(child: const SizedBox(height: 100)),
-                ],
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        FilipinoPalette.darkBg.withOpacity(0),
-                        FilipinoPalette.darkBg.withOpacity(0.98),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
-                  child: _buildCurrentPlayerBar(
-                    rank: playerRank,
-                    playerName: playerName ?? 'You',
-                    rating: playerRating,
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          if (top3.length > 1)
+                            _TopPlayerCard(
+                              rank: 2,
+                              playerName: top3[1]['name'] ?? 'Unknown',
+                              subtitle: getTopPlayerSubtitle(2),
+                              rating: top3[1]['rating'],
+                              color: getTopPlayerColor(2),
+                              size: 80,
+                            ),
+                          if (top3.isNotEmpty)
+                            _TopPlayerCard(
+                              rank: 1,
+                              playerName: top3[0]['name'] ?? 'Unknown',
+                              subtitle: getTopPlayerSubtitle(1),
+                              rating: top3[0]['rating'],
+                              color: getTopPlayerColor(1),
+                              size: 100,
+                              isTopOne: true,
+                            ),
+                          if (top3.length > 2)
+                            _TopPlayerCard(
+                              rank: 3,
+                              playerName: top3[2]['name'] ?? 'Unknown',
+                              subtitle: getTopPlayerSubtitle(3),
+                              rating: top3[2]['rating'],
+                              color: getTopPlayerColor(3),
+                              size: 75,
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'ALL RANKINGS',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.5,
+                            color: FilipinoPalette.warmGold.withOpacity(0.8),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+
+                // --- Scrollable Rankings List ---
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: rest.length,
+                    itemBuilder: (context, index) {
+                      final player = rest[index];
+                      final rank = index + 4;
+                      final isCurrent = player['id'] == currentUser!.uid;
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: _buildLeaderboardRow(
+                          rank: rank,
+                          playerName: player['name'] ?? 'Unknown',
+                          rating: player['rating'],
+                          isCurrentPlayer: isCurrent,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 90),
+              ],
+            ),
+
+            // --- Fixed Current Player Bar ---
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      FilipinoPalette.darkBg.withOpacity(0),
+                      FilipinoPalette.darkBg.withOpacity(0.98),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+                child: _buildCurrentPlayerBar(
+                  rank: playerRank,
+                  playerName: playerName ?? 'You',
+                  rating: playerRating,
+                ),
               ),
-            ],
-          );
-        },
-      ),
-    );
-  }
+            ),
+          ],
+        );
+      },
+    ),
+  );
+}
+
 
   Widget _buildLeaderboardRow({
     required int rank,

@@ -23,7 +23,7 @@ class AnimatedTitle extends PositionComponent with HasGameRef {
   textDirection: TextDirection.ltr,
   style: const TextStyle(
     color: Color(0xFFFFD700),
-    fontSize: 45,
+    fontSize: 32,
     fontWeight: FontWeight.w800,
     fontFamily: 'Poppins',
     shadows: [

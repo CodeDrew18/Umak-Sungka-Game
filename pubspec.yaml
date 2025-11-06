@@ -69,8 +69,9 @@ flutter:
     - assets/audio/sunngka_music.mp3
     - assets/audio/win.mp3
     - assets/empty_board.png
-    - assets/images/assets/traditional_bg.png
-    - assets/images/assets/farm_landscape.png
+    - assets/sungka_bg.png
+    - assets/images/assets/auth_bg.png
+    - assets/images/assets/home_bg.png
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
