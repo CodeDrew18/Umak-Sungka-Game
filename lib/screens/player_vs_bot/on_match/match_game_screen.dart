@@ -40,41 +40,6 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
     setState(() {});
   }
 
-  // void _handlePitTap(int pit) {
-  //   if (gameEnded) return;
-  //   if (isPlayerTurn && (pit < 0 || pit > 6 || board[pit] == 0)) return;
-  //   if (!isPlayerTurn && (pit < 8 || pit > 14 || board[pit] == 0)) return;
-
-  //   setState(() {
-  //     animatingPit = pit;
-  //     lastMove = pit;
-  //   });
-
-  //   Future.delayed(const Duration(milliseconds: 240), () {
-  //     final newBoard = GameLogic.makeMove(board, pit, isPlayerTurn);
-  //     setState(() {
-  //       board = newBoard;
-  //       animatingPit = null;
-  //     });
-
-  //     final result = GameLogic.checkEndGame(newBoard);
-  //     if (result['isEnded'] as bool) {
-  //       setState(() {
-  //         board = List<int>.from(result['finalBoard'] as List<int>);
-  //         gameEnded = true;
-  //         winner = GameLogic.getWinner(board);
-  //       });
-  //     } else {
-  //       setState(() {
-  //         isPlayerTurn = !isPlayerTurn;
-  //       });
-  //       if (!isPlayerTurn) _scheduleBotMove();
-  //     }
-  //   });
-  // }
-
-
-
 void _handlePitTap(int pit) async {
   if (gameEnded) return;
   if (isPlayerTurn && (pit < 0 || pit > 6 || board[pit] == 0)) return;
@@ -85,18 +50,15 @@ void _handlePitTap(int pit) async {
     lastMove = pit;
   });
 
-  // Copy of board for animation
   List<int> newBoard = List.from(board);
   int stones = newBoard[pit];
   newBoard[pit] = 0;
   int index = pit;
 
-  // Animate distribution
   for (int i = 0; i < stones; i++) {
     await Future.delayed(const Duration(milliseconds: 180));
     index = (index + 1) % newBoard.length;
 
-    // Skip opponent’s store
     if (isPlayerTurn && index == 15) {
       index = (index + 1) % newBoard.length;
     } else if (!isPlayerTurn && index == 7) {
@@ -105,7 +67,6 @@ void _handlePitTap(int pit) async {
 
     newBoard[index] += 1;
 
-    // Update the UI per drop
     setState(() {
       board = List.from(newBoard);
       animatingPit = index;
@@ -114,7 +75,6 @@ void _handlePitTap(int pit) async {
 
   await Future.delayed(const Duration(milliseconds: 300));
 
-  // After animation: finalize the move using your game logic
   final resultBoard = GameLogic.makeMove(board, pit, isPlayerTurn);
 
   setState(() {

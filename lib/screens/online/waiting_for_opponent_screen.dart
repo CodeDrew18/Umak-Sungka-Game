@@ -1,79 +1,8 @@
-// import 'package:flutter/material.dart';
-// import 'package:sungka/core/services/firebase_firestore_service.dart';
-// import 'package:sungka/screens/online/game_match/player_vs_opponent.dart';
-
-// class WaitingForOpponentScreen extends StatefulWidget {
-//   const WaitingForOpponentScreen({super.key, required this.matchId});
-
-//   final String matchId;
-
-//   @override
-//   State<WaitingForOpponentScreen> createState() =>
-//       _WaitingForOpponentScreenState();
-// }
-
-// class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen> {
-//   final firestoreService = FirebaseFirestoreService();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: StreamBuilder(
-//         stream: firestoreService.getMatch(matchId: widget.matchId),
-//         builder: (context, snapshot) {
-//           if (snapshot.connectionState == ConnectionState.waiting) {
-//             return const Center(child: CircularProgressIndicator());
-//           }
-
-//           if (!snapshot.hasData || !snapshot.data!.exists) {
-//             return Center(
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   Text("Match no longer available."),
-//                 ],
-//               ),
-//             );
-//           }
-
-//           final data = snapshot.data!.data() as Map<String, dynamic>?;
-
-//           if (data!['status'] == 'playing') {
-//             Future.microtask(() {
-//               Navigator.pushReplacement(
-//                 context,
-//                 MaterialPageRoute(
-//                   builder: (_) => PlayerVsOpponent(matchId: widget.matchId),
-//                 ),
-//               );
-//             });
-//           }
-
-//           return Center(
-//             child: Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 const Text("Waiting for an opponent..."),
-//                 ElevatedButton(
-//                   onPressed: () async {
-//                     await firestoreService.cancelMatch(matchId: widget.matchId);
-//                     Navigator.pop(context);
-//                   },
-//                   child: const Text("Cancel"),
-//                 ),
-//               ],
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-
-
 import 'dart:math';
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
+import 'package:sungka/screens/home_screen.dart'; 
 import 'package:sungka/screens/online/game_match/player_vs_opponent.dart';
 
 class WaitingForOpponentScreen extends StatefulWidget {
@@ -112,6 +41,19 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
     _pulseController.dispose();
     super.dispose();
   }
+  void _navigateToScreen(Widget screen) {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => screen));
+  }
+
+  void _showError(String message) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 4),
+        ),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,10 +73,15 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
 
           if (data!['status'] == 'playing') {
             Future.microtask(() {
+
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => PlayerVsOpponent(matchId: widget.matchId),
+                  builder: (_) => PlayerVsOpponent(
+                    matchId: widget.matchId,
+                    navigateToScreen: _navigateToScreen, 
+                    showError: _showError, 
+                  ),
                 ),
               );
             });
@@ -232,8 +179,17 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
                   elevation: 10,
                 ),
                 onPressed: () async {
+
                   await firestoreService.cancelMatch(matchId: widget.matchId);
-                  Navigator.pop(context);
+
+                  _navigateToScreen(
+                    GameWidget(
+                      game: HomeGame(
+                        navigateToScreen: _navigateToScreen, 
+                        showError: _showError, 
+                      ),
+                    ),
+                  );
                 },
                 child: const Text(
                   "Cancel Matchmaking",
@@ -291,7 +247,7 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.warning_amber_rounded,
+            const Icon(Icons.warning_amber_rounded,
                 color: Colors.amberAccent, size: 80),
             const SizedBox(height: 20),
             Text(

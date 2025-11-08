@@ -5,7 +5,6 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sungka/screens/adventure_mode/adventure_screen.dart';
 import 'package:sungka/screens/player_vs_bot/game_match/player_vs_bot.dart';
 import 'package:sungka/screens/player_vs_bot/on_match/match_game_screen.dart';
 import 'package:sungka/screens/start_game_screen.dart';
@@ -61,19 +60,19 @@ class FallingEmojiManager extends Component with HasGameRef<SelectionModeGame> {
 class FallingEmoji extends TextComponent with HasGameRef<SelectionModeGame> {
   final double speed;
   FallingEmoji(String emoji, Vector2 position, double fontSize, this.speed)
-    : super(
-        text: emoji,
-        position: position,
-        textRenderer: TextPaint(
-          style: TextStyle(
-            fontSize: fontSize,
-            color: Colors.white.withOpacity(0.3),
-            shadows: [
-              Shadow(blurRadius: 6, color: Colors.white.withOpacity(0.15)),
-            ],
+      : super(
+          text: emoji,
+          position: position,
+          textRenderer: TextPaint(
+            style: TextStyle(
+              fontSize: fontSize,
+              color: Colors.white.withOpacity(0.3),
+              shadows: [
+                Shadow(blurRadius: 6, color: Colors.white.withOpacity(0.15)),
+              ],
+            ),
           ),
-        ),
-      );
+        );
 
   @override
   void update(double dt) {
@@ -83,7 +82,14 @@ class FallingEmoji extends TextComponent with HasGameRef<SelectionModeGame> {
 }
 
 class SelectionMode extends StatefulWidget {
-  const SelectionMode({super.key});
+  final Function(Widget screen) navigateToScreen;
+  final Function(String message) showError;
+
+  const SelectionMode({
+    super.key,
+    required this.navigateToScreen,
+    required this.showError,
+  });
 
   @override
   State<SelectionMode> createState() => _SelectionModeState();
@@ -141,15 +147,21 @@ class _SelectionModeState extends State<SelectionMode> {
       onWillPop: () async {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const StartGameScreen()),
+          MaterialPageRoute(
+            builder: (_) => GameWidget(
+              game: StartMenuGame(
+                navigateToScreen: widget.navigateToScreen,
+                showError: widget.showError,
+              ),
+            ),
+          ),
         );
         return false;
       },
       child: GameWidget(
         game: game,
         overlayBuilderMap: {
-          'UI':
-              (context, game) => Stack(
+          'UI': (context, game) => Stack(
                 children: [
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 600),
@@ -210,34 +222,31 @@ class _SelectionModeState extends State<SelectionMode> {
                                         milliseconds: 300,
                                       ),
                                       opacity: isActive ? 1 : 0.6,
-                                     child: _ModeCard(
-                                          label: mode['label'],
-                                          color: mode['color'],
-                                          onPressed: () {
-                                            Difficulty difficulty;
+                                      child: _ModeCard(
+                                        label: mode['label'],
+                                        color: mode['color'],
+                                        onPressed: () {
+                                          Difficulty difficulty;
 
-                                            switch (mode['label']) {
-                                              case 'Easy':
-                                                difficulty = Difficulty.easy;
-                                                break;
-                                              case 'Medium':
-                                                difficulty = Difficulty.medium;
-                                                break;
-                                              default:
-                                                difficulty = Difficulty.hard; // “Impossible” maps to hard
-                                            }
+                                          switch (mode['label']) {
+                                            case 'Easy':
+                                              difficulty = Difficulty.easy;
+                                              break;
+                                            case 'Medium':
+                                              difficulty = Difficulty.medium;
+                                              break;
+                                            default:
+                                              difficulty = Difficulty.hard;
+                                          }
 
-                                            
-
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (_) => PlayerVsBot(difficulty: difficulty),
-                                              ),
-                                            );
-                                          },
-                                        ),
-
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => PlayerVsBot(difficulty: difficulty),
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   );
                                 },
@@ -255,10 +264,9 @@ class _SelectionModeState extends State<SelectionMode> {
                               width: _currentPage == index ? 24 : 8,
                               height: 8,
                               decoration: BoxDecoration(
-                                color:
-                                    _currentPage == index
-                                        ? Colors.white
-                                        : Colors.white.withOpacity(0.4),
+                                color: _currentPage == index
+                                    ? Colors.white
+                                    : Colors.white.withOpacity(0.4),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),

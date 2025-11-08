@@ -139,7 +139,6 @@ Widget build(BuildContext context) {
           children: [
             Column(
               children: [
-                // --- Fixed Header Section ---
                 Padding(
                   padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                   child: Column(
@@ -217,7 +216,6 @@ Widget build(BuildContext context) {
                   ),
                 ),
 
-                // --- Scrollable Rankings List ---
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -243,7 +241,6 @@ Widget build(BuildContext context) {
               ],
             ),
 
-            // --- Fixed Current Player Bar ---
             Positioned(
               left: 0,
               right: 0,

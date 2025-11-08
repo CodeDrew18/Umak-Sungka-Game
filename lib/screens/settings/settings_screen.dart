@@ -1,4 +1,4 @@
-import 'dart:ui';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -7,16 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:sungka/core/constants/app_colors.dart';
+import 'package:sungka/screens/auth/auth_screen.dart';
 import 'package:sungka/screens/components/game_back_button.dart';
 import 'package:sungka/screens/components/logout_button.dart';
-import 'package:sungka/screens/components/particle_background.dart';
-import 'package:sungka/screens/components/water_effect.dart';
-import 'package:sungka/screens/start_game_screen.dart';
+import 'package:sungka/screens/home_screen.dart';
 
 class SettingsGame extends FlameGame with TapDetector, PanDetector {
-  final BuildContext context;
+  final Function(Widget screen) navigateToScreen;
+  final Function(String message) showError;
 
-  SettingsGame(this.context);
+  SettingsGame({required this.navigateToScreen, required this.showError});
 
   double soundLevel = 0.8;
   double musicLevel = 0.6;
@@ -24,7 +24,14 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
   final AudioPlayer _musicPlayer = AudioPlayer();
 
   late final GameBackButton backButton = GameBackButton(
-    onPressed: () => Navigator.pop(context),
+    onPressed: () => navigateToScreen(
+      GameWidget(
+        game: HomeGame(
+          navigateToScreen: navigateToScreen,
+          showError: showError,
+        ),
+      ),
+    ),
     primaryColor: AppColors.titleColor,
     accentColor: AppColors.primary,
   );
@@ -32,9 +39,12 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
   late final LogoutButton logoutButton = LogoutButton(
     onPressed: () async {
       await FirebaseAuth.instance.signOut();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => StartGameScreen()),
+      
+      navigateToScreen(
+        AuthScreen(
+          navigateToScreen: navigateToScreen,
+          showError: showError,
+        ),
       );
     },
     backgroundColor: Colors.redAccent,
@@ -120,10 +130,6 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-
-    add(WaterEffect());
-    add(ParticleBackground());
-
     add(titleText);
     add(backButton);
     add(logoutButton);
@@ -134,17 +140,16 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
     add(soundKnob);
     add(musicKnob);
 
-    await _musicPlayer.setSource(AssetSource('audio/sunngka_music.mp3'));
-    _musicPlayer.setReleaseMode(ReleaseMode.loop);
-    _musicPlayer.setVolume(musicLevel);
-    _musicPlayer.resume();
+    try {
+      await _musicPlayer.setSource(AssetSource('audio/sunngka_music.mp3'));
+      _musicPlayer.setReleaseMode(ReleaseMode.loop);
+      _musicPlayer.setVolume(musicLevel);
+      _musicPlayer.resume();
+    } catch (e) {
+      debugPrint('Error loading music: $e');
+    }
   }
 
-  @override
-  void onMount() {
-    super.onMount();
-    _layout(size);
-  }
 
   @override
   void onGameResize(Vector2 newSize) {
@@ -154,7 +159,8 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
 
   void _layout(Vector2 screenSize) {
     titleText.position = Vector2(screenSize.x / 2, screenSize.y * 0.1);
-    backButton.position = Vector2(20, 20);
+    
+    backButton.position = Vector2(backButton.size.x / 2 + 20, backButton.size.y / 2 + 20);
 
     soundLabel.position = Vector2(screenSize.x / 2, screenSize.y * 0.35);
     soundBar.position = Vector2(screenSize.x / 2, screenSize.y * 0.42);
@@ -195,6 +201,7 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
         soundBar.position.x - soundBar.size.x / 2 + soundBar.size.x * soundLevel,
         soundBar.position.y,
       );
+      
     }
 
     if (_isInBar(pos, musicBar)) {
@@ -210,9 +217,12 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
   }
 
   bool _isInBar(Vector2 pos, RectangleComponent bar) {
-    return pos.x >= bar.position.x - bar.size.x / 2 &&
-        pos.x <= bar.position.x + bar.size.x / 2 &&
-        (pos.y - bar.position.y).abs() <= 20;
-  }
+    
+    bool withinX = pos.x >= bar.position.x - bar.size.x / 2 &&
+        pos.x <= bar.position.x + bar.size.x / 2;
+    
+    bool withinY = (pos.y - bar.position.y).abs() <= 20;
 
+    return withinX && withinY;
+  }
 }

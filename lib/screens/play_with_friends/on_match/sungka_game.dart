@@ -70,6 +70,16 @@ class SungkaGame extends FlameGame with TapDetector {
   }
 
   @override
+void onRemove() {
+
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  super.onRemove();
+}
+
+  @override
   void render(Canvas canvas) {
     final screenWidth = size.x;
     final screenHeight = size.y;
