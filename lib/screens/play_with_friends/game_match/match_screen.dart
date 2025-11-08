@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/screens/play_with_friends/game_match/player_card.dart';
-import 'package:sungka/screens/play_with_friends/on_match/on_match_screen.dart';
+import 'package:sungka/screens/play_with_friends/on_match/sungka_game.dart';
 
 class MatchScreen extends StatefulWidget {
   final String player1Name;
@@ -36,6 +35,20 @@ class _MatchScreenState extends State<MatchScreen>
   late Animation<Offset> _player2Slide;
   late Animation<double> _vsScale;
   late Animation<double> _fadeOut;
+
+
+void navigateToScreen(Widget screen) {
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => screen),
+    );
+  }
+
+  void showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 
   @override
   void initState() {
@@ -95,7 +108,10 @@ class _MatchScreenState extends State<MatchScreen>
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
             transitionDuration: const Duration(milliseconds: 800),
-            pageBuilder: (_, __, ___) => const OnMatchScreen(),
+            pageBuilder: (_, __, ___) =>  SungkaGame(
+              navigateToScreen: navigateToScreen,
+              showError: showError,
+            ),
             transitionsBuilder:
                 (_, animation, __, child) =>
                     FadeTransition(opacity: animation, child: child),

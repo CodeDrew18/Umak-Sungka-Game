@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
@@ -8,7 +9,7 @@ import 'package:sungka/screens/home_screen.dart';
 class StartMenuGame extends FlameGame with TapCallbacks {
 final Function(Widget screen) navigateToScreen;
 final Function(String message) showError;
-
+    final AudioPlayer _musicPlayer = AudioPlayer();
 StartMenuGame({
 required this.navigateToScreen,
 required this.showError,
@@ -18,6 +19,10 @@ late PlayButton playButtonComponent;
 
 @override
 Future<void> onLoad() async {
+
+await _musicPlayer.setSource(AssetSource('audio/sunngka_music.mp3'));
+_musicPlayer.setReleaseMode(ReleaseMode.loop);
+_musicPlayer.resume();
 await super.onLoad();
 
 final backgroundSprite = await loadSprite('assets/bg.png');

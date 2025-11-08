@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/online/game_match/player_vs_opponent_card.dart';
@@ -31,7 +32,10 @@ class _PlayerVsBotState extends State<PlayerVsBot>
   @override
   void initState() {
     super.initState();
-
+      SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeRight,
+    DeviceOrientation.landscapeLeft,
+  ]);
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 4),

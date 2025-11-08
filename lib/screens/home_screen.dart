@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -30,7 +31,6 @@ LeaderboardButton? leaderboardButton;
 final Function(String message) showError;
 
 final firestoreService = FirebaseFirestoreService();
-
 HomeGame({required this.navigateToScreen, required this.showError,});
 
 @override
@@ -39,7 +39,6 @@ Color backgroundColor() => const Color(0xFF1E1E1E);
 @override
 Future<void> onLoad() async {
 await super.onLoad();
-
 backgroundImage = SpriteComponent()
 ..sprite = await loadSprite('assets/bg.png')
 ..size = size

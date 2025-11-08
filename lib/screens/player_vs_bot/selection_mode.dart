@@ -5,6 +5,7 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sungka/screens/home_screen.dart';
 import 'package:sungka/screens/player_vs_bot/game_match/player_vs_bot.dart';
 import 'package:sungka/screens/player_vs_bot/on_match/match_game_screen.dart';
 import 'package:sungka/screens/start_game_screen.dart';
@@ -282,9 +283,16 @@ class _SelectionModeState extends State<SelectionMode> {
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
+                         onTap: () {
+              widget.navigateToScreen(
+               GameWidget(
+                game: HomeGame(
+                 navigateToScreen: widget.navigateToScreen,
+                 showError: widget.showError,
+                ),
+               ),
+              );
+             },
                           child: Container(
                             width: 60,
                             height: 60,

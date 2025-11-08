@@ -1,3 +1,4 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:sungka/core/constants/app_colors.dart';
@@ -66,7 +67,7 @@ class _AvatarSelectionScreenState extends State<AvatarSelectionScreen>
         backgroundColor: const Color(0xFF1E1E1E),
         elevation: 0,
         title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 60),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
               Expanded(
@@ -96,122 +97,166 @@ class _AvatarSelectionScreenState extends State<AvatarSelectionScreen>
           ),
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              const Gap(10),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 600),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  final slideAnimation = Tween<Offset>(
-                    begin: const Offset(0.0, 0.5),
-                    end: Offset.zero,
-                  ).animate(
-                    CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
-                  );
-
-                  final fadeAnimation = CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeIn,
-                  );
-
-                  return SlideTransition(
-                    position: slideAnimation,
-                    child: FadeTransition(opacity: fadeAnimation, child: child),
-                  );
-                },
-                child: Text(
-                  'Player $currentPlayer',
-                  key: ValueKey<int>(currentPlayer),
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black54,
-                        blurRadius: 10,
-                        offset: Offset(2, 2),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const Gap(6),
-              const Text(
-                'Choose your avatar',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Color(0xFFFFA500),
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const Gap(12),
-              Expanded(
-                child: GridView.builder(
-                  itemCount: avatars.length,
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    childAspectRatio: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    final isDisabled =
-                        currentPlayer == 2 && player1Selection == index;
-
-                    return Opacity(
-                      opacity: isDisabled ? 0.4 : 1.0,
-                      child: IgnorePointer(
-                        ignoring: isDisabled,
-                        child: AvatarCard(
-                          avatar: avatars[index],
-                          isSelected: selectedIndex == index,
-                          onTap: () {
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
+      body: Stack(
+        children: [
+          SafeArea(
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 16),
+                        child: GestureDetector(
+                         onTap: () {
+              //         widget.navigateToScreen(
+              //         GameWidget(
+              //         game: HomeGame(
+              //       navigateToScreen: widget.navigateToScreen,
+              //    showError: widget.showError,
+              //   ),
+              //  ),
+              // );
+             },
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                          ),
                         ),
                       ),
+                    ),
+                  ),
+            SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                const Gap(10),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 600),
+                  transitionBuilder: (Widget child, Animation<double> animation) {
+                    final slideAnimation = Tween<Offset>(
+                      begin: const Offset(0.0, 0.5),
+                      end: Offset.zero,
+                    ).animate(
+                      CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
+                    );
+        
+                    final fadeAnimation = CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeIn,
+                    );
+        
+                    return SlideTransition(
+                      position: slideAnimation,
+                      child: FadeTransition(opacity: fadeAnimation, child: child),
                     );
                   },
-                ),
-              ),
-              const Gap(16),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: ElevatedButton(
-                  onPressed: _onContinue,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFFA500),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 80,
-                      vertical: 16,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    shadowColor: const Color(0xFFFFA500).withOpacity(0.6),
-                    elevation: 10,
-                  ),
                   child: Text(
-                    currentPlayer == 1 ? 'CONTINUE' : 'START GAME',
+                    'Player $currentPlayer',
+                    key: ValueKey<int>(currentPlayer),
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.white,
-                      letterSpacing: 1.2,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black54,
+                          blurRadius: 10,
+                          offset: Offset(2, 2),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ),
-            ],
+                const Gap(6),
+                const Text(
+                  'Choose your avatar',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFFFFA500),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const Gap(12),
+                Expanded(
+                  child: GridView.builder(
+                    itemCount: avatars.length,
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: 1,
+                    ),
+                    itemBuilder: (context, index) {
+                      final isDisabled =
+                          currentPlayer == 2 && player1Selection == index;
+        
+                      return Opacity(
+                        opacity: isDisabled ? 0.4 : 1.0,
+                        child: IgnorePointer(
+                          ignoring: isDisabled,
+                          child: AvatarCard(
+                            avatar: avatars[index],
+                            isSelected: selectedIndex == index,
+                            onTap: () {
+                              setState(() {
+                                selectedIndex = index;
+                              });
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const Gap(16),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: ElevatedButton(
+                    onPressed: _onContinue,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFFA500),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 80,
+                        vertical: 16,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      shadowColor: const Color(0xFFFFA500).withOpacity(0.6),
+                      elevation: 10,
+                    ),
+                    child: Text(
+                      currentPlayer == 1 ? 'CONTINUE' : 'START GAME',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.white,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
+        ],
       ),
     );
   }
