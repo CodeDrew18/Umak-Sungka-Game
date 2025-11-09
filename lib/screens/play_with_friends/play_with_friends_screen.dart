@@ -2,12 +2,23 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:sungka/core/constants/app_colors.dart';
+import 'package:sungka/screens/components/pebble_bounce.dart';
+import 'package:sungka/screens/home_screen.dart';
 import 'package:sungka/screens/play_with_friends/game_match/match_screen.dart';
 import 'package:sungka/screens/play_with_friends/provider/avatar_card.dart';
 import 'package:sungka/screens/play_with_friends/provider/avatar_model.dart';
 
 class AvatarSelectionScreen extends StatefulWidget {
-  const AvatarSelectionScreen({Key? key}) : super(key: key);
+    final Function(Widget screen) navigateToScreen;
+  final Function(String message) showError;
+
+  const AvatarSelectionScreen({
+    Key? key,
+    required this.navigateToScreen,
+    required this.showError,
+  }) : super(key: key);
+
+  
 
   @override
   State<AvatarSelectionScreen> createState() => _AvatarSelectionScreenState();
@@ -99,22 +110,31 @@ class _AvatarSelectionScreenState extends State<AvatarSelectionScreen>
       ),
       body: Stack(
         children: [
-          SafeArea(
+        SafeArea(
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 16),
+                        padding: const EdgeInsets.all(16),
                         child: GestureDetector(
-                         onTap: () {
-              //         widget.navigateToScreen(
-              //         GameWidget(
-              //         game: HomeGame(
-              //       navigateToScreen: widget.navigateToScreen,
-              //    showError: widget.showError,
-              //   ),
-              //  ),
-              // );
-             },
+                          onTap: () async {
+                            final overlay = OverlayEntry(
+                                builder: (_) => const PebbleBounce());
+                            Overlay.of(context).insert(overlay);
+
+                            await Future.delayed(
+                                const Duration(milliseconds: 300));
+
+                            overlay.remove();
+
+                            widget.navigateToScreen(
+                              GameWidget(
+                                game: HomeGame(
+                                  navigateToScreen: widget.navigateToScreen,
+                                  showError: widget.showError,
+                                ),
+                              ),
+                            );
+                          },
                           child: Container(
                             width: 60,
                             height: 60,

@@ -1,7 +1,11 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
+import 'package:sungka/screens/components/pebble_bounce.dart';
+import 'package:sungka/screens/home_screen.dart';
 
 class Player {
   final int id;
@@ -30,7 +34,10 @@ class FilipinoPalette {
 }
 
 class LeaderboardScreen extends StatefulWidget {
-  const LeaderboardScreen({super.key});
+    final Function(Widget screen) navigateToScreen;
+  final Function(String message) showError;
+  
+  LeaderboardScreen({required this.navigateToScreen, required this.showError});
 
   @override
   State<LeaderboardScreen> createState() => _LeaderboardScreenState();
@@ -99,9 +106,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: FilipinoPalette.darkBg,
-    appBar: AppBar(
-      backgroundColor: FilipinoPalette.darkBg,
-    ),
     body: FutureBuilder(
       future: firestoreService.getRankings(currentUser!.uid),
       builder: (context, snapshot) {
@@ -144,6 +148,7 @@ Widget build(BuildContext context) {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Gap(60),
                       Text(
                         "LEADERBOARDS",
                         style: GoogleFonts.poppins(
@@ -264,6 +269,54 @@ Widget build(BuildContext context) {
                 ),
               ),
             ),
+
+              Positioned(
+  top: 16, // distance from the very top of the screen
+  left: 16, // distance from the left edge
+  child: SafeArea(
+    top: true,
+    bottom: false,
+    child: GestureDetector(
+      onTap: () async {
+        final overlay = OverlayEntry(builder: (_) => const PebbleBounce());
+        Overlay.of(context).insert(overlay);
+
+        await Future.delayed(const Duration(milliseconds: 300));
+        overlay.remove();
+
+        widget.navigateToScreen(
+          GameWidget(
+            game: HomeGame(
+              navigateToScreen: widget.navigateToScreen,
+              showError: widget.showError,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          color: Colors.red,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: const Icon(
+          Icons.arrow_back,
+          color: Colors.white,
+          size: 28,
+        ),
+      ),
+    ),
+  ),
+),
+
           ],
         );
       },

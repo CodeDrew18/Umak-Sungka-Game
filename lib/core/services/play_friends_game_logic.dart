@@ -1,7 +1,4 @@
 class PlayFriendsGameLogic {
-  
-  // Player 1: Pits 0-6, Store 7
-  // Player 2: Pits 8-14, Store 15
 
   static Map<String, dynamic> makeMove(List<int> currentBoard, int pit, bool isPlayerOneTurn) {
     final board = List<int>.from(currentBoard);
@@ -11,29 +8,23 @@ class PlayFriendsGameLogic {
     bool hasExtraTurn = false;
     bool isCapture = false;
 
-    // Determine the current player's store index
     final currentPlayerStore = isPlayerOneTurn ? 7 : 15;
-    // Determine the opponent's store index
+
     final opponentStore = isPlayerOneTurn ? 15 : 7;
-    
-    // --- Sowing Phase ---
+
     while (stones > 0) {
       index = (index + 1) % board.length;
-      
-      // Skip opponent's store
+
       if (index == opponentStore) continue;
       
       board[index]++;
       stones--;
     }
 
-    // --- Extra Turn Rule (Lands in Own Store) ---
     if (index == currentPlayerStore) {
       hasExtraTurn = true;
     }
 
-    // --- Capturing Rule (Lands in Empty Own Pit) ---
-    // Check if the last stone landed in an empty pit on the current player's side
     final isPlayerOnePit = index >= 0 && index <= 6;
     final isPlayerTwoPit = index >= 8 && index <= 14;
 
@@ -43,8 +34,8 @@ class PlayFriendsGameLogic {
         final oppositePit = 14 - index;
         final capturedStones = board[oppositePit];
         
-        if (capturedStones > 0) { // Only capture if opposite pit has stones
-          board[currentPlayerStore] += capturedStones + 1; // Add captured stones + the single stone that landed
+        if (capturedStones > 0) {
+          board[currentPlayerStore] += capturedStones + 1;
           board[index] = 0;
           board[oppositePit] = 0;
           isCapture = true;
@@ -54,8 +45,8 @@ class PlayFriendsGameLogic {
         final oppositePit = 14 - index;
         final capturedStones = board[oppositePit];
         
-        if (capturedStones > 0) { // Only capture if opposite pit has stones
-          board[currentPlayerStore] += capturedStones + 1; // Add captured stones + the single stone that landed
+        if (capturedStones > 0) {
+          board[currentPlayerStore] += capturedStones + 1;
           board[index] = 0;
           board[oppositePit] = 0;
           isCapture = true;
@@ -66,7 +57,7 @@ class PlayFriendsGameLogic {
     return {
       'board': board,
       'hasExtraTurn': hasExtraTurn,
-      'isCapture': isCapture, // Optional: useful for specific animation/UI feedback
+      'isCapture': isCapture,
     };
   }
 

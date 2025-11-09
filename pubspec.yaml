@@ -42,6 +42,7 @@ dependencies:
   gap: ^3.0.1
   google_fonts: ^6.3.2
   google_sign_in: ^7.2.0
+  quickalert: ^1.1.0
 
 dev_dependencies:
   flutter_lints: ^5.0.0
@@ -78,6 +79,17 @@ flutter:
     - assets/images/assets/p2f.png
     - assets/images/assets/adventure.png
     - assets/images/assets/bg.png
+    - assets/images/assets/mode_selection.png
+    - assets/images/assets/settings.png
+    - assets/images/assets/leaderboard.png
+    - assets/images/assets/lvl1.png
+    - assets/images/assets/lvl2.png
+    - assets/images/assets/lvl3.png
+    - assets/images/assets/lvl4.png
+    - assets/images/assets/lvl5.png
+    - assets/images/assets/lvl6.png
+    - assets/images/assets/adventure_mode.png
+
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

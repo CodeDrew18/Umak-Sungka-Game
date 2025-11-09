@@ -550,8 +550,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sungka/core/services/bot_service.dart';
 import 'package:sungka/core/services/game_logic_service.dart';
+import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
 
-enum Difficulty { easy, medium, hard }
 
 class SungkaBoardScreen extends StatefulWidget {
   final Difficulty difficulty;
