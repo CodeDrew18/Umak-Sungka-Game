@@ -74,7 +74,6 @@ class _GameButtonState extends State<GameButton>
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = widget.backgroundColor == AppColors.white;
     final primaryColor = widget.backgroundColor ?? AppColors.gamebuttonPrimary;
     final textColor = widget.textColor ?? AppColors.white;
 
@@ -117,15 +116,13 @@ class _GameButtonState extends State<GameButton>
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: _isHovered
-                          ? [
-                              primaryColor.withOpacity(1.0),
-                              primaryColor.withOpacity(0.85),
-                            ]
-                          : [
-                              primaryColor,
-                              primaryColor.withOpacity(0.9),
-                            ],
+                      colors:
+                          _isHovered
+                              ? [
+                                primaryColor.withOpacity(1.0),
+                                primaryColor.withOpacity(0.85),
+                              ]
+                              : [primaryColor, primaryColor.withOpacity(0.9)],
                     ),
                     border: Border.all(
                       color: AppColors.white.withOpacity(0.2),

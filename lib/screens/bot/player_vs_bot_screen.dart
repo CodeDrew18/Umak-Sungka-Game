@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sungka/screens/bot/player_vs_bot_game_screen.dart';
+import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
 
 class PlayerVsBotScreen extends StatefulWidget {
   const PlayerVsBotScreen({super.key});
@@ -19,7 +20,8 @@ class _PlayerVsBotScreenState extends State<PlayerVsBotScreen> {
             onPressed:
                 () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => PlayerVsBotGameScreen(gameMode: "easy"),
+                    builder:
+                        (_) => PlayerVsBotGameScreen(gameMode: Difficulty.easy),
                   ),
                 ),
             child: Text("Easy"),
@@ -28,7 +30,9 @@ class _PlayerVsBotScreenState extends State<PlayerVsBotScreen> {
             onPressed:
                 () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => PlayerVsBotGameScreen(gameMode: "medium"),
+                    builder:
+                        (_) =>
+                            PlayerVsBotGameScreen(gameMode: Difficulty.medium),
                   ),
                 ),
             child: Text("Medium"),
@@ -37,7 +41,8 @@ class _PlayerVsBotScreenState extends State<PlayerVsBotScreen> {
             onPressed:
                 () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => PlayerVsBotGameScreen(gameMode: "hard"),
+                    builder:
+                        (_) => PlayerVsBotGameScreen(gameMode: Difficulty.hard),
                   ),
                 ),
             child: Text("Hard"),

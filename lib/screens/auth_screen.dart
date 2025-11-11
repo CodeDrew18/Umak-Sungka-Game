@@ -3,7 +3,6 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/core/services/firebase_auth_service.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
-import 'package:sungka/screens/home_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   AuthScreen({super.key});
@@ -128,11 +127,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
       if (user != null) {
         await firestoreService.saveUser(user.uid, null);
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
+        // Navigation handled by StreamBuilder in main.dart
       }
     } catch (e) {
       print(e);
@@ -160,13 +155,7 @@ class _AuthScreenState extends State<AuthScreen> {
       if (user != null) {
         // Save user data to Firestore with their Google display name
         await firestoreService.saveUser(user.uid, user.displayName);
-
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          );
-        }
+        // Navigation handled by StreamBuilder in main.dart
       }
     } catch (e) {
       print('Error during Google Sign-In: $e');

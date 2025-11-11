@@ -4,19 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sungka/core/services/adventure_first_level_game_logic.dart';
 import 'package:sungka/core/services/bot_service.dart';
-import 'package:sungka/core/services/game_logic_service.dart';
 import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
-
 
 class AdventureFirstLevelScreen extends StatefulWidget {
   final Difficulty difficulty;
-  const AdventureFirstLevelScreen({Key? key, required this.difficulty}) : super(key: key);
+  const AdventureFirstLevelScreen({Key? key, required this.difficulty})
+    : super(key: key);
 
   @override
-  State<AdventureFirstLevelScreen> createState() => _AdventureFirstLevelScreenState();
+  State<AdventureFirstLevelScreen> createState() =>
+      _AdventureFirstLevelScreenState();
 }
 
-class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen> with TickerProviderStateMixin {
+class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
+    with TickerProviderStateMixin {
   late List<int> board;
   bool isPlayerTurn = true;
   bool gameEnded = false;
@@ -75,7 +76,7 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen> w
 
   //   for (int i = 0; i < stones; i++) {
   //     int nextIndex = (index + 1) % newBoard.length;
-      
+
   //     if (isPlayerTurn && nextIndex == 15) {
   //       nextIndex = (nextIndex + 1) % newBoard.length;
   //     } else if (!isPlayerTurn && nextIndex == 7) {
@@ -92,7 +93,7 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen> w
   //     });
 
   //     await Future.delayed(const Duration(milliseconds: 180));
-      
+
   //     index = nextIndex;
   //     newBoard[index] += 1;
 
@@ -128,81 +129,86 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen> w
   //   }
   // }
 
-void _handlePitTap(int pit) async {
-  if (gameEnded) return;
-  if (isPlayerTurn && (pit < 0 || pit > 6 || board[pit] == 0)) return;
-  if (!isPlayerTurn && (pit < 8 || pit > 14 || board[pit] == 0)) return;
+  void _handlePitTap(int pit) async {
+    if (gameEnded) return;
+    if (isPlayerTurn && (pit < 0 || pit > 6 || board[pit] == 0)) return;
+    if (!isPlayerTurn && (pit < 8 || pit > 14 || board[pit] == 0)) return;
 
-  setState(() {
-    animatingPit = pit;
-    lastMove = pit;
-  });
+    setState(() {
+      animatingPit = pit;
+      lastMove = pit;
+    });
 
-  final stones = board[pit];
-  var tempBoard = List<int>.from(board);
-  tempBoard[pit] = 0;
-  int index = pit;
+    final stones = board[pit];
+    var tempBoard = List<int>.from(board);
+    tempBoard[pit] = 0;
+    int index = pit;
 
-  for (int i = 0; i < stones; i++) {
-    int nextIndex = (index + 1) % tempBoard.length;
+    for (int i = 0; i < stones; i++) {
+      int nextIndex = (index + 1) % tempBoard.length;
 
-    if (isPlayerTurn && nextIndex == 15) {
-      nextIndex = (nextIndex + 1) % tempBoard.length;
-    } else if (!isPlayerTurn && nextIndex == 7) {
-      nextIndex = (nextIndex + 1) % tempBoard.length;
+      if (isPlayerTurn && nextIndex == 15) {
+        nextIndex = (nextIndex + 1) % tempBoard.length;
+      } else if (!isPlayerTurn && nextIndex == 7) {
+        nextIndex = (nextIndex + 1) % tempBoard.length;
+      }
+
+      setState(() {
+        animatingPebbles.add(
+          AnimatingPebbleData(
+            fromPit: index,
+            toPit: nextIndex,
+            startTime: DateTime.now(),
+            duration: const Duration(milliseconds: 600),
+          ),
+        );
+      });
+
+      await Future.delayed(const Duration(milliseconds: 180));
+
+      index = nextIndex;
+      tempBoard[index] += 1;
+
+      setState(() {
+        board = List<int>.from(tempBoard);
+        animatingPit = index;
+        animatingPebbles.removeWhere((p) => p.isComplete);
+      });
     }
 
-    setState(() {
-      animatingPebbles.add(AnimatingPebbleData(
-        fromPit: index,
-        toPit: nextIndex,
-        startTime: DateTime.now(),
-        duration: const Duration(milliseconds: 600),
-      ));
-    });
+    await Future.delayed(const Duration(milliseconds: 300));
 
-    await Future.delayed(const Duration(milliseconds: 180));
-
-    index = nextIndex;
-    tempBoard[index] += 1;
+    final result = AdventureFirstLevelGameLogic.makeMove(
+      board,
+      pit,
+      isPlayerTurn,
+    );
+    final resultBoard = result['board'] as List<int>;
+    final hasExtraTurn = result['hasExtraTurn'] as bool;
 
     setState(() {
-      board = List<int>.from(tempBoard);
-      animatingPit = index;
-      animatingPebbles.removeWhere((p) => p.isComplete);
+      board = List<int>.from(resultBoard);
+      animatingPit = null;
+      animatingPebbles = [];
     });
+
+    final endResult = AdventureFirstLevelGameLogic.checkEndGame(resultBoard);
+    if (endResult['isEnded'] as bool) {
+      setState(() {
+        board = List<int>.from(endResult['finalBoard'] as List<int>);
+        gameEnded = true;
+        winner = AdventureFirstLevelGameLogic.getWinner(board);
+      });
+      return;
+    }
+
+    if (!hasExtraTurn) {
+      setState(() {
+        isPlayerTurn = !isPlayerTurn;
+      });
+      if (!isPlayerTurn) _scheduleBotMove();
+    }
   }
-
-  await Future.delayed(const Duration(milliseconds: 300));
-
-  final result = AdventureFirstLevelGameLogic.makeMove(board, pit, isPlayerTurn);
-  final resultBoard = result['board'] as List<int>;
-  final hasExtraTurn = result['hasExtraTurn'] as bool;
-
-  setState(() {
-    board = List<int>.from(resultBoard);
-    animatingPit = null;
-    animatingPebbles = [];
-  });
-
-  final endResult = AdventureFirstLevelGameLogic.checkEndGame(resultBoard);
-  if (endResult['isEnded'] as bool) {
-    setState(() {
-      board = List<int>.from(endResult['finalBoard'] as List<int>);
-      gameEnded = true;
-      winner = AdventureFirstLevelGameLogic.getWinner(board);
-    });
-    return;
-  }
-
-  if (!hasExtraTurn) {
-    setState(() {
-      isPlayerTurn = !isPlayerTurn;
-    });
-    if (!isPlayerTurn) _scheduleBotMove();
-  }
-}
-
 
   void _scheduleBotMove() {
     _botTimer?.cancel();
@@ -217,16 +223,19 @@ void _handlePitTap(int pit) async {
     const storeWidth = 58.0;
     const sidePadding = 8.0;
     const verticalPadding = 24.0;
-    
+
     bool isTop = pitIndex > 7;
     int col = isTop ? 14 - pitIndex : pitIndex;
-    
+
     double gridWidth = boardWidth - (storeWidth * 2) - (sidePadding * 2);
     double pitSpacing = gridWidth / 7;
-    
+
     double x = storeWidth + sidePadding + (col * pitSpacing) + (pitSpacing / 2);
-    double y = isTop ? (verticalPadding + pitSize / 2) : (verticalPadding * 2 + pitSize + pitSize / 2);
-    
+    double y =
+        isTop
+            ? (verticalPadding + pitSize / 2)
+            : (verticalPadding * 2 + pitSize + pitSize / 2);
+
     return Offset(x, y);
   }
 
@@ -243,7 +252,11 @@ void _handlePitTap(int pit) async {
             padding: const EdgeInsets.all(12),
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF0A0A1A), Color(0xFF1C0435), Color(0xFF2B0018)],
+                colors: [
+                  Color(0xFF0A0A1A),
+                  Color(0xFF1C0435),
+                  Color(0xFF2B0018),
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -347,14 +360,16 @@ void _handlePitTap(int pit) async {
                                 child: Column(
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: List.generate(7, (i) {
                                         final index = 14 - i;
                                         return PitWidget(
                                           count: board[index],
                                           size: pitSize,
                                           isTop: true,
-                                          enabled: !isPlayerTurn &&
+                                          enabled:
+                                              !isPlayerTurn &&
                                               !gameEnded &&
                                               board[index] > 0,
                                           animating: animatingPit == index,
@@ -365,7 +380,9 @@ void _handlePitTap(int pit) async {
                                     ),
                                     Container(
                                       height: 1.5,
-                                      margin: const EdgeInsets.symmetric(vertical: 8),
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 8,
+                                      ),
                                       decoration: BoxDecoration(
                                         gradient: LinearGradient(
                                           colors: [
@@ -377,14 +394,16 @@ void _handlePitTap(int pit) async {
                                       ),
                                     ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: List.generate(7, (i) {
                                         final index = i;
                                         return PitWidget(
                                           count: board[index],
                                           size: pitSize,
                                           isTop: false,
-                                          enabled: isPlayerTurn &&
+                                          enabled:
+                                              isPlayerTurn &&
                                               !gameEnded &&
                                               board[index] > 0,
                                           animating: animatingPit == index,
@@ -411,7 +430,12 @@ void _handlePitTap(int pit) async {
                               child: CustomPaint(
                                 painter: AnimatedPebblesPainter(
                                   pebbles: animatingPebbles,
-                                  getPitPosition: (pit) => _getPitPosition(pit, pitSize, screenWidth - 24),
+                                  getPitPosition:
+                                      (pit) => _getPitPosition(
+                                        pit,
+                                        pitSize,
+                                        screenWidth - 24,
+                                      ),
                                 ),
                               ),
                             ),
@@ -463,10 +487,7 @@ class AnimatedPebblesPainter extends CustomPainter {
   final List<AnimatingPebbleData> pebbles;
   final Offset Function(int) getPitPosition;
 
-  AnimatedPebblesPainter({
-    required this.pebbles,
-    required this.getPitPosition,
-  });
+  AnimatedPebblesPainter({required this.pebbles, required this.getPitPosition});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -483,16 +504,19 @@ class AnimatedPebblesPainter extends CustomPainter {
       final arcHeight = 40.0;
       final verticalArc = sin(progress * pi) * arcHeight;
 
-      final paint = Paint()
-        ..shader = RadialGradient(
-          colors: const [Color(0xFFF8F8F8), Color(0xFFCCC0AA)],
-          center: Alignment.topLeft,
-          radius: 0.8,
-        ).createShader(Rect.fromCircle(
-          center: Offset(currentX, currentY - verticalArc),
-          radius: 6,
-        ))
-        ..style = PaintingStyle.fill;
+      final paint =
+          Paint()
+            ..shader = RadialGradient(
+              colors: const [Color(0xFFF8F8F8), Color(0xFFCCC0AA)],
+              center: Alignment.topLeft,
+              radius: 0.8,
+            ).createShader(
+              Rect.fromCircle(
+                center: Offset(currentX, currentY - verticalArc),
+                radius: 6,
+              ),
+            )
+            ..style = PaintingStyle.fill;
 
       canvas.drawCircle(
         Offset(currentX + 1, currentY - verticalArc + 1),
@@ -502,11 +526,7 @@ class AnimatedPebblesPainter extends CustomPainter {
           ..style = PaintingStyle.fill,
       );
 
-      canvas.drawCircle(
-        Offset(currentX, currentY - verticalArc),
-        6,
-        paint,
-      );
+      canvas.drawCircle(Offset(currentX, currentY - verticalArc), 6, paint);
     }
   }
 
@@ -537,9 +557,10 @@ class PitWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gradient = LinearGradient(
-      colors: isTop
-          ? [const Color(0xFF8B5CF6), const Color(0xFFFF4D67)]
-          : [const Color(0xFFFF4D67), const Color(0xFF8B5CF6)],
+      colors:
+          isTop
+              ? [const Color(0xFF8B5CF6), const Color(0xFFFF4D67)]
+              : [const Color(0xFFFF4D67), const Color(0xFF8B5CF6)],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     );
@@ -560,7 +581,9 @@ class PitWidget extends StatelessWidget {
                 gradient: gradient,
                 boxShadow: [
                   BoxShadow(
-                    color: (isTop ? const Color(0xFFFF4D67) : const Color(0xFF8B5CF6))
+                    color: (isTop
+                            ? const Color(0xFFFF4D67)
+                            : const Color(0xFF8B5CF6))
                         .withOpacity(0.35),
                     blurRadius: 12,
                     spreadRadius: 1,
@@ -572,23 +595,20 @@ class PitWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.black.withOpacity(0.8),
-                  boxShadow: lastMove
-                      ? [
-                          BoxShadow(
-                            color: (isTop
-                                    ? const Color(0xFF8B5CF6)
-                                    : const Color(0xFFFF4D67))
-                                .withOpacity(0.8),
-                            blurRadius: 8,
-                          ),
-                        ]
-                      : null,
+                  boxShadow:
+                      lastMove
+                          ? [
+                            BoxShadow(
+                              color: (isTop
+                                      ? const Color(0xFF8B5CF6)
+                                      : const Color(0xFFFF4D67))
+                                  .withOpacity(0.8),
+                              blurRadius: 8,
+                            ),
+                          ]
+                          : null,
                 ),
-                child: ClipOval(
-                  child: Stack(
-                    children: _buildPebbles(),
-                  ),
-                ),
+                child: ClipOval(child: Stack(children: _buildPebbles())),
               ),
             ),
           ),
@@ -609,36 +629,35 @@ class PitWidget extends StatelessWidget {
       final size = random.nextDouble() * 6 + 4;
       final rotation = random.nextDouble() * pi;
 
-      pebbles.add(Positioned(
-        left: dx,
-        top: dy,
-        child: Transform.rotate(
-          angle: rotation,
-          child: Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0.9),
-              gradient: const RadialGradient(
-                colors: [
-                  Color(0xFFF8F8F8),
-                  Color(0xFFCCC0AA),
-                ],
-                center: Alignment.topLeft,
-                radius: 0.8,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 2,
-                  offset: const Offset(0.5, 0.5),
+      pebbles.add(
+        Positioned(
+          left: dx,
+          top: dy,
+          child: Transform.rotate(
+            angle: rotation,
+            child: Container(
+              width: size,
+              height: size,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.9),
+                gradient: const RadialGradient(
+                  colors: [Color(0xFFF8F8F8), Color(0xFFCCC0AA)],
+                  center: Alignment.topLeft,
+                  radius: 0.8,
                 ),
-              ],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 2,
+                    offset: const Offset(0.5, 0.5),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ));
+      );
     }
     return pebbles;
   }
@@ -648,40 +667,57 @@ class StoreWidget extends StatelessWidget {
   final int count;
   final String label;
   final double height;
-  const StoreWidget({Key? key, required this.count, required this.label, this.height = 260})
-      : super(key: key);
+  const StoreWidget({
+    Key? key,
+    required this.count,
+    required this.label,
+    this.height = 260,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Container(
-        width: 58,
-        height: height,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(22),
-          gradient: const LinearGradient(
+    return Column(
+      children: [
+        Container(
+          width: 58,
+          height: height,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            gradient: const LinearGradient(
               colors: [Color(0xFF8B5CF6), Color(0xFFFF4D67)],
               begin: Alignment.topLeft,
-              end: Alignment.bottomRight),
-          boxShadow: [
-            BoxShadow(color: const Color(0xFFFF4D67).withOpacity(0.25), blurRadius: 16)
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: Container(
-            decoration: BoxDecoration(
+              end: Alignment.bottomRight,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFFF4D67).withOpacity(0.25),
+                blurRadius: 16,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Container(
+              decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18),
-                color: Colors.black.withOpacity(0.85)),
-            child: Center(
-                child: Text(count.toString(),
-                    style: const TextStyle(fontSize: 22, color: Colors.white))),
+                color: Colors.black.withOpacity(0.85),
+              ),
+              child: Center(
+                child: Text(
+                  count.toString(),
+                  style: const TextStyle(fontSize: 22, color: Colors.white),
+                ),
+              ),
+            ),
           ),
         ),
-      ),
-      const SizedBox(height: 6),
-      Text(label, style: const TextStyle(color: Colors.white70, fontSize: 11)),
-    ]);
+        const SizedBox(height: 6),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white70, fontSize: 11),
+        ),
+      ],
+    );
   }
 }
 
@@ -695,11 +731,14 @@ class CountBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       margin: const EdgeInsets.only(bottom: 4, top: 4),
       decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.75),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white10)),
-      child: Text(count.toString(),
-          style: const TextStyle(color: Colors.white, fontSize: 11)),
+        color: Colors.black.withOpacity(0.75),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Text(
+        count.toString(),
+        style: const TextStyle(color: Colors.white, fontSize: 11),
+      ),
     );
   }
 }
@@ -708,8 +747,12 @@ class PlayerLabel extends StatelessWidget {
   final String name;
   final int score;
   final bool isActive;
-  const PlayerLabel({Key? key, required this.name, required this.score, required this.isActive})
-      : super(key: key);
+  const PlayerLabel({
+    Key? key,
+    required this.name,
+    required this.score,
+    required this.isActive,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -717,22 +760,29 @@ class PlayerLabel extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(40),
-          gradient:
-              LinearGradient(colors: [color.withOpacity(0.12), color.withOpacity(0.06)])),
-      child: Row(children: [
-        Container(
+        borderRadius: BorderRadius.circular(40),
+        gradient: LinearGradient(
+          colors: [color.withOpacity(0.12), color.withOpacity(0.06)],
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
             width: 8,
             height: 8,
             decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient:
-                    LinearGradient(colors: [Color(0xFFFF4D67), Color(0xFF8B5CF6)]))),
-        const SizedBox(width: 6),
-        Text(name, style: const TextStyle(color: Colors.white70)),
-        const SizedBox(width: 6),
-        Text(score.toString(), style: TextStyle(color: color)),
-      ]),
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [Color(0xFFFF4D67), Color(0xFF8B5CF6)],
+              ),
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text(name, style: const TextStyle(color: Colors.white70)),
+          const SizedBox(width: 6),
+          Text(score.toString(), style: TextStyle(color: color)),
+        ],
+      ),
     );
   }
 }

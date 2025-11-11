@@ -300,36 +300,11 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
     );
   }
 
-  Widget _buildFlameBackButton({required VoidCallback onTap}) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        width: 44,
-        height: 44,
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          gradient: AppColors.gradient1,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.black.withOpacity(0.35),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: const Icon(Icons.arrow_back, color: AppColors.white, size: 20),
-      ),
-    );
-  }
-
   Widget _buildLevelCard(
     Map<String, dynamic> level, {
     required LinearGradient lockedGradient,
   }) {
     final bool unlocked = level["unlocked"];
-    final gradient = unlocked ? AppColors.gradient2 : lockedGradient;
     final imagePath = _getLevelImagePath(level["number"]);
 
     return Container(
@@ -363,18 +338,12 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
                 colors: [
                   unlocked
                       ? AppColors.black.withOpacity(0.2)
-                      : AppColors.black.withOpacity(
-                        0.6,
-                      ),
-                  AppColors.black.withOpacity(
-                    0.9,
-                  ),
+                      : AppColors.black.withOpacity(0.6),
+                  AppColors.black.withOpacity(0.9),
                 ],
               ),
               border: Border.all(
-                color: AppColors.white.withOpacity(
-                  unlocked ? 0.3 : 0.1,
-                ),
+                color: AppColors.white.withOpacity(unlocked ? 0.3 : 0.1),
                 width: 1.5,
               ),
             ),
@@ -505,9 +474,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
               }
               : null,
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: 18,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 18),
         decoration: BoxDecoration(
           color: unlocked ? Colors.amber : Colors.grey,
           borderRadius: BorderRadius.circular(16),
@@ -542,4 +509,3 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
     );
   }
 }
-

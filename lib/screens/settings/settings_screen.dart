@@ -108,7 +108,7 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
       onPressed: () async {
         if (flutterContext != null) {
           final overlay = OverlayEntry(builder: (_) => const PebbleBounce());
-          Overlay.of(flutterContext!)?.insert(overlay);
+          Overlay.of(flutterContext!).insert(overlay);
           await Future.delayed(const Duration(milliseconds: 300));
           overlay.remove();
         }
@@ -130,10 +130,7 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
       onPressed: () async {
         await FirebaseAuth.instance.signOut();
         navigateToScreen(
-          AuthScreen(
-            navigateToScreen: navigateToScreen,
-            showError: showError,
-          ),
+          AuthScreen(navigateToScreen: navigateToScreen, showError: showError),
         );
       },
       backgroundColor: Colors.redAccent,
@@ -164,7 +161,10 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
 
   void _layout(Vector2 screenSize) {
     titleSprite?.position = Vector2(screenSize.x / 2, screenSize.y * 0.20);
-    backButton?.position = Vector2(backButton!.size.x / 2 - 10, backButton!.size.y / 2);
+    backButton?.position = Vector2(
+      backButton!.size.x / 2 - 10,
+      backButton!.size.y / 2,
+    );
 
     soundLabel.position = Vector2(screenSize.x / 2, screenSize.y * 0.35);
     soundBar.position = Vector2(screenSize.x / 2, screenSize.y * 0.42);
@@ -187,23 +187,30 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
   @override
   void onTapDown(TapDownInfo info) => _handleTouch(info.eventPosition.global);
   @override
-  void onPanUpdate(DragUpdateInfo info) => _handleTouch(info.eventPosition.global);
+  void onPanUpdate(DragUpdateInfo info) =>
+      _handleTouch(info.eventPosition.global);
 
   void _handleTouch(Vector2 pos) {
     if (_isInBar(pos, soundBar)) {
-      soundLevel = ((pos.x - (soundBar.position.x - soundBar.size.x / 2)) / soundBar.size.x)
+      soundLevel = ((pos.x - (soundBar.position.x - soundBar.size.x / 2)) /
+              soundBar.size.x)
           .clamp(0.0, 1.0);
       soundKnob.position = Vector2(
-        soundBar.position.x - soundBar.size.x / 2 + soundBar.size.x * soundLevel,
+        soundBar.position.x -
+            soundBar.size.x / 2 +
+            soundBar.size.x * soundLevel,
         soundBar.position.y,
       );
     }
 
     if (_isInBar(pos, musicBar)) {
-      musicLevel = ((pos.x - (musicBar.position.x - musicBar.size.x / 2)) / musicBar.size.x)
+      musicLevel = ((pos.x - (musicBar.position.x - musicBar.size.x / 2)) /
+              musicBar.size.x)
           .clamp(0.0, 1.0);
       musicKnob.position = Vector2(
-        musicBar.position.x - musicBar.size.x / 2 + musicBar.size.x * musicLevel,
+        musicBar.position.x -
+            musicBar.size.x / 2 +
+            musicBar.size.x * musicLevel,
         musicBar.position.y,
       );
       _audioPlayer.setVolume(musicLevel);
@@ -211,7 +218,8 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
   }
 
   bool _isInBar(Vector2 pos, RectangleComponent bar) {
-    final withinX = pos.x >= bar.position.x - bar.size.x / 2 &&
+    final withinX =
+        pos.x >= bar.position.x - bar.size.x / 2 &&
         pos.x <= bar.position.x + bar.size.x / 2;
     final withinY = (pos.y - bar.position.y).abs() <= 20;
     return withinX && withinY;

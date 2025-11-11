@@ -91,7 +91,6 @@
 //   }
 // }
 
-
 // import 'package:flutter/material.dart';
 // import 'package:flame/game.dart';
 // import 'package:sungka/core/services/firebase_auth_service.dart';
@@ -184,7 +183,7 @@
 
 //       if (user != null) {
 //         await firestoreService.saveUser(user.uid, null);
-        
+
 //         Navigator.pushReplacement(
 //           context,
 //           MaterialPageRoute(
@@ -215,120 +214,102 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:sungka/core/services/firebase_auth_service.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/auth/auth_game.dart';
-import 'package:sungka/screens/start_game_screen.dart'; 
+import 'package:sungka/screens/start_game_screen.dart';
 import 'package:sungka/screens/username_screen.dart';
 
 class AuthScreen extends StatefulWidget {
+  final Function(Widget screen) navigateToScreen;
+  final Function(String message) showError;
 
- final Function(Widget screen) navigateToScreen;
- final Function(String message) showError;
+  const AuthScreen({
+    super.key,
+    required this.navigateToScreen,
+    required this.showError,
+  });
 
- const AuthScreen({
-  super.key,
-  required this.navigateToScreen,
-  required this.showError,
- });
-
- @override
- State<AuthScreen> createState() => _AuthScreenState();
+  @override
+  State<AuthScreen> createState() => _AuthScreenState();
 }
 
 class _AuthScreenState extends State<AuthScreen> {
- final authService = FirebaseAuthService();
- final firestoreService = FirebaseFirestoreService();
- late AuthGame authGame;
- bool _isLoading = false;
+  final authService = FirebaseAuthService();
+  final firestoreService = FirebaseFirestoreService();
+  late AuthGame authGame;
 
- @override
- void initState() {
-  super.initState();
-  authGame = AuthGame(
-   onGoogleSignIn: signInWithGoogle,
-   onGuestSignIn: _handleGuestSignIn,
-  );
- }
-
-void signInWithGoogle() async {
-  setState(() {
-   _isLoading = true;
-  });
-
-  try {
-   final userCredential = await authService.signInWithGoogle();
-
-   if (userCredential == null) {
-
-    setState(() {
-     _isLoading = false;
-    });
-    return;
-   }
-
-   final user = userCredential.user;
-
-   if (user != null) {
-
-    await firestoreService.saveUser(user.uid, user.displayName);
-
-    if (mounted) {
-     final nextScreen = GameWidget(
-      game: StartMenuGame(
-       navigateToScreen: widget.navigateToScreen,
-       showError: widget.showError,
-      ),
-     );
-
-     widget.navigateToScreen(nextScreen);
-    }
-   }
-  } catch (e) {
-   print('Error during Google Sign-In: $e');
-   setState(() {
-    _isLoading = false;
-   });
-
-   if (mounted) {
-    widget.showError('Failed to sign in with Google. Please try again.');
-   }
-  }
- }
-
- Future<void> _handleGuestSignIn() async {
-  try {
-   final userCredential = await authService.signInAsGuest();
-   final user = userCredential.user;
-
-   if (user != null) {
-    await firestoreService.saveUser(user.uid, null);
-    
-    final nextScreen = UsernameScreen(
-     navigateToScreen: widget.navigateToScreen,
-     showError: widget.showError,
+  @override
+  void initState() {
+    super.initState();
+    authGame = AuthGame(
+      onGoogleSignIn: signInWithGoogle,
+      onGuestSignIn: _handleGuestSignIn,
     );
-
-    widget.navigateToScreen(nextScreen);
-   }
-  } catch (e) {
-   print('Guest Sign-In Error: $e');
   }
- }
 
- @override
- Widget build(BuildContext context) {
-  return Scaffold(
-   body: GameWidget(game: authGame),
-  );
- }
+  void signInWithGoogle() async {
+    try {
+      final userCredential = await authService.signInWithGoogle();
 
- @override
- void dispose() {
-  super.dispose();
- }
+      if (userCredential == null) {
+        return;
+      }
+
+      final user = userCredential.user;
+
+      if (user != null) {
+        await firestoreService.saveUser(user.uid, user.displayName);
+
+        if (mounted) {
+          final nextScreen = GameWidget(
+            game: StartMenuGame(
+              navigateToScreen: widget.navigateToScreen,
+              showError: widget.showError,
+            ),
+          );
+
+          widget.navigateToScreen(nextScreen);
+        }
+      }
+    } catch (e) {
+      print('Error during Google Sign-In: $e');
+
+      if (mounted) {
+        widget.showError('Failed to sign in with Google. Please try again.');
+      }
+    }
+  }
+
+  Future<void> _handleGuestSignIn() async {
+    try {
+      final userCredential = await authService.signInAsGuest();
+      final user = userCredential.user;
+
+      if (user != null) {
+        await firestoreService.saveUser(user.uid, null);
+
+        final nextScreen = UsernameScreen(
+          navigateToScreen: widget.navigateToScreen,
+          showError: widget.showError,
+        );
+
+        widget.navigateToScreen(nextScreen);
+      }
+    } catch (e) {
+      print('Guest Sign-In Error: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: GameWidget(game: authGame));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }

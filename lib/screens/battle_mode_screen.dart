@@ -8,7 +8,14 @@ import 'package:sungka/screens/online/online_game_screen.dart';
 import 'package:sungka/screens/online/waiting_for_opponent_screen.dart';
 
 class BattleModeScreen extends StatefulWidget {
-  const BattleModeScreen({super.key});
+  const BattleModeScreen({
+    super.key,
+    required this.navigateToScreen,
+    required this.showError,
+  });
+
+  final Function(Widget screen) navigateToScreen;
+  final Function(String message) showError;
 
   @override
   State<BattleModeScreen> createState() => _BattleModeScreenState();
@@ -82,7 +89,12 @@ class _BattleModeScreenState extends State<BattleModeScreen> {
 
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => OnlineGameScreen(matchId: match.id),
+            builder:
+                (_) => OnlineGameScreen(
+                  matchId: match.id,
+                  navigateToScreen: widget.navigateToScreen,
+                  showError: widget.showError,
+                ),
           ),
         );
       } else {

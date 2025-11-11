@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:sungka/core/services/bot_service.dart';
 import 'package:sungka/core/services/game_logic_service.dart';
+import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
 import 'package:sungka/screens/widgets/sungka_board.dart';
 
 class PlayerVsBotGameScreen extends StatefulWidget {
   const PlayerVsBotGameScreen({super.key, required this.gameMode});
 
-  final String gameMode;
+  final Difficulty gameMode;
 
   @override
   State<PlayerVsBotGameScreen> createState() => _PlayerVsBotGameScreenState();
 }
 
 class _PlayerVsBotGameScreenState extends State<PlayerVsBotGameScreen> {
-  final BotService bot = BotService();
-  final GameLogicService gameLogicService = GameLogicService();
-
   List<int> board = [4, 4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 4, 0];
 
   bool isPlayerTurn = true;
@@ -28,12 +26,13 @@ class _PlayerVsBotGameScreenState extends State<PlayerVsBotGameScreen> {
     }
 
     setState(() {
-      board = gameLogicService.makeMove(board, pit, true);
+      board = GameLogic.makeMove(board, pit, true);
       isPlayerTurn = false;
       isBotThinking = true;
     });
 
-    if (gameLogicService.checkEndGame(board)) {
+    final endGameResult = GameLogic.checkEndGame(board);
+    if (endGameResult['isGameOver']) {
       endGame();
 
       return;
@@ -43,18 +42,19 @@ class _PlayerVsBotGameScreenState extends State<PlayerVsBotGameScreen> {
   }
 
   void botTurn() {
-    final pit = bot.getBotMove(board, widget.gameMode);
+    final pit = BotService.getBotMove(board, widget.gameMode);
     if (pit == -1) {
       return;
     }
 
     setState(() {
-      board = gameLogicService.makeMove(board, pit, false);
+      board = GameLogic.makeMove(board, pit, false);
       isBotThinking = false;
       isPlayerTurn = true;
     });
 
-    if (gameLogicService.checkEndGame(board)) {
+    final endGameResult = GameLogic.checkEndGame(board);
+    if (endGameResult['isGameOver']) {
       endGame();
     }
   }

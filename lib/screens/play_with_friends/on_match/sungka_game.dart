@@ -126,7 +126,6 @@ class _SungkaGameState extends State<SungkaGame> with TickerProviderStateMixin {
     );
     final resultBoard = moveResult['board'] as List<int>;
     final hasExtraTurn = moveResult['hasExtraTurn'] as bool;
-    final isCapture = moveResult['isCapture'] as bool;
 
     setState(() {
       board = List<int>.from(resultBoard);
@@ -408,16 +407,17 @@ class _SungkaGameState extends State<SungkaGame> with TickerProviderStateMixin {
 
                     ElevatedButton(
                       onPressed: () {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => GameWidget(
-                                    game: HomeGame(
-                                      navigateToScreen: widget.navigateToScreen,
-                                      showError: widget.showError,
-                                    ),
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder:
+                                (context) => GameWidget(
+                                  game: HomeGame(
+                                    navigateToScreen: widget.navigateToScreen,
+                                    showError: widget.showError,
                                   ),
                                 ),
-                              );
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black54,
