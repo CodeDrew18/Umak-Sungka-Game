@@ -11,7 +11,7 @@ class FirebaseAuthService {
 
   // Web Client ID
   static const String _serverClientId =
-      '992190293501-cu3obugq580rnl6g8v9ucv03bm25m6pj.apps.googleusercontent.com';
+      '484169081903-hhp579hiee8s0p0kbu0e4cf5hnbkfapk.apps.googleusercontent.com';
 
   Future<void> _ensureInitialized() async {
     if (!_isInitialized) {
