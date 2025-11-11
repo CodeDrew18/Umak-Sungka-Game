@@ -3,7 +3,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email'],
+    serverClientId:
+        '484169081903-hhp579hiee8s0p0kbu0e4cf5hnbkfapk.apps.googleusercontent.com',
+  );
 
   Future<UserCredential> signInAsGuest() async {
     return await auth.signInAnonymously();
