@@ -7,15 +7,15 @@ import 'package:sungka/core/services/game_logic_service.dart';
 import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
 
 
-class SungkaBoardScreen extends StatefulWidget {
+class AdventureFirstLevelScreen extends StatefulWidget {
   final Difficulty difficulty;
-  const SungkaBoardScreen({Key? key, required this.difficulty}) : super(key: key);
+  const AdventureFirstLevelScreen({Key? key, required this.difficulty}) : super(key: key);
 
   @override
-  State<SungkaBoardScreen> createState() => _SungkaBoardScreenState();
+  State<AdventureFirstLevelScreen> createState() => _AdventureFirstLevelScreenState();
 }
 
-class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProviderStateMixin {
+class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen> with TickerProviderStateMixin {
   late List<int> board;
   bool isPlayerTurn = true;
   bool gameEnded = false;
@@ -181,7 +181,7 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
                       Column(
                         children: [
                           Text(
-                            isPlayerTurn ? "Your Turn" : "Bot's Turn...",
+                            isPlayerTurn ? "Your Turn" : "Adventure 1...",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -198,7 +198,7 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
                               ),
                               const SizedBox(width: 12),
                               PlayerLabel(
-                                name: 'Bot',
+                                name: 'Adventure 1',
                                 score: board[15],
                                 isActive: !isPlayerTurn,
                               ),
@@ -212,8 +212,8 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
                           Text(
                             winner == 'player'
                                 ? ' You Win!'
-                                : (winner == 'bot'
-                                    ? 'Bot Wins!'
+                                : (winner == 'Adventure 1'
+                                    ? 'Adventure 1!'
                                     : "It's a Tie!"),
                             style: const TextStyle(
                               color: Colors.white,
@@ -231,9 +231,9 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
                               ),
                               const SizedBox(width: 12),
                               PlayerLabel(
-                                name: 'Bot',
+                                name: 'Adventure 1',
                                 score: board[15],
-                                isActive: winner == 'bot',
+                                isActive: winner == 'Adventure 1',
                               ),
                             ],
                           ),
@@ -262,7 +262,7 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
                             children: [
                               StoreWidget(
                                 count: board[15],
-                                label: 'Bot Store',
+                                label: 'Adventure 1',
                                 height: 210,
                               ),
                               const SizedBox(width: 8),

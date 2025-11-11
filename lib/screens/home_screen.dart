@@ -238,7 +238,7 @@ Future<void> online() async {
 
   if (user == null || user.isAnonymous) {
     QuickAlert.show(
-      context: buildContext!, // 🔥 use the current game context
+      context: buildContext!,
       type: QuickAlertType.error,
       title: "Sign In Required",
       text: "Please log in with your account to play online.",
