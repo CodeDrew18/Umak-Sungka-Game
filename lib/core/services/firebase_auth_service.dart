@@ -10,8 +10,6 @@ class FirebaseAuthService {
 
   Future<void> _ensureInitialized() async {
     if (!_isInitialized) {
-      // Initialize without serverClientId for Android (uses google-services.json)
-      // Only web needs serverClientId
       await _googleSignIn.initialize();
       _isInitialized = true;
     }
@@ -27,15 +25,10 @@ class FirebaseAuthService {
 
       print('Starting Google Sign-In...');
 
-      // Use attemptLightweightAuthentication which works better on Android
-      await _googleSignIn.attemptLightweightAuthentication();
-
-      // Wait a moment for the auth event
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      // Listen for authentication events with a completer
+      // Use authenticate with interactive flow
       final Completer<GoogleSignInAccount?> completer = Completer();
 
+      // Set up event listener BEFORE calling authenticate
       late StreamSubscription<GoogleSignInAuthenticationEvent> subscription;
       subscription = _googleSignIn.authenticationEvents.listen(
         (GoogleSignInAuthenticationEvent event) {
@@ -63,9 +56,19 @@ class FirebaseAuthService {
         },
       );
 
-      // Wait for authentication with timeout
+      // Trigger the authentication flow
+      try {
+        print('Calling authenticate...');
+        await _googleSignIn.authenticate(scopeHint: ['email']);
+        print('Authenticate call completed');
+      } catch (e) {
+        print('Authenticate threw: $e');
+        // Don't fail here - the event listener will handle success/failure
+      }
+
+      // Wait for the event with a longer timeout
       final googleUser = await completer.future.timeout(
-        const Duration(seconds: 10),
+        const Duration(seconds: 30),
         onTimeout: () {
           print('Authentication timed out');
           subscription.cancel();
@@ -90,7 +93,9 @@ class FirebaseAuthService {
         throw Exception('Failed to get authorization from Google');
       }
 
-      print('Got authorization');
+      print(
+        'Got authorization, access token: ${authorization.accessToken.substring(0, 20)}...',
+      );
 
       final credential = GoogleAuthProvider.credential(
         accessToken: authorization.accessToken,
