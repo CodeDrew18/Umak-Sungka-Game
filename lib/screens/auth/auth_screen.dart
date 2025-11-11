@@ -240,6 +240,8 @@ class _AuthScreenState extends State<AuthScreen> {
   final authService = FirebaseAuthService();
   final firestoreService = FirebaseFirestoreService();
   late AuthGame authGame;
+  bool _isLoading = false;
+  String _loadingMessage = '';
 
   @override
   void initState() {
@@ -251,10 +253,24 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void signInWithGoogle() async {
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = true;
+      _loadingMessage = "Signing in with Google...\nPlease wait...";
+    });
+
+    final startTime = DateTime.now();
+
     try {
       final userCredential = await authService.signInWithGoogle();
 
       if (userCredential == null) {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
         return;
       }
 
@@ -262,6 +278,14 @@ class _AuthScreenState extends State<AuthScreen> {
 
       if (user != null) {
         await firestoreService.saveUser(user.uid, user.displayName);
+
+        // Ensure loading screen shows for at least 1 second
+        final elapsed = DateTime.now().difference(startTime);
+        if (elapsed.inMilliseconds < 1000) {
+          await Future.delayed(
+            Duration(milliseconds: 1000 - elapsed.inMilliseconds),
+          );
+        }
 
         if (mounted) {
           final nextScreen = GameWidget(
@@ -278,12 +302,22 @@ class _AuthScreenState extends State<AuthScreen> {
       print('Error during Google Sign-In: $e');
 
       if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
         widget.showError('Failed to sign in with Google. Please try again.');
       }
     }
   }
 
   Future<void> _handleGuestSignIn() async {
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = true;
+      _loadingMessage = "Signing in as Guest...";
+    });
+
     try {
       final userCredential = await authService.signInAsGuest();
       final user = userCredential.user;
@@ -300,12 +334,66 @@ class _AuthScreenState extends State<AuthScreen> {
       }
     } catch (e) {
       print('Guest Sign-In Error: $e');
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        widget.showError('Failed to sign in as guest. Please try again.');
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: GameWidget(game: authGame));
+    return Scaffold(
+      body: Stack(
+        children: [
+          GameWidget(game: authGame),
+          // Loading overlay
+          if (_isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.85),
+              width: double.infinity,
+              height: double.infinity,
+              child: Center(
+                child: Container(
+                  padding: EdgeInsets.all(40),
+                  decoration: BoxDecoration(
+                    color: Colors.black87,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Color(0xFFE6B428), width: 3),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 80,
+                        height: 80,
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Color(0xFFE6B428),
+                          ),
+                          strokeWidth: 8,
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Text(
+                        _loadingMessage,
+                        style: TextStyle(
+                          fontSize: 22,
+                          color: Color(0xFFE6B428),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
   @override
