@@ -79,27 +79,44 @@ class FirebaseFirestoreService {
     return firestore.collection('matches').doc(matchId).snapshots();
   }
 
+  Future<void> updateBoardAndTurn({
+    required String matchId,
+    required List<int> newBoard,
+    required String nextTurnId,
+  }) async {
+    await firestore.collection('matches').doc(matchId).update({
+      'board': newBoard,
+      'turnId': nextTurnId,
+    });
+  }
+
   Future<void> cancelMatch({required String matchId}) async {
     await firestore.collection('matches').doc(matchId).delete();
   }
 
   Future<void> updateMatchResult({
     required String matchId,
-    required String winnerId,
-    required String loserId,
-    required int winnerNewRating,
-    required int loserNewRating,
-    required int player1Score,
-    required int player2Score,
+    required dynamic winnerId,
+    String? loserId,
+    int? winnerNewRating,
+    int? loserNewRating,
+    int? player1Score,
+    int? player2Score,
+    List<int>? board,
+    bool? isGameOver,
   }) async {
-    await FirebaseFirestore.instance.collection('matches').doc(matchId).update({
-      'winner': winnerId,
-      'loser': loserId,
-      'winnerNewRating': winnerNewRating,
-      'loserNewRating': loserNewRating,
-      'player1Score': player1Score,
-      'player2Score': player2Score,
-    });
+    final data = <String, dynamic>{
+      if (winnerId != null) 'winner': winnerId,
+      if (loserId != null) 'loser': loserId,
+      if (winnerNewRating != null) 'winnerNewRating': winnerNewRating,
+      if (loserNewRating != null) 'loserNewRating': loserNewRating,
+      if (player1Score != null) 'player1Score': player1Score,
+      if (player2Score != null) 'player2Score': player2Score,
+      if (board != null) 'board': board,
+      if (isGameOver != null) 'isGameOver': isGameOver,
+    };
+
+    await firestore.collection('matches').doc(matchId).update(data);
   }
 
   Future<void> updateUserRating(

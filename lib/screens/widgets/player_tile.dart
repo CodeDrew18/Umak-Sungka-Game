@@ -8,6 +8,7 @@ class PlayerTile extends StatelessWidget {
     required this.rating,
     this.changeRating = 0,
     this.playerStatus = "",
+    this.isCurrentTurn = false,
   });
 
   final int score;
@@ -15,6 +16,7 @@ class PlayerTile extends StatelessWidget {
   final String playerStatus;
   final int changeRating;
   final int rating;
+  final bool isCurrentTurn;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class PlayerTile extends StatelessWidget {
 
     if (changeRating != 0 && changeRating > 0) {
       text = "$name (${rating + changeRating} +$changeRating)";
-    } else if(changeRating != 0 && changeRating < 0) {
+    } else if (changeRating != 0 && changeRating < 0) {
       text = "$name (${rating + changeRating} $changeRating)";
     }
 
@@ -30,7 +32,8 @@ class PlayerTile extends StatelessWidget {
       child: ListTile(
         leading: CircleAvatar(child: Text("$score")),
         title: Text(text),
-        trailing: playerStatus != "" ? Text("Status: $playerStatus") : null,
+        trailing:
+            playerStatus.isNotEmpty ? Text("Status: $playerStatus") : null,
       ),
     );
   }
