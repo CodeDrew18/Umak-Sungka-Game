@@ -182,7 +182,6 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
                         return AnimatedBuilder(
                           animation: _pageController,
                           builder: (context, child) {
-                            // Carousel zoom/scale effect logic
                             double value = 1.0;
                             if (_pageController.position.haveDimensions) {
                               value = _pageController.page! - index;
@@ -208,12 +207,10 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
 
                   const SizedBox(height: 18),
 
-                  // Level Indicator Dots
                   _buildLevelIndicator(),
 
                   const SizedBox(height: 28),
 
-                  // Play Button
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: _buildPlayButton(),
@@ -282,7 +279,6 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
     );
   }
 
-  // Helper widget to build the dot indicator
   Widget _buildLevelIndicator() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -296,16 +292,14 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
             shape: BoxShape.circle,
             color:
                 _currentLevel == index
-                    ? AppColors
-                        .primary // Active dot color
-                    : AppColors.white.withOpacity(0.3), // Inactive dot color
+                    ? AppColors.primary
+                    : AppColors.white.withOpacity(0.3),
           ),
         ),
       ),
     );
   }
 
-  // Back Button - Remains mostly the same
   Widget _buildFlameBackButton({required VoidCallback onTap}) {
     return InkWell(
       onTap: onTap,
@@ -330,7 +324,6 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
     );
   }
 
-  // Level Card - MODIFIED to include the image and text overlay
   Widget _buildLevelCard(
     Map<String, dynamic> level, {
     required LinearGradient lockedGradient,
@@ -348,7 +341,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
         boxShadow: [
           BoxShadow(
             color: AppColors.black.withOpacity(unlocked ? 0.6 : 0.4),
-            blurRadius: 18, // Increased blur for depth
+            blurRadius: 18,
             offset: const Offset(0, 8),
           ),
         ],
@@ -356,13 +349,11 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // 1. Background Image
           ClipRRect(
             borderRadius: BorderRadius.circular(18),
             child: Image.asset(imagePath, fit: BoxFit.cover),
           ),
 
-          // 2. Overlay (Gradient/Locked Shade)
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(18),
@@ -374,28 +365,26 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
                       ? AppColors.black.withOpacity(0.2)
                       : AppColors.black.withOpacity(
                         0.6,
-                      ), // Darker overlay for locked
+                      ),
                   AppColors.black.withOpacity(
                     0.9,
-                  ), // Stronger dark shade at the bottom for text
+                  ),
                 ],
               ),
               border: Border.all(
                 color: AppColors.white.withOpacity(
                   unlocked ? 0.3 : 0.1,
-                ), // Subtle border
+                ),
                 width: 1.5,
               ),
             ),
           ),
 
-          // 3. Text Content (Overlayed)
           Padding(
-            padding: const EdgeInsets.all(20), // Slightly increased padding
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // LOCKED badge for locked levels
                 if (!unlocked)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
@@ -425,33 +414,29 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
                     ),
                   ),
 
-                // Spacer to push content towards the bottom slightly (or adjust based on image)
                 const Spacer(),
 
-                // LEVEL Number
                 Text(
                   "LEVEL ${level["number"]}",
                   style: GoogleFonts.poppins(
                     color: AppColors.white.withOpacity(0.8),
-                    fontSize: 14, // Slightly larger
+                    fontSize: 14,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1.5,
                   ),
                 ),
                 const SizedBox(height: 6),
 
-                // Level Name
                 Text(
                   level["name"],
                   style: GoogleFonts.poppins(
                     color: AppColors.white,
-                    fontSize: 26, // More emphasis
+                    fontSize: 26,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
                 const SizedBox(height: 10),
 
-                // Description
                 Text(
                   level["desc"],
                   style: GoogleFonts.poppins(
@@ -459,12 +444,11 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
                     fontSize: 14,
                     height: 1.4,
                   ),
-                  maxLines: 2, // Constrain description
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 18),
 
-                // Rules Divider and Header
                 Divider(color: AppColors.white.withOpacity(0.4)),
                 Text(
                   "RULES",
@@ -477,7 +461,6 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
                 ),
                 const SizedBox(height: 8),
 
-                // Rules List
                 ...List.generate(
                   (level["rules"] as List).length,
                   (i) => Padding(
@@ -492,7 +475,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10), // Extra space at the bottom
+                const SizedBox(height: 10),
               ],
             ),
           ),
@@ -501,11 +484,9 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
     );
   }
 
-  // Play Button - Includes dynamic styling based on locked state
   Widget _buildPlayButton() {
     final current = levels[_currentLevel];
     final unlocked = current["unlocked"];
-    // final gradient = unlocked ? Colors.amber : _lockedGradientFallback();
     final difficulty = current["level"];
     return GestureDetector(
       onTap:
@@ -526,10 +507,10 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(
           vertical: 18,
-        ), // Increased vertical padding
+        ),
         decoration: BoxDecoration(
           color: unlocked ? Colors.amber : Colors.grey,
-          borderRadius: BorderRadius.circular(16), // Slightly rounded corners
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
               color:
@@ -551,9 +532,9 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
             unlocked ? "START MATCH" : "LOCKED",
             style: GoogleFonts.poppins(
               color: AppColors.white,
-              fontWeight: FontWeight.w800, // Heavier weight
-              letterSpacing: 1.5, // Increased letter spacing
-              fontSize: 17, // Slightly larger font
+              fontWeight: FontWeight.w800,
+              letterSpacing: 1.5,
+              fontSize: 17,
             ),
           ),
         ),
@@ -561,3 +542,4 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
     );
   }
 }
+

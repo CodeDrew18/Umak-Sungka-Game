@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sungka/core/services/adventure_first_level_game_logic.dart';
 import 'package:sungka/core/services/bot_service.dart';
 import 'package:sungka/core/services/game_logic_service.dart';
 import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
@@ -57,75 +58,151 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen> w
     setState(() {});
   }
 
-  void _handlePitTap(int pit) async {
-    if (gameEnded) return;
-    if (isPlayerTurn && (pit < 0 || pit > 6 || board[pit] == 0)) return;
-    if (!isPlayerTurn && (pit < 8 || pit > 14 || board[pit] == 0)) return;
+  // void _handlePitTap(int pit) async {
+  //   if (gameEnded) return;
+  //   if (isPlayerTurn && (pit < 0 || pit > 6 || board[pit] == 0)) return;
+  //   if (!isPlayerTurn && (pit < 8 || pit > 14 || board[pit] == 0)) return;
 
-    setState(() {
-      animatingPit = pit;
-      lastMove = pit;
-    });
+  //   setState(() {
+  //     animatingPit = pit;
+  //     lastMove = pit;
+  //   });
 
-    List<int> newBoard = List.from(board);
-    int stones = newBoard[pit];
-    newBoard[pit] = 0;
-    int index = pit;
+  //   List<int> newBoard = List.from(board);
+  //   int stones = newBoard[pit];
+  //   newBoard[pit] = 0;
+  //   int index = pit;
 
-    for (int i = 0; i < stones; i++) {
-      int nextIndex = (index + 1) % newBoard.length;
+  //   for (int i = 0; i < stones; i++) {
+  //     int nextIndex = (index + 1) % newBoard.length;
       
-      if (isPlayerTurn && nextIndex == 15) {
-        nextIndex = (nextIndex + 1) % newBoard.length;
-      } else if (!isPlayerTurn && nextIndex == 7) {
-        nextIndex = (nextIndex + 1) % newBoard.length;
-      }
+  //     if (isPlayerTurn && nextIndex == 15) {
+  //       nextIndex = (nextIndex + 1) % newBoard.length;
+  //     } else if (!isPlayerTurn && nextIndex == 7) {
+  //       nextIndex = (nextIndex + 1) % newBoard.length;
+  //     }
 
-      setState(() {
-        animatingPebbles.add(AnimatingPebbleData(
-          fromPit: index,
-          toPit: nextIndex,
-          startTime: DateTime.now(),
-          duration: const Duration(milliseconds: 600),
-        ));
-      });
+  //     setState(() {
+  //       animatingPebbles.add(AnimatingPebbleData(
+  //         fromPit: index,
+  //         toPit: nextIndex,
+  //         startTime: DateTime.now(),
+  //         duration: const Duration(milliseconds: 600),
+  //       ));
+  //     });
 
-      await Future.delayed(const Duration(milliseconds: 180));
+  //     await Future.delayed(const Duration(milliseconds: 180));
       
-      index = nextIndex;
-      newBoard[index] += 1;
+  //     index = nextIndex;
+  //     newBoard[index] += 1;
 
-      setState(() {
-        board = List.from(newBoard);
-        animatingPit = index;
-        animatingPebbles.removeWhere((p) => p.isComplete);
-      });
+  //     setState(() {
+  //       board = List.from(newBoard);
+  //       animatingPit = index;
+  //       animatingPebbles.removeWhere((p) => p.isComplete);
+  //     });
+  //   }
+
+  //   await Future.delayed(const Duration(milliseconds: 300));
+
+  //   final resultBoard = AdventureFirstLevelGameLogic.makeMove(board, pit, isPlayerTurn);
+
+  //   setState(() {
+  //     board = List<int>.from(resultBoard);
+  //     animatingPit = null;
+  //     animatingPebbles = [];
+  //   });
+
+  //   final result = GameLogic.checkEndGame(resultBoard);
+  //   if (result['isEnded'] as bool) {
+  //     setState(() {
+  //       board = List<int>.from(result['finalBoard'] as List<int>);
+  //       gameEnded = true;
+  //       winner = GameLogic.getWinner(board);
+  //     });
+  //   } else {
+  //     setState(() {
+  //       isPlayerTurn = !isPlayerTurn;
+  //     });
+  //     if (!isPlayerTurn) _scheduleBotMove();
+  //   }
+  // }
+
+void _handlePitTap(int pit) async {
+  if (gameEnded) return;
+  if (isPlayerTurn && (pit < 0 || pit > 6 || board[pit] == 0)) return;
+  if (!isPlayerTurn && (pit < 8 || pit > 14 || board[pit] == 0)) return;
+
+  setState(() {
+    animatingPit = pit;
+    lastMove = pit;
+  });
+
+  final stones = board[pit];
+  var tempBoard = List<int>.from(board);
+  tempBoard[pit] = 0;
+  int index = pit;
+
+  for (int i = 0; i < stones; i++) {
+    int nextIndex = (index + 1) % tempBoard.length;
+
+    if (isPlayerTurn && nextIndex == 15) {
+      nextIndex = (nextIndex + 1) % tempBoard.length;
+    } else if (!isPlayerTurn && nextIndex == 7) {
+      nextIndex = (nextIndex + 1) % tempBoard.length;
     }
 
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    final resultBoard = GameLogic.makeMove(board, pit, isPlayerTurn);
-
     setState(() {
-      board = List<int>.from(resultBoard);
-      animatingPit = null;
-      animatingPebbles = [];
+      animatingPebbles.add(AnimatingPebbleData(
+        fromPit: index,
+        toPit: nextIndex,
+        startTime: DateTime.now(),
+        duration: const Duration(milliseconds: 600),
+      ));
     });
 
-    final result = GameLogic.checkEndGame(resultBoard);
-    if (result['isEnded'] as bool) {
-      setState(() {
-        board = List<int>.from(result['finalBoard'] as List<int>);
-        gameEnded = true;
-        winner = GameLogic.getWinner(board);
-      });
-    } else {
-      setState(() {
-        isPlayerTurn = !isPlayerTurn;
-      });
-      if (!isPlayerTurn) _scheduleBotMove();
-    }
+    await Future.delayed(const Duration(milliseconds: 180));
+
+    index = nextIndex;
+    tempBoard[index] += 1;
+
+    setState(() {
+      board = List<int>.from(tempBoard);
+      animatingPit = index;
+      animatingPebbles.removeWhere((p) => p.isComplete);
+    });
   }
+
+  await Future.delayed(const Duration(milliseconds: 300));
+
+  final result = AdventureFirstLevelGameLogic.makeMove(board, pit, isPlayerTurn);
+  final resultBoard = result['board'] as List<int>;
+  final hasExtraTurn = result['hasExtraTurn'] as bool;
+
+  setState(() {
+    board = List<int>.from(resultBoard);
+    animatingPit = null;
+    animatingPebbles = [];
+  });
+
+  final endResult = AdventureFirstLevelGameLogic.checkEndGame(resultBoard);
+  if (endResult['isEnded'] as bool) {
+    setState(() {
+      board = List<int>.from(endResult['finalBoard'] as List<int>);
+      gameEnded = true;
+      winner = AdventureFirstLevelGameLogic.getWinner(board);
+    });
+    return;
+  }
+
+  if (!hasExtraTurn) {
+    setState(() {
+      isPlayerTurn = !isPlayerTurn;
+    });
+    if (!isPlayerTurn) _scheduleBotMove();
+  }
+}
+
 
   void _scheduleBotMove() {
     _botTimer?.cancel();

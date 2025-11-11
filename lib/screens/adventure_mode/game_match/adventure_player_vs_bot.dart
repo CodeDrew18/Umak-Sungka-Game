@@ -4,8 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/screens/adventure_mode/game_level_match/adventure_first_level_screen.dart';
 import 'package:sungka/screens/adventure_mode/game_match/adventure_bot_card.dart';
 import 'package:sungka/screens/adventure_mode/game_match/adventure_player_card.dart';
-import 'package:sungka/screens/player_vs_bot/game_match/bot_card.dart';
-import 'package:sungka/screens/player_vs_bot/game_match/player_card.dart';
 
 class AdventurePlayerVsBot extends StatefulWidget {
   final dynamic difficulty;
@@ -99,13 +97,6 @@ class _AdventurePlayerVsBotState extends State<AdventurePlayerVsBot>
 
   @override
   void dispose() {
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitUp,
-    //   DeviceOrientation.portraitDown,
-    //   DeviceOrientation.landscapeRight,
-    //   DeviceOrientation.landscapeLeft,
-    // ]);
-
     _controller.removeStatusListener(_animationListener);
     _controller.dispose();
     super.dispose();

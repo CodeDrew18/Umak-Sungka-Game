@@ -1,5 +1,3 @@
-
-import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -20,7 +18,6 @@ import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
 import 'package:sungka/screens/settings/settings_screen.dart';
 import 'package:sungka/screens/start_game_screen.dart';
 import 'package:sungka/screens/components/image_game_button.dart';
-import 'package:quickalert/quickalert.dart';
 
 class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
   SpriteComponent? backgroundImage;
