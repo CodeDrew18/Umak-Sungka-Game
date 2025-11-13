@@ -1133,6 +1133,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:sungka/core/services/bot_service.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/core/services/game_logic_service.dart';
@@ -1332,6 +1333,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Player Cards
+            Gap(15),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -1352,7 +1354,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen>
                 ),
               ],
             ),
-
+            Gap(10),
             // Board with stores and pits (Wrapped in LayoutBuilder/Stack for animation)
             Expanded(
               child: Center(
@@ -1492,18 +1494,73 @@ class _OnlineGameScreenState extends State<OnlineGameScreen>
               ),
             ),
             // Resign button
-            ElevatedButton(
-              onPressed: () => showResignDialog(
-                player1Id,
-                player2Id,
-                player1Rating,
-                player2Rating,
-                player1Score,
-                player2Score,
+            // ElevatedButton(
+            //   onPressed: () => showResignDialog(
+            //     player1Id,
+            //     player2Id,
+            //     player1Rating,
+            //     player2Rating,
+            //     player1Score,
+            //     player2Score,
+            //   ),
+            //   child: const Text("Resign"),
+            // ),
+  
+            GestureDetector(
+  onTap: () => showResignDialog(
+    player1Id,
+    player2Id,
+    player1Rating,
+    player2Rating,
+    player1Score,
+    player2Score,
+  ),
+  child: Container(
+    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+    decoration: BoxDecoration(
+      gradient: const LinearGradient(
+        colors: [Color(0xFFFF4B5C), Color(0xFFDB2B39)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.4),
+          offset: const Offset(4, 4),
+          blurRadius: 8,
+        ),
+        BoxShadow(
+          color: Colors.white.withOpacity(0.15),
+          offset: const Offset(-4, -4),
+          blurRadius: 8,
+        ),
+      ],
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: const [
+        Icon(Icons.flag, color: Colors.white, size: 20),
+        SizedBox(width: 10),
+        Text(
+          "Resign",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            shadows: [
+              Shadow(
+                color: Colors.black26,
+                offset: Offset(1, 1),
+                blurRadius: 2,
               ),
-              child: const Text("Resign"),
-            ),
-            const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ],
+    ),
+  ),
+),
           ],
         ),
       ),
@@ -2187,27 +2244,53 @@ class StoreWidget extends StatelessWidget {
   final DecorationImage? woodenTexture;
 
   const StoreWidget({
-    super.key,
+    Key? key,
     required this.count,
     required this.label,
-    required this.height,
+    this.height = 150,
     this.woodenTexture,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 58.0,
-      height: height,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(29.0),
-        image: woodenTexture,
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        count.toString(),
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      ),
+    return Column(
+      children: [
+        Container(
+          width: 58,
+          height: height,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            color: woodenTexture == null ? const Color(0xFF966F33) : null,
+            image: woodenTexture,
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF4B3219).withOpacity(0.5),
+                blurRadius: 16,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                color: Colors.black.withOpacity(0.85),
+              ),
+              child: Center(
+                child: Text(
+                  count.toString(),
+                  style: const TextStyle(fontSize: 22, color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.white70, fontSize: 11),
+        ),
+      ],
     );
   }
 }
