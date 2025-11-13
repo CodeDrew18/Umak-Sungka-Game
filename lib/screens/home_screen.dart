@@ -3,6 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:sungka/core/constants/app_colors.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
@@ -39,6 +40,10 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
 
   @override
   Future<void> onLoad() async {
+        SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     await super.onLoad();
     backgroundImage =
         SpriteComponent()
@@ -233,7 +238,7 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
 Future<void> online() async {
   final user = FirebaseAuth.instance.currentUser;
 
-  if (user == null || user.isAnonymous) {
+  if (user == null) {
     QuickAlert.show(
       context: buildContext!,
       type: QuickAlertType.error,
@@ -299,5 +304,7 @@ Future<void> online() async {
       text: e.toString(),
     );
   }
+
+
 }
 }

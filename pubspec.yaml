@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   audioplayers: ^6.5.1
+  carousel_slider: ^5.1.1
   cloud_firestore: ^6.0.3
   cupertino_icons: ^1.0.8
   firebase_auth: ^6.1.1
@@ -89,6 +90,12 @@ flutter:
     - assets/images/assets/lvl5.png
     - assets/images/assets/lvl6.png
     - assets/images/assets/adventure_mode.png
+    - assets/images/assets/pebble1.png
+    - assets/images/assets/pebble2.png
+    - assets/images/assets/pebble3.png
+    - assets/images/assets/texture_test.jpg
+    - assets/images/assets/texture_light.jpg
+    - assets/images/assets/texture_plain.jpg
 
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see

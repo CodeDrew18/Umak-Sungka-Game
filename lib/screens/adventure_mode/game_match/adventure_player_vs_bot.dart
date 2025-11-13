@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sungka/screens/adventure_mode/game_level_match/adventure_fifth_level_screen,.dart';
 import 'package:sungka/screens/adventure_mode/game_level_match/adventure_first_level_screen.dart';
+import 'package:sungka/screens/adventure_mode/game_level_match/adventure_fourth_level_screen.dart';
+import 'package:sungka/screens/adventure_mode/game_level_match/adventure_second_level_screen.dart';
+import 'package:sungka/screens/adventure_mode/game_level_match/adventure_sixth_level_screen,.dart';
+import 'package:sungka/screens/adventure_mode/game_level_match/adventure_third_level_screen.dart';
 import 'package:sungka/screens/adventure_mode/game_match/adventure_bot_card.dart';
 import 'package:sungka/screens/adventure_mode/game_match/adventure_player_card.dart';
 
 class AdventurePlayerVsBot extends StatefulWidget {
   final dynamic difficulty;
-
-  const AdventurePlayerVsBot({Key? key, required this.difficulty}) : super(key: key);
+  final dynamic level;
+  const AdventurePlayerVsBot({
+    Key? key,
+    required this.difficulty,
+    required this.level,
+  }) : super(key: key);
 
   @override
   State<AdventurePlayerVsBot> createState() => _AdventurePlayerVsBotState();
@@ -81,10 +90,56 @@ class _AdventurePlayerVsBotState extends State<AdventurePlayerVsBot>
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
             transitionDuration: const Duration(milliseconds: 800),
-            pageBuilder: (_, __, ___) =>
-                AdventureFirstLevelScreen(difficulty: widget.difficulty),
-            transitionsBuilder: (_, animation, __, child) =>
-                FadeTransition(opacity: animation, child: child),
+            pageBuilder: (_, __, ___) {
+
+              if (widget.level == 1) {
+                return AdventureFirstLevelScreen(
+                  difficulty: widget.difficulty,
+                  level: widget.level,
+                );
+
+              }
+              if (widget.level == 2) {
+                return AdventureSecondLevelScreen(
+                  difficulty: widget.difficulty,
+                  level: widget.level,
+                );
+              }
+
+              if (widget.level == 3) {
+                return AdventureThirdLevelScreen(
+                  difficulty: widget.difficulty,
+                  level: widget.level,
+                );
+              }
+
+              if (widget.level == 4) {
+                return AdventureFourthLevelScreen(
+                  difficulty: widget.difficulty,
+                  level: widget.level,
+                );
+              }
+
+              if (widget.level == 5) {
+                return AdventureFifthLevelScreen(
+                  difficulty: widget.difficulty,
+                  level: widget.level,
+                );
+              }
+
+              if (widget.level == 6) {
+                return AdventureSixthLevelScreen(
+                  difficulty: widget.difficulty,
+                  level: widget.level,
+                );
+              }
+
+              return Text("");
+            },
+
+            transitionsBuilder:
+                (_, animation, __, child) =>
+                    FadeTransition(opacity: animation, child: child),
           ),
         );
       }
@@ -142,7 +197,9 @@ class _AdventurePlayerVsBotState extends State<AdventurePlayerVsBot>
                       position: _player2Slide,
                       child: FadeTransition(
                         opacity: _fadeIn,
-                        child: AdventureBotCard(name: "Adventure 1"),
+                        child: AdventureBotCard(
+                          name: "Adventure ${widget.level}",
+                        ),
                       ),
                     ),
                   ],

@@ -57,6 +57,8 @@ class _AvatarSelectionScreenState extends State<AvatarSelectionScreen>
         context,
         MaterialPageRoute(
           builder: (_) => MatchScreen(
+            navigateToScreen: widget.navigateToScreen,
+            showError: widget.showError,
             player1Name: "Player 1",
             player1Icon: avatars[player1Selection!].icon,
             player1Color: avatars[player1Selection!].color,

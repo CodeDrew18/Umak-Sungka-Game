@@ -83,7 +83,7 @@ class _SplashscreenState extends State<Splashscreen> {
             
             const SizedBox(height: 20),
             
-            Text(
+            Text(textAlign: TextAlign.center,
               "Sungka Master",
               style: GoogleFonts.poppins(
                 color: Colors.yellow,
