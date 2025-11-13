@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
+import 'package:sungka/screens/online/game_match/player_2_card.dart';
 import 'package:sungka/screens/online/game_match/player_vs_opponent_card.dart';
 import 'package:sungka/screens/online/online_game_screen.dart';
 
@@ -34,6 +36,12 @@ class _PlayerVsOpponentState extends State<PlayerVsOpponent>
   @override
   void initState() {
     super.initState();
+
+ SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeRight,
+    DeviceOrientation.landscapeLeft,
+  ]);
 
     _controller = AnimationController(
       vsync: this,
@@ -188,7 +196,7 @@ class _PlayerVsOpponentState extends State<PlayerVsOpponent>
                           position: _player2Slide,
                           child: FadeTransition(
                             opacity: _fadeIn,
-                            child: PlayerVsOpponentCard(name: player2Name),
+                            child: Player2Card(name: player2Name),
                           ),
                         ),
                       ],

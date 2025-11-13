@@ -160,13 +160,17 @@ import 'package:sungka/screens/play_with_friends/Game%20Match/player_card.dart';
 import 'package:sungka/screens/play_with_friends/On%20Match/on_match_screen.dart';
 
 class MatchScreen extends StatefulWidget {
+  
+  
   final String player1Name;
   final IconData player1Icon;
   final Color player1Color;
+  
 
   final String player2Name;
   final IconData player2Icon;
   final Color player2Color;
+
 
   const MatchScreen({
     super.key,

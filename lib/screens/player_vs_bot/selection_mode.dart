@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sungka/screens/components/pebble_bounce.dart';
 import 'package:sungka/screens/home_screen.dart';
+import 'package:sungka/screens/player_vs_bot/board_selection/board_selection_screen.dart';
 import 'package:sungka/screens/player_vs_bot/game_match/player_vs_bot.dart';
 import 'package:sungka/screens/start_game_screen.dart';
 
@@ -245,6 +246,8 @@ class _SelectionModeState extends State<SelectionMode> {
                                                         difficulty: difficulty),
                                               ),
                                             );
+
+                                            // Navigator.push(context, MaterialPageRoute(builder: (_)=> BoardSelectionScreen()));
                                           },
                                         ),
                                       ),
