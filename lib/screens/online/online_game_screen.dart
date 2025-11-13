@@ -368,15 +368,17 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed:
-                        () => widget.navigateToScreen(
-                          GameWidget(
-                            game: StartMenuGame(
-                              navigateToScreen: widget.navigateToScreen,
-                              showError: widget.showError,
-                            ),
+                    onPressed: () {
+                      if (!mounted) return;
+                      widget.navigateToScreen(
+                        GameWidget(
+                          game: StartMenuGame(
+                            navigateToScreen: widget.navigateToScreen,
+                            showError: widget.showError,
                           ),
                         ),
+                      );
+                    },
                     child: const Text("Back to Menu"),
                   ),
                 ],
@@ -455,6 +457,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
     int player2Score,
   ) async {
     if (isMakingMove) return;
+    if (!mounted) return;
     setState(() => isMakingMove = true);
 
     try {
@@ -486,7 +489,9 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
     } catch (e) {
       widget.showError("Error during move: $e");
     } finally {
-      setState(() => isMakingMove = false);
+      if (mounted) {
+        setState(() => isMakingMove = false);
+      }
     }
   }
 
@@ -538,8 +543,9 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
     );
 
     if (winnerId != "draw") {
+      // At this point, winnerId and loserId are guaranteed to be player IDs
       await firestoreService.updateUserRating(
-        winnerId!,
+        winnerId,
         newWinnerRating,
         winner: true,
       );
@@ -558,6 +564,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
     player1Score,
     player2Score,
   ) {
+    if (!mounted) return;
     showDialog(
       context: context,
       builder: (context) {

@@ -251,6 +251,8 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void signInWithGoogle() async {
+    if (!mounted) return;
+
     try {
       final userCredential = await authService.signInWithGoogle();
 
@@ -284,6 +286,8 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> _handleGuestSignIn() async {
+    if (!mounted) return;
+
     try {
       final userCredential = await authService.signInAsGuest();
       final user = userCredential.user;
@@ -291,15 +295,20 @@ class _AuthScreenState extends State<AuthScreen> {
       if (user != null) {
         await firestoreService.saveUser(user.uid, null);
 
-        final nextScreen = UsernameScreen(
-          navigateToScreen: widget.navigateToScreen,
-          showError: widget.showError,
-        );
+        if (mounted) {
+          final nextScreen = UsernameScreen(
+            navigateToScreen: widget.navigateToScreen,
+            showError: widget.showError,
+          );
 
-        widget.navigateToScreen(nextScreen);
+          widget.navigateToScreen(nextScreen);
+        }
       }
     } catch (e) {
       print('Guest Sign-In Error: $e');
+      if (mounted) {
+        widget.showError('Failed to sign in as guest. Please try again.');
+      }
     }
   }
 

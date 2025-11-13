@@ -81,6 +81,7 @@ class _PlayerVsOpponentState extends State<PlayerVsOpponent>
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
+        if (!mounted) return;
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
             transitionDuration: const Duration(milliseconds: 800),
