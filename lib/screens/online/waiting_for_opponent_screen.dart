@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/screens/home_screen.dart'; 
 import 'package:sungka/screens/online/game_match/player_vs_opponent.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WaitingForOpponentScreen extends StatefulWidget {
   const WaitingForOpponentScreen({super.key, required this.matchId});
@@ -21,6 +23,9 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
   late AnimationController _glowController;
   late AnimationController _pulseController;
 
+  Timer? botTimer;
+  bool botJoined = false;
+
   @override
   void initState() {
     super.initState();
@@ -33,16 +38,57 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
+
+    botTimer = Timer(const Duration(seconds: 30), joinBotIfNoOpponent);
   }
 
   @override
   void dispose() {
     _glowController.dispose();
     _pulseController.dispose();
+
+    botTimer?.cancel();
     super.dispose();
   }
   void _navigateToScreen(Widget screen) {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => screen));
+  }
+
+   Future<void> joinBotIfNoOpponent() async {
+    if (botJoined) return;
+
+    try {
+      final matchSnapshot = await firestoreService.getMatchOnce(matchId: widget.matchId);
+      if (!matchSnapshot.exists) return;
+
+      final matchData = matchSnapshot.data() as Map<String, dynamic>;
+      final player1Id = matchData['player1Id'];
+      final player2Id = matchData['player2Id'];
+
+      if (player2Id == null || player2Id.isEmpty) {
+        botJoined = true;
+
+        final player1Rating = matchData['player1Rating'] ?? 800;
+        String difficulty;
+        if (player1Rating <= 800) {
+          difficulty = 'easy';
+        } else if (player1Rating <= 1200) {
+          difficulty = 'medium';
+        } else {
+          difficulty = 'hard';
+        }
+
+        await FirebaseFirestore.instance.collection('matches').doc(widget.matchId).update({
+          'player2Id': 'bot_1',
+          'player2Name': 'Bot1',
+          'player2Rating': player1Rating,
+          'difficulty': difficulty,
+          'status': 'playing',
+        });
+      }
+    } catch (e) {
+      debugPrint('Error adding bot: $e');
+    }
   }
 
   void _showError(String message) {

@@ -240,8 +240,10 @@
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sungka/core/services/bot_service.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
 import 'package:sungka/core/services/game_logic_service.dart';
+import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
 import 'package:sungka/screens/widgets/player_tile.dart';
 import 'package:sungka/screens/start_game_screen.dart';
 import 'package:flame/game.dart';
@@ -305,6 +307,20 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
           final turnId = matchData['turnId'];
           final isMyTurn = turnId == currentUser!.uid;
 
+          final difficulty = matchData['difficulty'] ?? 'easy';
+          if (player2Id == 'bot_1' && turnId == player2Id && !isMakingMove) {
+            botPlay(
+              board,
+              player1Id,
+              player2Id,
+              player1Rating,
+              player2Rating,
+              player1Score,
+              player2Score,
+              difficulty,
+            );
+          }
+
           if (winner != null || isGameOver) {
             String player1Status = "";
             String player2Status = "";
@@ -319,13 +335,17 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
             } else if (winner == player1Id) {
               player1Status = "Winner";
               player2Status = "Loser";
-              player1ChangeRating = (matchData['winnerNewRating'] ?? 0) - player1Rating;
-              player2ChangeRating = (matchData['loserNewRating'] ?? 0) - player2Rating;
+              player1ChangeRating =
+                  (matchData['winnerNewRating'] ?? 0) - player1Rating;
+              player2ChangeRating =
+                  (matchData['loserNewRating'] ?? 0) - player2Rating;
             } else if (winner == player2Id) {
               player1Status = "Loser";
               player2Status = "Winner";
-              player1ChangeRating = (matchData['loserNewRating'] ?? 0) - player1Rating;
-              player2ChangeRating = (matchData['winnerNewRating'] ?? 0) - player2Rating;
+              player1ChangeRating =
+                  (matchData['loserNewRating'] ?? 0) - player1Rating;
+              player2ChangeRating =
+                  (matchData['winnerNewRating'] ?? 0) - player2Rating;
             }
 
             return Center(
@@ -348,14 +368,15 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () => widget.navigateToScreen(
-                      GameWidget(
-                        game: StartMenuGame(
-                          navigateToScreen: widget.navigateToScreen,
-                          showError: widget.showError,
+                    onPressed:
+                        () => widget.navigateToScreen(
+                          GameWidget(
+                            game: StartMenuGame(
+                              navigateToScreen: widget.navigateToScreen,
+                              showError: widget.showError,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
                     child: const Text("Back to Menu"),
                   ),
                 ],
@@ -380,16 +401,17 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
                     board: board,
                     isPlayerTurn: isMyTurn,
                     isGameOver: isGameOver,
-                    onPitTap: (pit) => handlePitTap(
-                      pit,
-                      board,
-                      player1Id,
-                      player2Id,
-                      player1Rating,
-                      player2Rating,
-                      player1Score,
-                      player2Score,
-                    ),
+                    onPitTap:
+                        (pit) => handlePitTap(
+                          pit,
+                          board,
+                          player1Id,
+                          player2Id,
+                          player1Rating,
+                          player2Rating,
+                          player1Score,
+                          player2Score,
+                        ),
                   ),
                 ),
 
@@ -402,14 +424,15 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () => showResignDialog(
-                    player1Id,
-                    player2Id,
-                    player1Rating,
-                    player2Rating,
-                    player1Score,
-                    player2Score,
-                  ),
+                  onPressed:
+                      () => showResignDialog(
+                        player1Id,
+                        player2Id,
+                        player1Rating,
+                        player2Rating,
+                        player1Score,
+                        player2Score,
+                      ),
                   child: const Text("Resign"),
                 ),
                 const SizedBox(height: 20),
@@ -439,7 +462,6 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
       final newBoard = GameLogic.makeMove(board, pit, isPlayer1Turn);
       final result = GameLogic.checkEndGame(newBoard);
 
-      // End game check
       if (result['isEnded']) {
         final finalBoard = result['finalBoard'];
         final outcome = GameLogic.getWinner(finalBoard);
@@ -454,7 +476,6 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
           player2Score,
         );
       } else {
-        // Switch turns
         final nextTurnId = isPlayer1Turn ? player2Id : player1Id;
         await firestoreService.updateBoardAndTurn(
           matchId: widget.matchId,
@@ -517,7 +538,11 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
     );
 
     if (winnerId != "draw") {
-      await firestoreService.updateUserRating(winnerId!, newWinnerRating, winner: true);
+      await firestoreService.updateUserRating(
+        winnerId!,
+        newWinnerRating,
+        winner: true,
+      );
       await firestoreService.updateUserRating(loserId!, newLoserRating);
     } else {
       await firestoreService.updateUserRating(player1Id, newWinnerRating);
@@ -547,7 +572,14 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                resign(player1Id, player2Id, player1Rating, player2Rating, player1Score, player2Score);
+                resign(
+                  player1Id,
+                  player2Id,
+                  player1Rating,
+                  player2Rating,
+                  player1Score,
+                  player2Score,
+                );
               },
               child: const Text("Resign"),
             ),
@@ -574,8 +606,10 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
     int newWinnerRating = calculateNewRating(winnerRating, loserRating, 1);
     int newLoserRating = calculateNewRating(loserRating, winnerRating, 0);
 
-    if (winnerId == player1Id) player1Score++;
-    else player2Score++;
+    if (winnerId == player1Id)
+      player1Score++;
+    else
+      player2Score++;
 
     await firestoreService.updateMatchResult(
       matchId: widget.matchId,
@@ -588,14 +622,70 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
       isGameOver: true,
     );
 
-    await firestoreService.updateUserRating(winnerId, newWinnerRating, winner: true);
+    await firestoreService.updateUserRating(
+      winnerId,
+      newWinnerRating,
+      winner: true,
+    );
     await firestoreService.updateUserRating(loserId, newLoserRating);
   }
 
-  int calculateNewRating(int yourRating, int opponentRating, double actualScore) {
+  int calculateNewRating(
+    int yourRating,
+    int opponentRating,
+    double actualScore,
+  ) {
     const K = 10;
-    final expectedScore = 1 / (1 + pow(10, (opponentRating - yourRating) / 400));
+    final expectedScore =
+        1 / (1 + pow(10, (opponentRating - yourRating) / 400));
     return (yourRating + K * (actualScore - expectedScore)).round();
   }
-}
 
+  void botPlay(
+    List<int> board,
+    String player1Id,
+    String player2Id,
+    int player1Rating,
+    int player2Rating,
+    int player1Score,
+    int player2Score,
+    String difficulty,
+  ) async {
+    await Future.delayed(const Duration(seconds: 2));
+
+    final validDifficulties = {
+      'easy': Difficulty.easy,
+      'medium': Difficulty.medium,
+      'hard': Difficulty.hard,
+    };
+
+    final diff = validDifficulties[difficulty] ?? Difficulty.easy;
+
+    final pit = BotService.getBotMove(board, diff);
+    if (pit == -1) return;
+
+    final newBoard = GameLogic.makeMove(board, pit, false);
+    final result = GameLogic.checkEndGame(newBoard);
+
+    if (result['isEnded']) {
+      final finalBoard = result['finalBoard'];
+      final outcome = GameLogic.getWinner(finalBoard);
+      await handleGameOver(
+        outcome,
+        finalBoard,
+        player1Id,
+        player2Id,
+        player1Rating,
+        player2Rating,
+        player1Score,
+        player2Score,
+      );
+    } else {
+      await firestoreService.updateBoardAndTurn(
+        matchId: widget.matchId,
+        newBoard: newBoard,
+        nextTurnId: player1Id,
+      );
+    }
+  }
+}

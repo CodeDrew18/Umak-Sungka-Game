@@ -275,4 +275,8 @@ class FirebaseFirestoreService {
       'playerRating': playerRating,
     };
   }
+
+  Future<DocumentSnapshot> getMatchOnce({required String matchId}) {
+    return firestore.collection('matches').doc(matchId).get();
+  }
 }
