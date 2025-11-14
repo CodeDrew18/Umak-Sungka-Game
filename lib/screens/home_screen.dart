@@ -3,7 +3,6 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:sungka/core/constants/app_colors.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
@@ -40,10 +39,6 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
 
   @override
   Future<void> onLoad() async {
-        SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     await super.onLoad();
     backgroundImage =
         SpriteComponent()
@@ -95,10 +90,12 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
 
     leaderboardButton = LeaderboardButton(
       onPressed: () {
-        navigateToScreen( LeaderboardScreen(
-              navigateToScreen: navigateToScreen,
-              showError: showError,
-        ));
+        navigateToScreen(
+          LeaderboardScreen(
+            navigateToScreen: navigateToScreen,
+            showError: showError,
+          ),
+        );
       },
       primaryColor: AppColors.titleColor,
       accentColor: AppColors.primary,
@@ -210,19 +207,21 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
   void _onModeSelected(String mode) {
     switch (mode) {
       case 'adventure':
-        navigateToScreen( SungkaAdventureScreen(
-              navigateToScreen: navigateToScreen,
-              showError: showError,
-        ));
+        navigateToScreen(
+          SungkaAdventureScreen(
+            navigateToScreen: navigateToScreen,
+            showError: showError,
+          ),
+        );
         break;
-    case 'friends':
-  navigateToScreen(
-    AvatarSelectionScreen(
-      navigateToScreen: navigateToScreen,
-      showError: showError,
-    ),
-  );
-  break;
+      case 'friends':
+        navigateToScreen(
+          AvatarSelectionScreen(
+            navigateToScreen: navigateToScreen,
+            showError: showError,
+          ),
+        );
+        break;
       case 'bot':
         navigateToScreen(
           SelectionMode(
@@ -234,77 +233,80 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
     }
   }
 
+  Future<void> online() async {
+    final user = FirebaseAuth.instance.currentUser;
 
-Future<void> online() async {
-  final user = FirebaseAuth.instance.currentUser;
-
-  if (user == null) {
-    QuickAlert.show(
-      context: buildContext!,
-      type: QuickAlertType.error,
-      title: "Sign In Required",
-      text: "Please log in with your account to play online.",
-      confirmBtnText: "OK",
-    );
-    return;
-  }
-
-  try {
-    final userDoc = await firestoreService.getUser(user: user);
-
-    if (!userDoc.exists) {
+    if (user == null || user.isAnonymous) {
       QuickAlert.show(
         context: buildContext!,
         type: QuickAlertType.error,
-        title: "User Not Found",
-        text: "User data not found. Please contact support.",
+        title: "Sign In Required",
+        text: "Please log in with your account to play online.",
+        confirmBtnText: "OK",
       );
       return;
     }
 
-    final userData = userDoc.data() as Map<String, dynamic>;
-    final userName = userData["name"];
-    final userRating = userData['rating'] ?? 800;
-    final minRating = userRating - 100;
-    final maxRating = userRating + 100;
+    try {
+      final userDoc = await firestoreService.getUser(user: user);
 
-    final findMatch = await firestoreService.findMatch(
-      minRating: minRating,
-      maxRating: maxRating,
-    );
+      if (!userDoc.exists) {
+        QuickAlert.show(
+          context: buildContext!,
+          type: QuickAlertType.error,
+          title: "User Not Found",
+          text: "User data not found. Please contact support.",
+        );
+        return;
+      }
 
-    if (findMatch.docs.isNotEmpty) {
-      final match = findMatch.docs.first;
-      await firestoreService.joinMatch(
-        matchId: match.id,
-        userId: user.uid,
-        userName: userName,
-        rating: userRating,
+      final userData = userDoc.data() as Map<String, dynamic>;
+      final userName = userData["name"];
+      final userRating = userData['rating'] ?? 800;
+      final minRating = userRating - 100;
+      final maxRating = userRating + 100;
+
+      final findMatch = await firestoreService.findMatch(
+        minRating: minRating,
+        maxRating: maxRating,
       );
-      navigateToScreen(
-        OnlineGameScreen(
+
+      if (findMatch.docs.isNotEmpty) {
+        final match = findMatch.docs.first;
+        await firestoreService.joinMatch(
           matchId: match.id,
-          navigateToScreen: navigateToScreen,
-          showError: showError,
-        ),
+          userId: user.uid,
+          userName: userName,
+          rating: userRating,
+        );
+        navigateToScreen(
+          OnlineGameScreen(
+            matchId: match.id,
+            navigateToScreen: navigateToScreen,
+            showError: showError,
+          ),
+        );
+      } else {
+        final newMatch = await firestoreService.newMatch(
+          userId: user.uid,
+          userName: userName,
+          userRating: userRating,
+        );
+        navigateToScreen(
+          WaitingForOpponentScreen(
+            matchId: newMatch.id,
+            navigateToScreen: navigateToScreen,
+            showError: showError,
+          ),
+        );
+      }
+    } catch (e) {
+      QuickAlert.show(
+        context: buildContext!,
+        type: QuickAlertType.error,
+        title: "Error",
+        text: e.toString(),
       );
-    } else {
-      final newMatch = await firestoreService.newMatch(
-        userId: user.uid,
-        userName: userName,
-        userRating: userRating,
-      );
-      navigateToScreen(WaitingForOpponentScreen(matchId: newMatch.id));
     }
-  } catch (e) {
-    QuickAlert.show(
-      context: buildContext!,
-      type: QuickAlertType.error,
-      title: "Error",
-      text: e.toString(),
-    );
   }
-
-
-}
 }

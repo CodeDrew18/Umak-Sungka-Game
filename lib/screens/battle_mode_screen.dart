@@ -107,7 +107,12 @@ class _BattleModeScreenState extends State<BattleModeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => WaitingForOpponentScreen(matchId: newMatch.id),
+            builder:
+                (_) => WaitingForOpponentScreen(
+                  matchId: newMatch.id,
+                  navigateToScreen: widget.navigateToScreen,
+                  showError: widget.showError,
+                ),
           ),
         );
       }

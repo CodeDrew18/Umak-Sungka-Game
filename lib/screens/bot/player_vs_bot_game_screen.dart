@@ -42,6 +42,8 @@ class _PlayerVsBotGameScreenState extends State<PlayerVsBotGameScreen> {
   }
 
   void botTurn() {
+    if (!mounted) return;
+
     final pit = BotService.getBotMove(board, widget.gameMode);
     if (pit == -1) {
       return;
@@ -60,6 +62,8 @@ class _PlayerVsBotGameScreenState extends State<PlayerVsBotGameScreen> {
   }
 
   void showEndGameDialog() {
+    if (!mounted) return;
+
     String result;
     if (board[7] > board[15]) {
       result = "You Win!";
