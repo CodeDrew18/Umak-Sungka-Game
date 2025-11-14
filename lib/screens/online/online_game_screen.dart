@@ -403,6 +403,8 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
                     board: board,
                     isPlayerTurn: isMyTurn,
                     isGameOver: isGameOver,
+                    topPlayerName: player2Name,
+                    bottomPlayerName: player1Name,
                     onPitTap:
                         (pit) => handlePitTap(
                           pit,

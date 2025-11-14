@@ -236,7 +236,7 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
   Future<void> online() async {
     final user = FirebaseAuth.instance.currentUser;
 
-    if (user == null || user.isAnonymous) {
+    if (user == null) {
       QuickAlert.show(
         context: buildContext!,
         type: QuickAlertType.error,

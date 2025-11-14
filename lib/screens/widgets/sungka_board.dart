@@ -7,12 +7,19 @@ class SungkaBoard extends StatefulWidget {
     required this.isPlayerTurn,
     required this.isGameOver,
     required this.onPitTap,
+    this.topPlayerName = "Bot",
+    this.bottomPlayerName = "Player",
+    this.isPlayer = false,
   });
 
   final List<int> board;
   final bool isPlayerTurn;
   final bool isGameOver;
   final Function(int pit) onPitTap;
+
+  final String topPlayerName;
+  final String bottomPlayerName;
+  final bool isPlayer;
 
   @override
   State<SungkaBoard> createState() => _SungkaBoardState();
@@ -25,7 +32,7 @@ class _SungkaBoardState extends State<SungkaBoard> {
       children: [
         Row(
           children: [
-            buildStore(widget.board[15], "Bot Store"),
+            buildStore(widget.board[15], widget.topPlayerName),
             Row(
               children: List.generate(7, (index) {
                 int pitIndex = 14 - index;
@@ -34,7 +41,7 @@ class _SungkaBoardState extends State<SungkaBoard> {
               }),
             ),
 
-            buildStore(widget.board[7], "Player Store"),
+            buildStore(widget.board[7], widget.bottomPlayerName),
           ],
         ),
 
@@ -61,6 +68,8 @@ class _SungkaBoardState extends State<SungkaBoard> {
   }
 
   Widget buildStore(int stones, String label) {
-    return Column(children: [Text("$stones"), Text(label)]);
+    final firstWord = label.split(' ').first;
+
+    return Column(children: [Text("$stones"), Text("$firstWord's Store")]);
   }
 }
