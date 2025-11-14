@@ -526,8 +526,8 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
       winnerId = "draw";
       newWinnerRating = calculateNewRating(player1Rating, player2Rating, 0.5);
       newLoserRating = calculateNewRating(player2Rating, player1Rating, 0.5);
-      player1Score += 1;
-      player2Score += 1;
+      player1Score++;
+      player2Score++;
     }
 
     await firestoreService.updateMatchResult(
@@ -542,17 +542,16 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
       isGameOver: true,
     );
 
-    if (winnerId != "draw") {
-      // At this point, winnerId and loserId are guaranteed to be player IDs
+    // Update user ratings only for real users
+    if (winnerId != "draw" && winnerId != "bot_1") {
       await firestoreService.updateUserRating(
         winnerId,
         newWinnerRating,
         winner: true,
       );
-      await firestoreService.updateUserRating(loserId!, newLoserRating);
-    } else {
-      await firestoreService.updateUserRating(player1Id, newWinnerRating);
-      await firestoreService.updateUserRating(player2Id, newLoserRating);
+    }
+    if (loserId != null && loserId != "bot_1") {
+      await firestoreService.updateUserRating(loserId, newLoserRating);
     }
   }
 
@@ -613,10 +612,11 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
     int newWinnerRating = calculateNewRating(winnerRating, loserRating, 1);
     int newLoserRating = calculateNewRating(loserRating, winnerRating, 0);
 
-    if (winnerId == player1Id)
+    if (winnerId == player1Id) {
       player1Score++;
-    else
+    } else {
       player2Score++;
+    }
 
     await firestoreService.updateMatchResult(
       matchId: widget.matchId,
@@ -629,12 +629,18 @@ class _OnlineGameScreenState extends State<OnlineGameScreen> {
       isGameOver: true,
     );
 
-    await firestoreService.updateUserRating(
-      winnerId,
-      newWinnerRating,
-      winner: true,
-    );
-    await firestoreService.updateUserRating(loserId, newLoserRating);
+    // Update user ratings only for real users
+    if (winnerId != "bot_1") {
+      await firestoreService.updateUserRating(
+        winnerId,
+        newWinnerRating,
+        winner: true,
+      );
+    }
+
+    if (loserId != "bot_1") {
+      await firestoreService.updateUserRating(loserId, newLoserRating);
+    }
   }
 
   int calculateNewRating(

@@ -33,6 +33,24 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
   Timer? botTimer;
   bool botJoined = false;
 
+  final List<String> botNames = [
+    "Krishna Hernandez",
+    "Kristopher Pasaron",
+    "Deo Cabael",
+    "Nyah Balana",
+    "Tristan Garin",
+    "Camela Arcalas",
+    "Aj Osias",
+    "Paulo Pajela",
+    "Philip Pajela",
+    "Railey Capitis",
+  ];
+
+  String getRandomBotName() {
+    final random = Random();
+    return botNames[random.nextInt(botNames.length)];
+  }
+
   @override
   void initState() {
     super.initState();
@@ -89,7 +107,7 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
             .doc(widget.matchId)
             .update({
               'player2Id': 'bot_1',
-              'player2Name': 'Bot1',
+              'player2Name': getRandomBotName(),
               'player2Rating': player1Rating,
               'difficulty': difficulty,
               'status': 'playing',

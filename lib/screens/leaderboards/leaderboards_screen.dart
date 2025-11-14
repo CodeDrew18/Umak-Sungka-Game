@@ -18,7 +18,6 @@ class Player {
     required this.name,
     required this.score,
     required this.rank,
-
   });
 }
 
@@ -34,9 +33,9 @@ class FilipinoPalette {
 }
 
 class LeaderboardScreen extends StatefulWidget {
-    final Function(Widget screen) navigateToScreen;
+  final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
-  
+
   LeaderboardScreen({required this.navigateToScreen, required this.showError});
 
   @override
@@ -89,278 +88,311 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   }
 
   Icon? getRankIcon(int rank) {
-    if (rank == 1) return const Icon(Icons.emoji_events, color: Color(0xFFFFD700), size: 24);
-    if (rank == 2) return const Icon(Icons.emoji_events, color: Color(0xFFC0C0C0), size: 24);
-    if (rank == 3) return const Icon(Icons.emoji_events, color: Color(0xFFCD7F32), size: 24);
+    if (rank == 1)
+      return const Icon(Icons.emoji_events, color: Color(0xFFFFD700), size: 24);
+    if (rank == 2)
+      return const Icon(Icons.emoji_events, color: Color(0xFFC0C0C0), size: 24);
+    if (rank == 3)
+      return const Icon(Icons.emoji_events, color: Color(0xFFCD7F32), size: 24);
     return null;
   }
 
   Icon getRankChange(int current, int previous) {
     int change = previous - current;
-    if (change > 0) return const Icon(Icons.trending_up, color: Color(0xFF4CAF50), size: 16);
-    if (change < 0) return const Icon(Icons.trending_down, color: Color(0xFFE53935), size: 16);
+    if (change > 0)
+      return const Icon(Icons.trending_up, color: Color(0xFF4CAF50), size: 16);
+    if (change < 0)
+      return const Icon(
+        Icons.trending_down,
+        color: Color(0xFFE53935),
+        size: 16,
+      );
     return const Icon(Icons.remove, color: Color(0xFF9E9E9E), size: 16);
   }
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: FilipinoPalette.darkBg,
-    body: FutureBuilder(
-      future: firestoreService.getRankings(currentUser!.uid),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(
-              color: FilipinoPalette.warmGold,
-              strokeWidth: 3,
-            ),
-          );
-        }
-
-        if (!snapshot.hasData || snapshot.data == null) {
-          return Center(
-            child: Text(
-              'No leaderboard data available',
-              style: TextStyle(
-                color: FilipinoPalette.creamAccent.withOpacity(0.6),
-                fontSize: 16,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: FilipinoPalette.darkBg,
+      body: FutureBuilder(
+        future: firestoreService.getRankings(currentUser!.uid),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: FilipinoPalette.warmGold,
+                strokeWidth: 3,
               ),
-            ),
-          );
-        }
+            );
+          }
 
-        final data = snapshot.data!;
-        final top100Players = data['top100Players'] as List;
-        final playerRank = data['playerRank'];
-        final playerName = data['playerName'];
-        final playerRating = data['playerRating'];
+          if (!snapshot.hasData || snapshot.data == null) {
+            return Center(
+              child: Text(
+                'No leaderboard data available',
+                style: TextStyle(
+                  color: FilipinoPalette.creamAccent.withOpacity(0.6),
+                  fontSize: 16,
+                ),
+              ),
+            );
+          }
 
-        final top3 = top100Players.take(3).toList();
-        final rest = top100Players.skip(3).toList();
+          final data = snapshot.data!;
+          final top100Players = data['top100Players'] as List;
+          final playerRank = data['playerRank'];
+          final playerName = data['playerName'];
+          final playerRating = data['playerRating'];
 
-        return Stack(
-          children: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Gap(60),
-                      Text(
-                        "LEADERBOARDS",
-                        style: GoogleFonts.poppins(
-                          color: FilipinoPalette.warmGold,
-                          fontSize: 42,
-                          fontWeight: FontWeight.w800,
-                          shadows: [
-                            Shadow(
-                              offset: const Offset(0, 4),
-                              blurRadius: 12,
-                              color: const Color(0xFFE67E22).withOpacity(0.6),
-                            ),
-                            Shadow(
-                              offset: const Offset(0, 8),
-                              blurRadius: 20,
-                              color: const Color(0xFFE67E22).withOpacity(0.3),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          if (top3.length > 1)
-                            _TopPlayerCard(
-                              rank: 2,
-                              playerName: top3[1]['name'] ?? 'Unknown',
-                              subtitle: getTopPlayerSubtitle(2),
-                              rating: top3[1]['rating'],
-                              color: getTopPlayerColor(2),
-                              size: 80,
-                            ),
-                          if (top3.isNotEmpty)
-                            _TopPlayerCard(
-                              rank: 1,
-                              playerName: top3[0]['name'] ?? 'Unknown',
-                              subtitle: getTopPlayerSubtitle(1),
-                              rating: top3[0]['rating'],
-                              color: getTopPlayerColor(1),
-                              size: 100,
-                              isTopOne: true,
-                            ),
-                          if (top3.length > 2)
-                            _TopPlayerCard(
-                              rank: 3,
-                              playerName: top3[2]['name'] ?? 'Unknown',
-                              subtitle: getTopPlayerSubtitle(3),
-                              rating: top3[2]['rating'],
-                              color: getTopPlayerColor(3),
-                              size: 75,
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'ALL RANKINGS',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 1.5,
-                            color: FilipinoPalette.warmGold.withOpacity(0.8),
+          final top3 = top100Players.take(3).toList();
+          final rest = top100Players.skip(3).toList();
+
+          return Stack(
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      bottom: 16,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Gap(60),
+                        Text(
+                          "LEADERBOARDS",
+                          style: GoogleFonts.poppins(
+                            color: FilipinoPalette.warmGold,
+                            fontSize: 42,
+                            fontWeight: FontWeight.w800,
+                            shadows: [
+                              Shadow(
+                                offset: const Offset(0, 4),
+                                blurRadius: 12,
+                                color: const Color(0xFFE67E22).withOpacity(0.6),
+                              ),
+                              Shadow(
+                                offset: const Offset(0, 8),
+                                blurRadius: 20,
+                                color: const Color(0xFFE67E22).withOpacity(0.3),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 24),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            if (top3.length > 1)
+                              _TopPlayerCard(
+                                rank: 2,
+                                playerName: top3[1]['name'] ?? 'Unknown',
+                                subtitle: getTopPlayerSubtitle(2),
+                                rating: top3[1]['rating'],
+                                color: getTopPlayerColor(2),
+                                size: 80,
+                                record:
+                                    'W: ${top3[1]['wins'] ?? 0} | L: ${top3[1]['losses'] ?? 0} | D: ${top3[1]['draws'] ?? 0}',
+                              ),
+                            if (top3.isNotEmpty)
+                              _TopPlayerCard(
+                                rank: 1,
+                                playerName: top3[0]['name'] ?? 'Unknown',
+                                subtitle: getTopPlayerSubtitle(1),
+                                rating: top3[0]['rating'],
+                                color: getTopPlayerColor(1),
+                                size: 100,
+                                isTopOne: true,
+                                record:
+                                    'W: ${top3[0]['wins'] ?? 0} | L: ${top3[0]['losses'] ?? 0} | D: ${top3[0]['draws'] ?? 0}',
+                              ),
+                            if (top3.length > 2)
+                              _TopPlayerCard(
+                                rank: 3,
+                                playerName: top3[2]['name'] ?? 'Unknown',
+                                subtitle: getTopPlayerSubtitle(3),
+                                rating: top3[2]['rating'],
+                                color: getTopPlayerColor(3),
+                                size: 75,
+                                record:
+                                    'W: ${top3[2]['wins'] ?? 0} | L: ${top3[2]['losses'] ?? 0} | D: ${top3[2]['draws'] ?? 0}',
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'ALL RANKINGS',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1.5,
+                              color: FilipinoPalette.warmGold.withOpacity(0.8),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: rest.length,
+                      itemBuilder: (context, index) {
+                        final player = rest[index];
+                        final rank = index + 4;
+                        final isCurrent = player['id'] == currentUser!.uid;
+
+                        final wins = player['wins'] ?? 0;
+                        final losses = player['losses'] ?? 0;
+                        final draws = player['draws'] ?? 0;
+                        final recordSubtitle =
+                            'W: $wins | L: $losses | D: $draws';
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: _buildLeaderboardRow(
+                            rank: rank,
+                            playerName: player['name'] ?? 'Unknown',
+                            rating: player['rating'],
+                            isCurrentPlayer: isCurrent,
+                            subtitle: recordSubtitle,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 90),
+                ],
+              ),
+
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        FilipinoPalette.darkBg.withOpacity(0),
+                        FilipinoPalette.darkBg.withOpacity(0.98),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+                  child: _buildCurrentPlayerBar(
+                    rank: playerRank,
+                    playerName: playerName ?? 'You',
+                    rating: playerRating,
+                    wins: data['playerWins'] ?? 0,
+                    losses: data['playerLosses'] ?? 0,
+                    draws: data['playerDraws'] ?? 0,
                   ),
                 ),
+              ),
 
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: rest.length,
-                    itemBuilder: (context, index) {
-                      final player = rest[index];
-                      final rank = index + 4;
-                      final isCurrent = player['id'] == currentUser!.uid;
+              Positioned(
+                top: 16, // distance from the very top of the screen
+                left: 16, // distance from the left edge
+                child: SafeArea(
+                  top: true,
+                  bottom: false,
+                  child: GestureDetector(
+                    onTap: () async {
+                      final overlay = OverlayEntry(
+                        builder: (_) => const PebbleBounce(),
+                      );
+                      Overlay.of(context).insert(overlay);
 
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: _buildLeaderboardRow(
-                          rank: rank,
-                          playerName: player['name'] ?? 'Unknown',
-                          rating: player['rating'],
-                          isCurrentPlayer: isCurrent,
+                      await Future.delayed(const Duration(milliseconds: 300));
+                      overlay.remove();
+
+                      widget.navigateToScreen(
+                        GameWidget(
+                          game: HomeGame(
+                            navigateToScreen: widget.navigateToScreen,
+                            showError: widget.showError,
+                          ),
                         ),
                       );
                     },
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 90),
-              ],
-            ),
-
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      FilipinoPalette.darkBg.withOpacity(0),
-                      FilipinoPalette.darkBg.withOpacity(0.98),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-                padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
-                child: _buildCurrentPlayerBar(
-                  rank: playerRank,
-                  playerName: playerName ?? 'You',
-                  rating: playerRating,
                 ),
               ),
-            ),
-
-              Positioned(
-  top: 16, // distance from the very top of the screen
-  left: 16, // distance from the left edge
-  child: SafeArea(
-    top: true,
-    bottom: false,
-    child: GestureDetector(
-      onTap: () async {
-        final overlay = OverlayEntry(builder: (_) => const PebbleBounce());
-        Overlay.of(context).insert(overlay);
-
-        await Future.delayed(const Duration(milliseconds: 300));
-        overlay.remove();
-
-        widget.navigateToScreen(
-          GameWidget(
-            game: HomeGame(
-              navigateToScreen: widget.navigateToScreen,
-              showError: widget.showError,
-            ),
-          ),
-        );
-      },
-      child: Container(
-        width: 60,
-        height: 60,
-        decoration: BoxDecoration(
-          color: Colors.red,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: const Icon(
-          Icons.arrow_back,
-          color: Colors.white,
-          size: 28,
-        ),
+            ],
+          );
+        },
       ),
-    ),
-  ),
-),
-
-          ],
-        );
-      },
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildLeaderboardRow({
     required int rank,
     required String playerName,
     required int rating,
     required bool isCurrentPlayer,
+    String subtitle = '',
   }) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: isCurrentPlayer
-              ? [
-                  FilipinoPalette.warmGold.withOpacity(0.12),
-                  FilipinoPalette.deepRed.withOpacity(0.08),
-                ]
-              : [
-                  FilipinoPalette.coconutBrown.withOpacity(0.08),
-                  FilipinoPalette.earthTone.withOpacity(0.04),
-                ],
+          colors:
+              isCurrentPlayer
+                  ? [
+                    FilipinoPalette.warmGold.withOpacity(0.12),
+                    FilipinoPalette.deepRed.withOpacity(0.08),
+                  ]
+                  : [
+                    FilipinoPalette.coconutBrown.withOpacity(0.08),
+                    FilipinoPalette.earthTone.withOpacity(0.04),
+                  ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isCurrentPlayer
-              ? FilipinoPalette.warmGold.withOpacity(0.4)
-              : FilipinoPalette.coconutBrown.withOpacity(0.2),
+          color:
+              isCurrentPlayer
+                  ? FilipinoPalette.warmGold.withOpacity(0.4)
+                  : FilipinoPalette.coconutBrown.withOpacity(0.2),
           width: isCurrentPlayer ? 2 : 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: isCurrentPlayer
-                ? FilipinoPalette.warmGold.withOpacity(0.15)
-                : Colors.black.withOpacity(0.2),
+            color:
+                isCurrentPlayer
+                    ? FilipinoPalette.warmGold.withOpacity(0.15)
+                    : Colors.black.withOpacity(0.2),
             blurRadius: 12,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
@@ -384,7 +416,7 @@ Widget build(BuildContext context) {
                   color: FilipinoPalette.coconutBrown.withOpacity(0.4),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
-                )
+                ),
               ],
             ),
             child: Center(
@@ -430,7 +462,7 @@ Widget build(BuildContext context) {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Competitive Rank',
+                  subtitle,
                   style: TextStyle(
                     color: FilipinoPalette.creamAccent.withOpacity(0.5),
                     fontSize: 11,
@@ -456,7 +488,7 @@ Widget build(BuildContext context) {
                   color: FilipinoPalette.warmGold.withOpacity(0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
-                )
+                ),
               ],
             ),
             child: Text(
@@ -478,7 +510,12 @@ Widget build(BuildContext context) {
     required int rank,
     required String playerName,
     required int rating,
+    int wins = 0,
+    int losses = 0,
+    int draws = 0,
   }) {
+    final record = 'W: $wins | L: $losses | D: $draws';
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -499,7 +536,7 @@ Widget build(BuildContext context) {
             color: FilipinoPalette.warmGold.withOpacity(0.2),
             blurRadius: 16,
             offset: const Offset(0, -4),
-          )
+          ),
         ],
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -510,10 +547,7 @@ Widget build(BuildContext context) {
             height: 44,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  FilipinoPalette.warmGold,
-                  FilipinoPalette.goldGlow,
-                ],
+                colors: [FilipinoPalette.warmGold, FilipinoPalette.goldGlow],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -547,7 +581,7 @@ Widget build(BuildContext context) {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Your Current Rank',
+                  record,
                   style: TextStyle(
                     fontSize: 11,
                     color: FilipinoPalette.creamAccent.withOpacity(0.6),
@@ -566,7 +600,7 @@ Widget build(BuildContext context) {
                   color: FilipinoPalette.deepRed.withOpacity(0.4),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
-                )
+                ),
               ],
             ),
             child: Text(
@@ -593,6 +627,7 @@ class _TopPlayerCard extends StatelessWidget {
   final Color color;
   final double size;
   final bool isTopOne;
+  final String record;
 
   const _TopPlayerCard({
     required this.rank,
@@ -602,6 +637,7 @@ class _TopPlayerCard extends StatelessWidget {
     required this.color,
     required this.size,
     this.isTopOne = false,
+    this.record = '',
   });
 
   @override
@@ -647,7 +683,7 @@ class _TopPlayerCard extends StatelessWidget {
                     color: color.withOpacity(0.5),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
-                  )
+                  ),
                 ],
               ),
               child: Center(
@@ -682,6 +718,14 @@ class _TopPlayerCard extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           '$rating pts',
+          style: const TextStyle(
+            color: FilipinoPalette.warmGold,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          record,
           style: const TextStyle(
             color: FilipinoPalette.warmGold,
             fontWeight: FontWeight.bold,

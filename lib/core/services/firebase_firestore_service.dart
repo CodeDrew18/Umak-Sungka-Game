@@ -260,7 +260,6 @@
 //   }
 // }
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -495,6 +494,9 @@ class FirebaseFirestoreService {
             'id': player.id,
             'name': player['name'] ?? 'Unknown',
             'rating': player['rating'] ?? 0,
+            'wins': player['wins'] ?? 0,
+            'losses': player['losses'] ?? 0,
+            'draws': player['draws'] ?? 0,
           };
         }).toList();
 
@@ -505,7 +507,6 @@ class FirebaseFirestoreService {
 
     final int userRating = userDoc['rating'] ?? 0;
     final String playerName = userDoc['name'] ?? 'Unknown Player';
-    final int playerRating = userDoc['rating'] ?? 0;
 
     final higherRated =
         await firestore
@@ -525,9 +526,7 @@ class FirebaseFirestoreService {
       (doc) => doc.id == userId,
     );
 
-    if (positionInTieGroup == -1) {
-      positionInTieGroup = 0;
-    }
+    if (positionInTieGroup == -1) positionInTieGroup = 0;
 
     int playerRank = higherRated.count! + positionInTieGroup + 1;
 
@@ -535,7 +534,10 @@ class FirebaseFirestoreService {
       'top100Players': top100Players,
       'playerRank': playerRank,
       'playerName': playerName,
-      'playerRating': playerRating,
+      'playerRating': userRating,
+      'playerWins': userDoc['wins'] ?? 0,
+      'playerLosses': userDoc['losses'] ?? 0,
+      'playerDraws': userDoc['draws'] ?? 0,
     };
   }
 
