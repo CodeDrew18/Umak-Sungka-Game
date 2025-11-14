@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class PlayerVsOpponentCard extends StatefulWidget {
+class Player2Card extends StatefulWidget {
   final String name;
 
-  const PlayerVsOpponentCard({
+  const Player2Card({
     super.key,
     required this.name,
   });
 
   @override
-  State<PlayerVsOpponentCard> createState() => _PlayerVsOpponentCardState();
+  State<Player2Card> createState() => _Player2CardState();
 }
 
-class _PlayerVsOpponentCardState extends State<PlayerVsOpponentCard> {
+class _Player2CardState extends State<Player2Card> {
   
   
   @override
@@ -23,10 +23,10 @@ class _PlayerVsOpponentCardState extends State<PlayerVsOpponentCard> {
       children: [
         CircleAvatar(
           radius: 60,
-          backgroundColor: Colors.red.withOpacity(0.2),
+          backgroundColor: Colors.amber.withOpacity(0.2),
           child: Icon(
             Icons.person,
-            color: Colors.red,
+            color: Colors.amber,
             size: 70,
           ),
         ),
@@ -34,7 +34,7 @@ class _PlayerVsOpponentCardState extends State<PlayerVsOpponentCard> {
         Text(
           widget.name,
           style: GoogleFonts.poppins(
-            color: Colors.red,
+            color: Colors.amber,
             fontSize: 28,
             fontWeight: FontWeight.bold,
           ),

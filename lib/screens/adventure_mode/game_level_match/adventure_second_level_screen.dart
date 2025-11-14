@@ -4,9 +4,8 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
-// import 'package:sungka/core/services/adventure_first_level_game_logic.dart';
+// import 'package:sungka/core/services/adventure_first_level_game_logic.dart'; 
 // import 'package:sungka/core/services/bot_service.dart';
-
 // import 'package:sungka/screens/adventure_mode/game_level_match/adventure_cards.dart';
 // import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
 
@@ -84,25 +83,23 @@
 //   bool shouldRepaint(AnimatedPebblesPainter oldDelegate) => true;
 // }
 
-// // -------------------------------------------------------------------
-// // 3. AdventureFirstLevelScreen (Main Widget, logic unchanged)
-// // -------------------------------------------------------------------
 
-// class AdventureFirstLevelScreen extends StatefulWidget {
+
+// class AdventureSecondLevelScreen extends StatefulWidget {
 //   final Difficulty difficulty;
 //   final dynamic level;
-//   const AdventureFirstLevelScreen({
+//   const AdventureSecondLevelScreen({
 //     Key? key,
 //     required this.difficulty,
 //     required this.level,
-//   }) : super(key: key);
+//   });
 
 //   @override
-//   State<AdventureFirstLevelScreen> createState() =>
-//       _AdventureFirstLevelScreenState();
+//   State<AdventureSecondLevelScreen> createState() =>
+//       _AdventureSecondLevelScreenState();
 // }
 
-// class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
+// class _AdventureSecondLevelScreenState extends State<AdventureSecondLevelScreen>
 //     with TickerProviderStateMixin {
 //   late List<int> board;
 //   bool isPlayerTurn = true;
@@ -114,8 +111,7 @@
 //   List<AnimatingPebbleData> animatingPebbles = [];
 //   late AnimationController _masterController;
 
-//   static const String _woodenTexturePath =
-//       'assets/images/assets/texture_test.jpg';
+//   static const String _woodenTexturePath = 'assets/images/assets/texture_test.jpg';
 
 //   @override
 //   void initState() {
@@ -149,9 +145,9 @@
 //     setState(() {});
 //   }
 
-//   final firestore = FirebaseFirestore.instance;
+//       final firestore = FirebaseFirestore.instance;
 //   final auth = FirebaseAuth.instance;
-//   Future<void> completeLevel(int levelNumber) async {
+//  Future<void> completeLevel(int levelNumber) async {
 //     final user = auth.currentUser;
 //     if (user == null) return;
 
@@ -233,8 +229,10 @@
 //       });
 
 //       if (winner == 'player') {
-//         completeLevel(widget.level as int);
+
+//         completeLevel(widget.level as int); 
 //       }
+
 //       return;
 //     }
 
@@ -272,17 +270,6 @@
 //             ? (verticalPadding + pitSize / 2)
 //             : (verticalPadding * 2 + pitSize + pitSize / 2);
 
-//     // Special case for Store positions (indices 7 and 15)
-//     if (pitIndex == 7) {
-//       // Player's store (right)
-//       x = boardWidth - storeWidth / 2 - sidePadding;
-//       y = (verticalPadding * 1.5 + pitSize);
-//     } else if (pitIndex == 15) {
-//       // Bot's store (left)
-//       x = storeWidth / 2 + sidePadding;
-//       y = (verticalPadding * 1.5 + pitSize);
-//     }
-
 //     return Offset(x, y);
 //   }
 
@@ -291,28 +278,32 @@
 //     final screenWidth = MediaQuery.of(context).size.width;
 //     final pitSize = screenWidth < 600 ? 48.0 : 66.0;
 
+//     // *** Define the common DecorationImage with the new asset ***
 //     const _boardTexture = DecorationImage(
 //       image: AssetImage(_woodenTexturePath),
 //       fit: BoxFit.cover,
 //     );
 
+//     // *** Define a slightly darker filter for the Pit/Store interiors (for depth) ***
 //     const _pitStoreTexture = DecorationImage(
 //       image: AssetImage(_woodenTexturePath),
 //       fit: BoxFit.cover,
 //       colorFilter: ColorFilter.mode(
-//         Colors.black38, // Subtle dark overlay for depth
+//         Colors.black38,
 //         BlendMode.darken,
 //       ),
 //     );
 
 //     return Scaffold(
-//       backgroundColor: const Color(0xFF1E0E0E), // Keep a dark background
+//       // Changed to dark color to complement wood theme
+//       backgroundColor: const Color(0xFF1E0E0E), 
 //       body: Column(
 //         children: [
 //           Container(
 //             padding: const EdgeInsets.all(12),
+
 //             decoration: const BoxDecoration(
-//               color: Color(0xFF1E0E0E), // Dark top bar
+//               color: Color(0xFF1E0E0E), 
 //             ),
 //             child: Center(
 //               child: ConstrainedBox(
@@ -326,8 +317,7 @@
 //                           Row(
 //                             mainAxisAlignment: MainAxisAlignment.spaceAround,
 //                             children: [
-//                               // --- Player Card (Icon: person) ---
-//                               AdventureCards(
+//                              AdventureCards(
 //                                 name: 'You',
 //                                 score: board[7],
 //                                 isActive: isPlayerTurn,
@@ -340,7 +330,7 @@
 //                                 style: const TextStyle(
 //                                   color: Colors.white,
 //                                   fontSize: 21,
-//                                   fontWeight: FontWeight.bold,
+//                                   fontWeight: FontWeight.bold
 //                                 ),
 //                               ),
 //                               // --- Bot Card (Icon: computer) ---
@@ -360,8 +350,7 @@
 //                           Row(
 //                             mainAxisAlignment: MainAxisAlignment.spaceAround,
 //                             children: [
-//                               // --- Player Card (Icon: person, Game Ended) ---
-//                               AdventureCards(
+//                                                            AdventureCards(
 //                                 name: 'You',
 //                                 score: board[7],
 //                                 isActive: isPlayerTurn,
@@ -387,7 +376,6 @@
 //                               ),
 //                             ],
 //                           ),
-//                           const SizedBox(height: 8),
 //                           // ElevatedButton(
 //                           //   onPressed: _resetBoard,
 //                           //   style: ElevatedButton.styleFrom(
@@ -404,10 +392,8 @@
 //                           padding: const EdgeInsets.all(12),
 //                           decoration: BoxDecoration(
 //                             borderRadius: BorderRadius.circular(24),
-//                             border: Border.all(
-//                               color: const Color(0xFF4B3219),
-//                               width: 5,
-//                             ),
+//                             // Changed border color to wood tone
+//                             border: Border.all(color: const Color(0xFF4B3219), width: 5),
 //                             boxShadow: const [
 //                               BoxShadow(
 //                                 color: Colors.black45,
@@ -425,7 +411,7 @@
 //                                 count: board[15],
 //                                 label: 'Adventure ${widget.level}',
 //                                 height: 210,
-//                                 // Use the darker texture for the store
+//                                 // Pass the texture to the StoreWidget
 //                                 woodenTexture: _pitStoreTexture,
 //                               ),
 //                               const SizedBox(width: 8),
@@ -448,8 +434,8 @@
 //                                           animating: animatingPit == index,
 //                                           lastMove: lastMove == index,
 //                                           onTap: () => _handlePitTap(index),
-//                                           // Use the darker texture for the pit interior
-//                                           woodenTexture: _pitStoreTexture,
+//                                           // Pass the texture to the PitWidget
+//                                           woodenTexture: _pitStoreTexture, 
 //                                         );
 //                                       }),
 //                                     ),
@@ -458,10 +444,9 @@
 //                                       margin: const EdgeInsets.symmetric(
 //                                         vertical: 8,
 //                                       ),
+//                                       // Changed separator color to wood tone
 //                                       decoration: const BoxDecoration(
-//                                         color: Color(
-//                                           0xFF4B3219,
-//                                         ), // Darker separator to blend with wood
+//                                         color: Color(0xFF4B3219), 
 //                                       ),
 //                                     ),
 //                                     Row(
@@ -480,8 +465,8 @@
 //                                           animating: animatingPit == index,
 //                                           lastMove: lastMove == index,
 //                                           onTap: () => _handlePitTap(index),
-//                                           // Use the darker texture for the pit interior
-//                                           woodenTexture: _pitStoreTexture,
+//                                           // Pass the texture to the PitWidget
+//                                           woodenTexture: _pitStoreTexture, 
 //                                         );
 //                                       }),
 //                                     ),
@@ -493,7 +478,7 @@
 //                                 count: board[7],
 //                                 label: 'Your Store',
 //                                 height: 210,
-//                                 // Use the darker texture for the store
+//                                 // Pass the texture to the StoreWidget
 //                                 woodenTexture: _pitStoreTexture,
 //                               ),
 //                             ],
@@ -517,19 +502,31 @@
 //                           ),
 //                       ],
 //                     ),
-//                     const SizedBox(height: 12),
+//                       const SizedBox(height: 12),
 //                     IconButton(
-//                       icon: const Icon(Icons.home, color: Colors.white),
+//                       icon: const Icon(Icons.home, color: Colors.white70),
 //                       iconSize: 30,
 //                       onPressed: () {
 //                         final didPlayerWin = gameEnded && winner == 'player';
 //                         Navigator.of(context).pop(didPlayerWin);
 //                       },
 //                       style: IconButton.styleFrom(
-//                         backgroundColor: Colors.red,
+//                         backgroundColor: Colors.black54,
 //                         padding: const EdgeInsets.all(12),
 //                       ),
 //                     ),
+//                     // const SizedBox(height: 12),
+
+//                     // ElevatedButton(
+//                     //   onPressed: () {
+//                     //   final didPlayerWin = gameEnded && winner == 'player';
+//                     //   Navigator.of(context).pop(didPlayerWin);
+//                     //     },
+//                     //   style: ElevatedButton.styleFrom(
+//                     //     backgroundColor: Colors.black54,
+//                     //   ),
+//                     //   child: const Text('Back'),
+//                     // ),
 //                   ],
 //                 ),
 //               ),
@@ -541,6 +538,10 @@
 //   }
 // }
 
+// // -------------------------------------------------------------------
+// //                          WIDGETS (Updated for Texture)
+// // -------------------------------------------------------------------
+
 // class PitWidget extends StatefulWidget {
 //   final int count;
 //   final double size;
@@ -549,7 +550,8 @@
 //   final bool animating;
 //   final bool lastMove;
 //   final VoidCallback onTap;
-//   final DecorationImage? woodenTexture;
+//   // New property for the wooden texture
+//   final DecorationImage? woodenTexture; 
 
 //   const PitWidget({
 //     Key? key,
@@ -560,7 +562,7 @@
 //     required this.animating,
 //     required this.lastMove,
 //     required this.onTap,
-//     this.woodenTexture,
+//     this.woodenTexture, // Allow texture to be passed
 //   }) : super(key: key);
 
 //   @override
@@ -568,18 +570,22 @@
 // }
 
 // class _PitWidgetState extends State<PitWidget> {
+//   // Store the list of pebbles in the state
 //   List<Widget> _pebbles = [];
+//   // Use a single Random instance for the widget's lifetime
 //   final Random _random = Random();
 
 //   @override
 //   void initState() {
 //     super.initState();
+//     // Generate pebbles when the widget is first created
 //     _pebbles = _generatePebbles(widget.count);
 //   }
 
 //   @override
 //   void didUpdateWidget(PitWidget oldWidget) {
 //     super.didUpdateWidget(oldWidget);
+//     // ONLY regenerate pebbles if the count has actually changed
 //     if (widget.count != oldWidget.count) {
 //       setState(() {
 //         _pebbles = _generatePebbles(widget.count);
@@ -587,15 +593,19 @@
 //     }
 //   }
 
+//   // This function now generates pebbles with a fixed size
 //   List<Widget> _generatePebbles(int count) {
 //     final List<Widget> pebbles = [];
-//     // Cap the number of visually displayed pebbles for performance
-//     final maxPebbles = count.clamp(0, 10);
+//     // Clamp the visual count for performance
+//     final maxPebbles = count.clamp(0, 10); 
 
 //     for (int i = 0; i < maxPebbles; i++) {
 //       final dx = _random.nextDouble() * 30 + 10;
 //       final dy = _random.nextDouble() * 30 + 10;
-//       final double pebbleSize = 6.0;
+      
+//       // Fixed size of 6.0
+//       final double pebbleSize = 6.0; 
+      
 //       final rotation = _random.nextDouble() * pi;
 
 //       pebbles.add(
@@ -605,6 +615,7 @@
 //           child: Transform.rotate(
 //             angle: rotation,
 //             child: Container(
+//               // Apply fixed size
 //               width: pebbleSize,
 //               height: pebbleSize,
 //               decoration: BoxDecoration(
@@ -633,6 +644,8 @@
 
 //   @override
 //   Widget build(BuildContext context) {
+//     // Removed the gradient logic for the pit body/lip, replaced with wood color/texture
+    
 //     return Column(
 //       children: [
 //         if (widget.isTop) CountBadge(count: widget.count),
@@ -646,14 +659,12 @@
 //               height: widget.size,
 //               decoration: BoxDecoration(
 //                 shape: BoxShape.circle,
-//                 // The outer pit ring/lip uses the solid color or the texture
-//                 color:
-//                     widget.woodenTexture == null
-//                         ? const Color(0xFF966F33)
-//                         : null,
-//                 image: widget.woodenTexture,
+//                 // The outer pit ring/lip uses a solid wood color or the texture
+//                 color: widget.woodenTexture == null ? const Color(0xFF966F33) : null, 
+//                 image: widget.woodenTexture, 
 //                 boxShadow: [
 //                   BoxShadow(
+//                     // Changed shadow color to a dark wood tone
 //                     color: const Color(0xFF4B3219).withOpacity(0.7),
 //                     blurRadius: 12,
 //                     spreadRadius: 1,
@@ -665,17 +676,19 @@
 //                 decoration: BoxDecoration(
 //                   shape: BoxShape.circle,
 //                   // The pit interior is a deep black/dark color for depth contrast
-//                   color: Colors.black.withOpacity(0.8),
+//                   color: Colors.black.withOpacity(0.8), 
 //                   boxShadow:
 //                       widget.lastMove
 //                           ? [
-//                             BoxShadow(
-//                               color: const Color(0xFFC69C6D).withOpacity(0.8),
-//                               blurRadius: 8,
-//                             ),
-//                           ]
+//                               BoxShadow(
+//                                 // Highlight color for last move (can be customized)
+//                                 color: const Color(0xFFC69C6D).withOpacity(0.8),
+//                                 blurRadius: 8,
+//                               ),
+//                             ]
 //                           : null,
 //                 ),
+//                 // Use the stored pebble list
 //                 child: ClipOval(child: Stack(children: _pebbles)),
 //               ),
 //             ),
@@ -691,14 +704,15 @@
 //   final int count;
 //   final String label;
 //   final double height;
-//   final DecorationImage? woodenTexture;
+//   // New property for the wooden texture
+//   final DecorationImage? woodenTexture; 
 
 //   const StoreWidget({
 //     Key? key,
 //     required this.count,
 //     required this.label,
 //     this.height = 260,
-//     this.woodenTexture,
+//     this.woodenTexture, // Allow texture to be passed
 //   }) : super(key: key);
 
 //   @override
@@ -712,9 +726,10 @@
 //             borderRadius: BorderRadius.circular(22),
 //             // Store uses the passed wooden texture for the outer body
 //             color: woodenTexture == null ? const Color(0xFF966F33) : null,
-//             image: woodenTexture,
+//             image: woodenTexture, 
 //             boxShadow: [
 //               BoxShadow(
+//                 // Changed shadow color to wood tone
 //                 color: const Color(0xFF4B3219).withOpacity(0.5),
 //                 blurRadius: 16,
 //               ),
@@ -726,7 +741,7 @@
 //               decoration: BoxDecoration(
 //                 borderRadius: BorderRadius.circular(18),
 //                 // Inner count display is deep black for contrast
-//                 color: Colors.black.withOpacity(0.85),
+//                 color: Colors.black.withOpacity(0.85), 
 //               ),
 //               child: Center(
 //                 child: Text(
@@ -769,8 +784,6 @@
 //   }
 // }
 
-// // NOTE: PlayerLabel is defined in the original code but NOT used in the build method.
-// // We are keeping AdventureCards as the primary player/bot display.
 // class PlayerLabel extends StatelessWidget {
 //   final String name;
 //   final int score;
@@ -903,25 +916,21 @@ class AnimatedPebblesPainter extends CustomPainter {
   bool shouldRepaint(AnimatedPebblesPainter oldDelegate) => true;
 }
 
-// -------------------------------------------------------------------
-// Main Game Screen
-// -------------------------------------------------------------------
-
-class AdventureFirstLevelScreen extends StatefulWidget {
+class AdventureSecondLevelScreen extends StatefulWidget {
   final Difficulty difficulty;
   final dynamic level;
-  const AdventureFirstLevelScreen({
+  const AdventureSecondLevelScreen({
     Key? key,
     required this.difficulty,
     required this.level,
   }) : super(key: key);
 
   @override
-  State<AdventureFirstLevelScreen> createState() =>
-      _AdventureFirstLevelScreenState();
+  State<AdventureSecondLevelScreen> createState() =>
+      _AdventureSecondLevelScreenState();
 }
 
-class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
+class _AdventureSecondLevelScreenState extends State<AdventureSecondLevelScreen>
     with TickerProviderStateMixin {
   late List<int> board;
   bool isPlayerTurn = true;
@@ -964,7 +973,7 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
   }
 
   void _resetBoard() {
-    board = [7, 7, 7, 7, 7, 7, 7, 0, 7, 7, 7, 7, 7, 7, 7, 0];
+        board = [7, 7, 7, 7, 7, 7, 7, 0, 7, 7, 7, 7, 7, 7, 7, 0];
     isPlayerTurn = true;
     gameEnded = false;
     winner = '';
@@ -1711,7 +1720,6 @@ class GameOverDialog extends StatelessWidget {
                 ),
                 const SizedBox(height: 15),
 
-                // --- Message ---
                 Text(
                   message,
                   textAlign: TextAlign.center,
@@ -1719,7 +1727,6 @@ class GameOverDialog extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
 
-                // --- Scoreboard ---
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -1739,17 +1746,16 @@ class GameOverDialog extends StatelessWidget {
                 const SizedBox(height: 10),
                 Column(
                   children: [
-                    // Play Again Button
+
                     _DialogButton(
                       text: 'Play Again',
-                      color: const Color(0xFF6B8E23), // Olive Green
+                      color: const Color(0xFF6B8E23),
                       onPressed: onPlayAgain,
                     ),
                     const SizedBox(height: 10),
-                    // Go Home Button
                     _DialogButton(
                       text: 'Return to Levels',
-                      color: const Color(0xFFC93030), // Dark Red
+                      color: const Color(0xFFC93030),
                       onPressed: onGoHome,
                     ),
                   ],
