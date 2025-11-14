@@ -9,7 +9,6 @@ class SungkaBoard extends StatefulWidget {
     required this.onPitTap,
     this.topPlayerName = "Bot",
     this.bottomPlayerName = "Player",
-    this.isPlayer = false,
   });
 
   final List<int> board;
@@ -19,7 +18,6 @@ class SungkaBoard extends StatefulWidget {
 
   final String topPlayerName;
   final String bottomPlayerName;
-  final bool isPlayer;
 
   @override
   State<SungkaBoard> createState() => _SungkaBoardState();
