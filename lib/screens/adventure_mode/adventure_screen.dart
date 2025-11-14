@@ -664,6 +664,7 @@
 
 
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -683,11 +684,14 @@ import 'package:quickalert/quickalert.dart';
 class SungkaAdventureScreen extends StatefulWidget {
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
+  final AudioPlayer bgmPlayer;
+
 
   const SungkaAdventureScreen({
     super.key,
     required this.navigateToScreen,
     required this.showError,
+    required this.bgmPlayer
   });
 
   @override
@@ -940,6 +944,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
                       widget.navigateToScreen(
                         GameWidget(
                           game: HomeGame(
+                            bgmPlayer: widget.bgmPlayer,
                             navigateToScreen: widget.navigateToScreen,
                             showError: widget.showError,
                           ),

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,12 +12,15 @@ class PlayerVsOpponent extends StatefulWidget {
     required this.matchId,
     required this.navigateToScreen,
     required this.showError,
+    required this.bgmPlayer,
     super.key,
   });
 
   final String matchId;
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
+  final AudioPlayer bgmPlayer;
+
 
   @override
   State<PlayerVsOpponent> createState() => _PlayerVsOpponentState();
@@ -94,6 +98,7 @@ class _PlayerVsOpponentState extends State<PlayerVsOpponent>
             transitionDuration: const Duration(milliseconds: 800),
             pageBuilder:
                 (_, __, ___) => OnlineGameScreen(
+                  bgmPlayer: widget.bgmPlayer,
                   matchId: widget.matchId,
                   navigateToScreen: widget.navigateToScreen,
                   showError: widget.showError,

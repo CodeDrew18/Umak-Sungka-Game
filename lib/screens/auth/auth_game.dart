@@ -1,3 +1,178 @@
+// // import 'package:flame/game.dart';
+// // import 'package:flame/components.dart';
+// // import 'package:flutter/material.dart';
+// // import 'package:sungka/core/constants/app_colors.dart';
+// // import 'package:sungka/screens/components/game_button.dart';
+
+// // class AuthGame extends FlameGame {
+// //  final VoidCallback onGoogleSignIn;
+// //  final VoidCallback onGuestSignIn;
+
+// //  SpriteComponent? backgroundImage;
+// //  GameButton? googleButton;
+// //  GameButton? guestButton;
+// //  SpriteComponent? titleImageComponent;
+
+// //  AuthGame({
+// //   required this.onGoogleSignIn,
+// //   required this.onGuestSignIn,
+// //  });
+
+// //  @override
+// //  Color backgroundColor() => Colors.transparent;
+
+// //  @override
+// //  Future<void> onLoad() async {
+// //   backgroundImage = SpriteComponent()
+// //    ..sprite = await loadSprite('assets/bg.png')
+// //    ..size = size
+// //    ..anchor = Anchor.topLeft
+// //    ..priority = -1;
+// //   add(backgroundImage!);
+
+// //   final titleSprite = await loadSprite('assets/app_title.png');
+// //   titleImageComponent = SpriteComponent(
+// //    sprite: titleSprite,
+// //    size: Vector2(450, 400),
+// //    anchor: Anchor.center,
+// //    position: Vector2(size.x / 2, size.y * 0.35),
+// //    priority: 0,
+// //   );
+// //   add(titleImageComponent!);
+
+// //   googleButton = GameButton(
+// //    position: Vector2(size.x / 2, size.y * 0.58),
+// //    width: 280,
+// //    height: 70,
+// //    label: 'Continue with Google',
+// //    backgroundColor: Colors.white,
+// //    textColor: Colors.black,
+// //    onPressed: onGoogleSignIn,
+// //    hasIcon: true,
+// //    iconPath: 'assets/google.png',
+// //   );
+// //   add(googleButton!);
+
+// //   guestButton = GameButton(
+// //    position: Vector2(size.x / 2, size.y * 0.70),
+// //    width: 280,
+// //    height: 70,
+// //    label: 'Continue as Guest',
+// //    backgroundColor: AppColors.gamebuttonPrimary,
+// //    textColor: AppColors.white,
+// //    onPressed: onGuestSignIn,
+// //    hasIcon: false,
+// //   );
+// //   add(guestButton!);
+// //  }
+
+// //  @override
+// //  void onGameResize(Vector2 newSize) {
+// //   super.onGameResize(newSize);
+
+// //   backgroundImage?.size = newSize;
+
+// //   titleImageComponent?.position = Vector2(newSize.x / 2, newSize.y * 0.35);
+// //   googleButton?.position = Vector2(newSize.x / 2, newSize.y * 0.55);
+// //   guestButton?.position = Vector2(newSize.x / 2, newSize.y * 0.65);
+// //  }
+// // }
+
+// import 'package:flame/game.dart';
+// import 'package:flame/components.dart';
+// import 'package:flutter/material.dart';
+// import 'package:sungka/core/constants/app_colors.dart';
+// import 'package:sungka/screens/components/game_button.dart';
+
+// class AuthGame extends FlameGame {
+//   /// Callbacks must be nullable & not final so we can remove them in dispose()
+//   VoidCallback? onGoogleSignIn;
+//   VoidCallback? onGuestSignIn;
+
+//   SpriteComponent? backgroundImage;
+//   GameButton? googleButton;
+//   GameButton? guestButton;
+//   SpriteComponent? titleImageComponent;
+
+//   AuthGame({required this.onGoogleSignIn, required this.onGuestSignIn});
+
+//   @override
+//   Color backgroundColor() => Colors.transparent;
+
+//   @override
+//   Future<void> onLoad() async {
+//     backgroundImage =
+//         SpriteComponent()
+//           ..sprite = await loadSprite('assets/bg.png')
+//           ..size = size
+//           ..anchor = Anchor.topLeft
+//           ..priority = -1;
+
+//     add(backgroundImage!);
+
+//     final titleSprite = await loadSprite('assets/app_title.png');
+
+//     titleImageComponent = SpriteComponent(
+//       sprite: titleSprite,
+//       size: Vector2(450, 400),
+//       anchor: Anchor.center,
+//       position: Vector2(size.x / 2, size.y * 0.35),
+//       priority: 0,
+//     );
+
+//     add(titleImageComponent!);
+
+//     // Google login button
+//     googleButton = GameButton(
+//       position: Vector2(size.x / 2, size.y * 0.58),
+//       width: 280,
+//       height: 70,
+//       label: 'Continue with Google',
+//       backgroundColor: Colors.white,
+//       textColor: Colors.black,
+//       onPressed: () {
+//         if (onGoogleSignIn != null) onGoogleSignIn!();
+//       },
+//       hasIcon: true,
+//       iconPath: 'assets/google.png',
+//     );
+//     add(googleButton!);
+
+//     // Guest login button
+//     guestButton = GameButton(
+//       position: Vector2(size.x / 2, size.y * 0.70),
+//       width: 280,
+//       height: 70,
+//       label: 'Continue as Guest',
+//       backgroundColor: AppColors.gamebuttonPrimary,
+//       textColor: AppColors.white,
+//       onPressed: () {
+//         if (onGuestSignIn != null) onGuestSignIn!();
+//       },
+//       hasIcon: false,
+//     );
+//     add(guestButton!);
+//   }
+
+//   @override
+//   void onGameResize(Vector2 newSize) {
+//     super.onGameResize(newSize);
+
+//     backgroundImage?.size = newSize;
+
+//     titleImageComponent?.position = Vector2(newSize.x / 2, newSize.y * 0.35);
+
+//     googleButton?.position = Vector2(newSize.x / 2, newSize.y * 0.58);
+
+//     guestButton?.position = Vector2(newSize.x / 2, newSize.y * 0.70);
+//   }
+
+//   /// SAF
+// }
+
+
+
+
 import 'package:flame/game.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
@@ -5,75 +180,87 @@ import 'package:sungka/core/constants/app_colors.dart';
 import 'package:sungka/screens/components/game_button.dart';
 
 class AuthGame extends FlameGame {
- final VoidCallback onGoogleSignIn;
- final VoidCallback onGuestSignIn;
+  VoidCallback? onGoogleSignIn;
+  VoidCallback? onGuestSignIn;
 
- SpriteComponent? backgroundImage;
- GameButton? googleButton;
- GameButton? guestButton;
- SpriteComponent? titleImageComponent; 
+  SpriteComponent? backgroundImage;
+  GameButton? googleButton;
+  GameButton? guestButton;
+  SpriteComponent? titleImageComponent;
 
- AuthGame({
-  required this.onGoogleSignIn,
-  required this.onGuestSignIn,
- });
+  AuthGame({
+    required this.onGoogleSignIn,
+    required this.onGuestSignIn,
+  });
 
- @override
- Color backgroundColor() => Colors.transparent;
+  @override
+  Color backgroundColor() => Colors.transparent;
 
- @override
- Future<void> onLoad() async {
-  backgroundImage = SpriteComponent()
-   ..sprite = await loadSprite('assets/bg.png')
-   ..size = size
-   ..anchor = Anchor.topLeft
-   ..priority = -1;
-  add(backgroundImage!);
+  @override
+  Future<void> onLoad() async {
+    // Background
+    backgroundImage = SpriteComponent()
+      ..sprite = await loadSprite('assets/bg.png')
+      ..size = size
+      ..anchor = Anchor.topLeft
+      ..priority = -1;
+    add(backgroundImage!);
 
-  final titleSprite = await loadSprite('assets/app_title.png');
-  titleImageComponent = SpriteComponent( 
-   sprite: titleSprite,
-   size: Vector2(450, 400),
-   anchor: Anchor.center,
-   position: Vector2(size.x / 2, size.y * 0.35),
-   priority: 0,
-  );
-  add(titleImageComponent!);
+    // Title
+    final titleSprite = await loadSprite('assets/app_title.png');
+    titleImageComponent = SpriteComponent(
+      sprite: titleSprite,
+      size: Vector2(450, 400),
+      anchor: Anchor.center,
+      position: Vector2(size.x / 2, size.y * 0.35),
+      priority: 0,
+    );
+    add(titleImageComponent!);
 
-  googleButton = GameButton(
-   position: Vector2(size.x / 2, size.y * 0.58), 
-   width: 280,
-   height: 70,
-   label: 'Continue with Google',
-   backgroundColor: Colors.white,
-   textColor: Colors.black,
-   onPressed: onGoogleSignIn,
-   hasIcon: true,
-   iconPath: 'assets/google.png',
-  );
-  add(googleButton!);
+    // Google Button
+    googleButton = GameButton(
+      position: Vector2(size.x / 2, size.y * 0.58),
+      width: 280,
+      height: 70,
+      label: 'Continue with Google',
+      backgroundColor: Colors.white,
+      textColor: Colors.black,
+      onPressed: () {
+        if (onGoogleSignIn != null) {
+          onGoogleSignIn!();
+        }
+      },
+      hasIcon: true,
+      iconPath: 'assets/google.png',
+    );
+    add(googleButton!);
 
-  guestButton = GameButton(
-   position: Vector2(size.x / 2, size.y * 0.70), 
-   width: 280,
-   height: 70,
-   label: 'Continue as Guest',
-   backgroundColor: AppColors.gamebuttonPrimary,
-   textColor: AppColors.white,
-   onPressed: onGuestSignIn,
-   hasIcon: false,
-  );
-  add(guestButton!);
- }
+    // Guest Button
+    guestButton = GameButton(
+      position: Vector2(size.x / 2, size.y * 0.70),
+      width: 280,
+      height: 70,
+      label: 'Continue as Guest',
+      backgroundColor: AppColors.gamebuttonPrimary,
+      textColor: AppColors.white,
+      onPressed: () {
+        if (onGuestSignIn != null) {
+          onGuestSignIn!();
+        }
+      },
+      hasIcon: false,
+    );
+    add(guestButton!);
+  }
 
- @override
- void onGameResize(Vector2 newSize) {
-  super.onGameResize(newSize);
+  @override
+  void onGameResize(Vector2 newSize) {
+    super.onGameResize(newSize);
 
-  backgroundImage?.size = newSize;
+    backgroundImage?.size = newSize;
 
-  titleImageComponent?.position = Vector2(newSize.x / 2, newSize.y * 0.35);
-  googleButton?.position = Vector2(newSize.x / 2, newSize.y * 0.55);
-  guestButton?.position = Vector2(newSize.x / 2, newSize.y * 0.65);
- }
+    titleImageComponent?.position = Vector2(newSize.x / 2, newSize.y * 0.35);
+    googleButton?.position = Vector2(newSize.x / 2, newSize.y * 0.55);
+    guestButton?.position = Vector2(newSize.x / 2, newSize.y * 0.65);
+  }
 }

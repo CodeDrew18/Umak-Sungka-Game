@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,9 +36,11 @@ class FilipinoPalette {
 
 class LeaderboardScreen extends StatefulWidget {
     final Function(Widget screen) navigateToScreen;
-  final Function(String message) showError;
+    final Function(String message) showError;
+    final AudioPlayer bgmPlayer;
+
   
-  LeaderboardScreen({required this.navigateToScreen, required this.showError});
+  LeaderboardScreen({required this.navigateToScreen, required this.showError, required this.bgmPlayer});
 
   @override
   State<LeaderboardScreen> createState() => _LeaderboardScreenState();
@@ -287,6 +290,7 @@ Widget build(BuildContext context) {
         widget.navigateToScreen(
           GameWidget(
             game: HomeGame(
+              bgmPlayer: widget.bgmPlayer,
               navigateToScreen: widget.navigateToScreen,
               showError: widget.showError,
             ),

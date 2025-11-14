@@ -2,7 +2,7 @@
 // import 'package:flame/game.dart';
 // import 'package:flutter/material.dart';
 // import 'package:sungka/core/services/firebase_firestore_service.dart';
-// import 'package:sungka/screens/home_screen.dart'; 
+// import 'package:sungka/screens/home_screen.dart';
 // import 'package:sungka/screens/online/game_match/player_vs_opponent.dart';
 
 // class WaitingForOpponentScreen extends StatefulWidget {
@@ -79,8 +79,8 @@
 //             //     MaterialPageRoute(
 //             //       builder: (_) => PlayerVsOpponent(
 //             //         matchId: widget.matchId,
-//             //         navigateToScreen: _navigateToScreen, 
-//             //         showError: _showError, 
+//             //         navigateToScreen: _navigateToScreen,
+//             //         showError: _showError,
 //             //       ),
 //             //     ),
 //             //   );
@@ -89,8 +89,8 @@
 //            _navigateToScreen(
 //           PlayerVsOpponent(
 //             matchId: widget.matchId,
-//             navigateToScreen: _navigateToScreen, 
-//             showError: _showError, 
+//             navigateToScreen: _navigateToScreen,
+//             showError: _showError,
 //           ),
 //         );
 //           }
@@ -192,8 +192,8 @@
 //                   _navigateToScreen(
 //                     GameWidget(
 //                       game: HomeGame(
-//                         navigateToScreen: _navigateToScreen, 
-//                         showError: _showError, 
+//                         navigateToScreen: _navigateToScreen,
+//                         showError: _showError,
 //                       ),
 //                     ),
 //                   );
@@ -286,21 +286,29 @@
 //   }
 // }
 
-
 import 'dart:async';
 import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sungka/core/services/firebase_firestore_service.dart';
-import 'package:sungka/screens/home_screen.dart'; 
+import 'package:sungka/screens/home_screen.dart';
 import 'package:sungka/screens/online/game_match/player_vs_opponent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WaitingForOpponentScreen extends StatefulWidget {
-  const WaitingForOpponentScreen({super.key, required this.matchId});
-
+  const WaitingForOpponentScreen({
+    super.key,
+    required this.matchId,
+    required this.bgmPlayer,
+    required this.navigateToScreen,
+    required this.showError,
+  });
+  final AudioPlayer bgmPlayer;
   final String matchId;
+  final Function(Widget screen) navigateToScreen;
+  final Function(String message) showError;
 
   @override
   State<WaitingForOpponentScreen> createState() =>
@@ -341,15 +349,14 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
     botTimer?.cancel();
     super.dispose();
   }
-  void _navigateToScreen(Widget screen) {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => screen));
-  }
 
-   Future<void> joinBotIfNoOpponent() async {
+  Future<void> joinBotIfNoOpponent() async {
     if (botJoined) return;
 
     try {
-      final matchSnapshot = await firestoreService.getMatchOnce(matchId: widget.matchId);
+      final matchSnapshot = await firestoreService.getMatchOnce(
+        matchId: widget.matchId,
+      );
       if (!matchSnapshot.exists) return;
 
       final matchData = matchSnapshot.data() as Map<String, dynamic>;
@@ -369,30 +376,22 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
           difficulty = 'hard';
         }
 
-        await FirebaseFirestore.instance.collection('matches').doc(widget.matchId).update({
-          'player2Id': 'bot_1',
-          'player2Name': 'Bot 1',
-          'player2Rating': player1Rating,
-          'difficulty': difficulty,
-          'status': 'playing',
-        });
+        await FirebaseFirestore.instance
+            .collection('matches')
+            .doc(widget.matchId)
+            .update({
+              'player2Id': 'bot_1',
+              'player2Name': 'Bot 1',
+              'player2Rating': player1Rating,
+              'difficulty': difficulty,
+              'status': 'playing',
+            });
       }
     } catch (e) {
       debugPrint('Error adding bot: $e');
     }
   }
 
-  void _showError(String message) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 4),
-        ),
-      );
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder(
@@ -410,18 +409,21 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
 
           if (data!['status'] == 'playing') {
             Future.microtask(() {
-                        SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
+              if (!mounted) return;
+              SystemChrome.setPreferredOrientations([
+                DeviceOrientation.landscapeRight,
+                DeviceOrientation.landscapeLeft,
+              ]);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => PlayerVsOpponent(
-                    matchId: widget.matchId,
-                    navigateToScreen: _navigateToScreen, 
-                    showError: _showError, 
-                  ),
+                  builder:
+                      (_) => PlayerVsOpponent(
+                        bgmPlayer: widget.bgmPlayer,
+                        matchId: widget.matchId,
+                        navigateToScreen: widget.navigateToScreen,
+                        showError: widget.showError,
+                      ),
                 ),
               );
             });
@@ -466,8 +468,12 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ScaleTransition(
-                scale: Tween(begin: 0.9, end: 1.1)
-                    .animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut)),
+                scale: Tween(begin: 0.9, end: 1.1).animate(
+                  CurvedAnimation(
+                    parent: _pulseController,
+                    curve: Curves.easeInOut,
+                  ),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 16.0),
                   child: Icon(
@@ -511,22 +517,24 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.redAccent.shade400,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 14,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
                   elevation: 10,
                 ),
                 onPressed: () async {
-
                   await firestoreService.cancelMatch(matchId: widget.matchId);
-
-                  _navigateToScreen(
+                  if (!mounted) return;
+                  widget.navigateToScreen(
                     GameWidget(
                       game: HomeGame(
-                        navigateToScreen: _navigateToScreen, 
-                        showError: _showError, 
+                        bgmPlayer: widget.bgmPlayer,
+                        navigateToScreen: widget.navigateToScreen,
+                        showError: widget.showError,
                       ),
                     ),
                   );
@@ -587,8 +595,11 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.warning_amber_rounded,
-                color: Colors.amberAccent, size: 80),
+            const Icon(
+              Icons.warning_amber_rounded,
+              color: Colors.amberAccent,
+              size: 80,
+            ),
             const SizedBox(height: 20),
             Text(
               message,
@@ -603,14 +614,18 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.redAccent,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
               ),
-              child: const Text("Go Back",
-                  style: TextStyle(color: Colors.white, fontSize: 18)),
+              child: const Text(
+                "Go Back",
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
             ),
           ],
         ),

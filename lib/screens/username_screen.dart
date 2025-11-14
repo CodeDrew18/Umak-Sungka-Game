@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -50,6 +51,7 @@ class UsernameGame extends FlameGame {
 }
 
 class UsernameScreen extends StatefulWidget {
+  final AudioPlayer bgmPlayer;
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
 
@@ -57,6 +59,7 @@ class UsernameScreen extends StatefulWidget {
     super.key,
     required this.navigateToScreen,
     required this.showError,
+    required this.bgmPlayer
   });
 
   @override
@@ -110,6 +113,7 @@ void _handlePlayGame() async {
     debugPrint('✅ User data saved successfully with name: $username');
 
     final StartMenuGame game = StartMenuGame(
+      bgmPlayer: widget.bgmPlayer,
       navigateToScreen: widget.navigateToScreen,
       showError: widget.showError,
     );

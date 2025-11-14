@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -11,11 +12,13 @@ import 'package:sungka/screens/play_with_friends/provider/avatar_model.dart';
 class AvatarSelectionScreen extends StatefulWidget {
     final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
+  final AudioPlayer bgmPlayer;
 
   const AvatarSelectionScreen({
     Key? key,
     required this.navigateToScreen,
     required this.showError,
+    required this.bgmPlayer
   }) : super(key: key);
 
   
@@ -59,6 +62,7 @@ class _AvatarSelectionScreenState extends State<AvatarSelectionScreen>
           builder: (_) => MatchScreen(
             navigateToScreen: widget.navigateToScreen,
             showError: widget.showError,
+            bgmPlayer: widget.bgmPlayer,
             player1Name: "Player 1",
             player1Icon: avatars[player1Selection!].icon,
             player1Color: avatars[player1Selection!].color,
@@ -131,6 +135,7 @@ class _AvatarSelectionScreenState extends State<AvatarSelectionScreen>
                             widget.navigateToScreen(
                               GameWidget(
                                 game: HomeGame(
+                                  bgmPlayer: widget.bgmPlayer,
                                   navigateToScreen: widget.navigateToScreen,
                                   showError: widget.showError,
                                 ),

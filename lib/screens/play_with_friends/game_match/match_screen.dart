@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +8,7 @@ import 'package:sungka/screens/play_with_friends/on_match/sungka_game.dart';
 class MatchScreen extends StatefulWidget {
   final Function(String message) showError;
   final Function(Widget screen) navigateToScreen;
+  final AudioPlayer bgmPlayer;
   final String player1Name;
   final IconData player1Icon;
   final Color player1Color;
@@ -19,6 +21,7 @@ class MatchScreen extends StatefulWidget {
     super.key,
     required this.navigateToScreen,
     required this.showError,
+    required this.bgmPlayer,
     required this.player1Name,
     required this.player1Icon,
     required this.player1Color,
@@ -41,18 +44,18 @@ class _MatchScreenState extends State<MatchScreen>
   late Animation<double> _fadeOut;
 
 
-void navigateToScreen(Widget screen) {
+// void navigateToScreen(Widget screen) {
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => screen),
-    );
-  }
+//     Navigator.of(context).pushReplacement(
+//       MaterialPageRoute(builder: (context) => screen),
+//     );
+//   }
 
-  void showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
-  }
+//   void showError(String message) {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(content: Text(message)),
+//     );
+//   }
 
   @override
   void initState() {
@@ -113,8 +116,11 @@ void navigateToScreen(Widget screen) {
           PageRouteBuilder(
             transitionDuration: const Duration(milliseconds: 800),
             pageBuilder: (_, __, ___) =>  SungkaGame(
-              navigateToScreen: navigateToScreen,
-              showError: showError,
+              player1Icon: widget.player1Icon,
+              player2Icon: widget.player2Icon,
+              bgmPlayer: widget.bgmPlayer,
+              navigateToScreen: widget.navigateToScreen,
+              showError: widget.showError,
             ),
             transitionsBuilder:
                 (_, animation, __, child) =>

@@ -815,9 +815,6 @@
 //   }
 // }
 
-
-
-
 import 'dart:async';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -1062,7 +1059,7 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
       if (winner == 'player') {
         await completeLevel(widget.level as int);
       }
-      
+
       _showGameOverDialog();
       return;
     }
@@ -1114,14 +1111,18 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
 
     return Offset(x, y);
   }
-  
+
   void _showGameOverDialog() {
-    final title = winner == 'player' 
-        ? 'VICTORY!' 
-        : (winner.isNotEmpty ? 'DEFEAT' : 'STALEMATE');
-    final message = winner == 'player' 
-        ? 'You conquered Adventure ${widget.level}!'
-        : (winner.isNotEmpty ? 'The Adventure ${widget.level} proved too strong.' : "It's a draw, neither player wins!");
+    final title =
+        winner == 'player'
+            ? 'VICTORY!'
+            : (winner.isNotEmpty ? 'DEFEAT' : 'STALEMATE');
+    final message =
+        winner == 'player'
+            ? 'You conquered Adventure ${widget.level}!'
+            : (winner.isNotEmpty
+                ? 'The Adventure ${widget.level} proved too strong.'
+                : "It's a draw, neither player wins!");
 
     showDialog(
       context: context,
@@ -1139,7 +1140,7 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
           onGoHome: () {
             Navigator.of(context).pop(); // Close dialog
             // Return 'true' if player won, otherwise 'false'
-            Navigator.of(context).pop(winner == 'player'); 
+            Navigator.of(context).pop(winner == 'player');
           },
         );
       },
@@ -1174,15 +1175,14 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
     return Scaffold(
       backgroundColor: const Color(0xFF1E0E0E),
       body: SafeArea(
-        child: SingleChildScrollView( // Add SingleChildScrollView to prevent overflow on very small screens
+        child: SingleChildScrollView(
+          // Add SingleChildScrollView to prevent overflow on very small screens
           padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
           child: Column(
             children: [
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: const BoxDecoration(
-                  color: Color(0xFF1E0E0E),
-                ),
+                decoration: const BoxDecoration(color: Color(0xFF1E0E0E)),
                 child: Center(
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 900),
@@ -1191,7 +1191,7 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
                       children: [
                         // --- Game Status Cards ---
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             // Player Card
                             AdventureCards(
@@ -1208,13 +1208,19 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
                                       : (winner.isNotEmpty
                                           ? 'Defeated'
                                           : "Tie"))
-                                  : (isPlayerTurn ? "Your Turn" : "Adventure ${widget.level}'s Turn"),
+                                  : (isPlayerTurn
+                                      ? "Your Turn"
+                                      : "Adventure ${widget.level}'s Turn"),
                               style: TextStyle(
-                                color: gameEnded
-                                    ? (winner == 'player'
-                                        ? const Color(0xFFFACC15) // Gold for Win
-                                        : Colors.redAccent) // Red for Loss/Tie
-                                    : Colors.white,
+                                color:
+                                    gameEnded
+                                        ? (winner == 'player'
+                                            ? const Color(
+                                              0xFFFACC15,
+                                            ) // Gold for Win
+                                            : Colors
+                                                .redAccent) // Red for Loss/Tie
+                                        : Colors.white,
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -1273,7 +1279,8 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
                                               count: board[index],
                                               size: pitSize,
                                               isTop: true,
-                                              enabled: !isPlayerTurn &&
+                                              enabled:
+                                                  !isPlayerTurn &&
                                                   !gameEnded &&
                                                   board[index] > 0,
                                               animating: animatingPit == index,
@@ -1303,7 +1310,8 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
                                               count: board[index],
                                               size: pitSize,
                                               isTop: false,
-                                              enabled: isPlayerTurn &&
+                                              enabled:
+                                                  isPlayerTurn &&
                                                   !gameEnded &&
                                                   board[index] > 0,
                                               animating: animatingPit == index,
@@ -1334,11 +1342,12 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
                                   child: CustomPaint(
                                     painter: AnimatedPebblesPainter(
                                       pebbles: animatingPebbles,
-                                      getPitPosition: (pit) => _getPitPosition(
-                                        pit,
-                                        pitSize,
-                                        screenWidth - 24,
-                                      ),
+                                      getPitPosition:
+                                          (pit) => _getPitPosition(
+                                            pit,
+                                            pitSize,
+                                            screenWidth - 24,
+                                          ),
                                     ),
                                   ),
                                 ),
@@ -1351,12 +1360,225 @@ class _AdventureFirstLevelScreenState extends State<AdventureFirstLevelScreen>
                           IconButton(
                             icon: const Icon(Icons.home, color: Colors.white),
                             iconSize: 30,
-                            onPressed: () {
-                              Navigator.of(context).pop(false); 
+                            onPressed: () async {
+                              bool? exitGame = await showGeneralDialog<bool>(
+                                context: context,
+                                barrierDismissible: false,
+                                barrierLabel: 'Exit Game',
+                                transitionDuration: const Duration(
+                                  milliseconds: 300,
+                                ),
+                                // The pageBuilder is simplified as the content is in transitionBuilder
+                                pageBuilder: (context, anim1, anim2) {
+                                  return const SizedBox.shrink();
+                                },
+                                transitionBuilder: (
+                                  context,
+                                  anim1,
+                                  anim2,
+                                  child,
+                                ) {
+                                  return Transform.scale(
+                                    // Use an interpolated scale for a smoother, more 'poppy' effect
+                                    scale: 0.8 + (anim1.value * 0.2),
+                                    child: Opacity(
+                                      opacity: anim1.value,
+                                      child: Center(
+                                        child: Container(
+                                          width:
+                                              320, // Slightly wider for better presentation
+                                          padding: const EdgeInsets.all(
+                                            24,
+                                          ), // Increased padding
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ), // More rounded corners
+                                            // Use a deeper, more sophisticated dark gradient
+                                            gradient: const LinearGradient(
+                                              colors: [
+                                                Color(0xFF1E1E1E),
+                                                Color(0xFF0F0F0F),
+                                              ],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ),
+                                            // Enhanced box shadow for depth
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(
+                                                  0.8,
+                                                ),
+                                                offset: const Offset(0, 10),
+                                                blurRadius: 20,
+                                              ),
+                                            ],
+                                            // Use a subtle, vibrant border color
+                                            border: Border.all(
+                                              color: const Color(0xFF4A4A4A),
+                                              width: 1.5,
+                                            ),
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              // Larger, more dramatic warning icon
+                                              const Icon(
+                                                Icons
+                                                    .exit_to_app, // A more relevant icon for "Exit"
+                                                color: Color(
+                                                  0xFFFFA726,
+                                                ), // Orange/Amber for warning but more contrast
+                                                size: 60,
+                                              ),
+                                              const SizedBox(height: 15),
+                                              const Text(
+                                                "EXIT GAME?",
+                                                style: TextStyle(
+                                                  color: Color(
+                                                    0xFFFFA726,
+                                                  ), // Matching the icon color
+                                                  fontSize:
+                                                      26, // Larger heading
+                                                  fontWeight:
+                                                      FontWeight
+                                                          .w900, // Extra bold
+                                                  letterSpacing:
+                                                      1.5, // Spacing for a more aggressive look
+                                                  decoration:
+                                                      TextDecoration.none,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              const Text(
+                                                "Unsaved progress will be lost. Are you sure you want to return to the Selection Mode?",
+                                                style: TextStyle(
+                                                  color: Colors.white70,
+                                                  fontSize:
+                                                      14, // Slightly smaller body text for hierarchy
+                                                  decoration:
+                                                      TextDecoration.none,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              const SizedBox(height: 30),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  // --- Cancel Button (Secondary/Passive) ---
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 5,
+                                                          ),
+                                                      child: ElevatedButton(
+                                                        onPressed:
+                                                            () => Navigator.of(
+                                                              context,
+                                                            ).pop(false),
+                                                        style: ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                              const Color(
+                                                                0xFF4A4A4A,
+                                                              ), // Deep grey/neutral
+                                                          elevation: 0,
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                vertical: 14,
+                                                              ),
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  10,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        child: const Text(
+                                                          "CANCEL",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            letterSpacing: 1,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 5,
+                                                          ),
+                                                      child: ElevatedButton(
+                                                        onPressed:
+                                                            () => Navigator.of(
+                                                              context,
+                                                            ).pop(true),
+                                                        style: ElevatedButton.styleFrom(
+                                                          // Use a more aggressive game red/orange
+                                                          backgroundColor:
+                                                              const Color(
+                                                                0xFFC62828,
+                                                              ),
+                                                          elevation: 5,
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                vertical: 14,
+                                                              ),
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  10,
+                                                                ),
+                                                            side: const BorderSide(
+                                                              color: Color(
+                                                                0xFFFF5252,
+                                                              ),
+                                                              width: 1.5,
+                                                            ), // Accent border
+                                                          ),
+                                                        ),
+                                                        child: const Text(
+                                                          "EXIT",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            letterSpacing: 1,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+
+                              if (exitGame == true) {
+                                Navigator.of(context).pop(false);
+                              }
                             },
                             style: IconButton.styleFrom(
-                              backgroundColor: Colors.red,
+                              backgroundColor: const Color(
+                                0xFFC62828,
+                              ), // Consistent primary color
                               padding: const EdgeInsets.all(12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
                           ),
                       ],
@@ -1504,11 +1726,11 @@ class _PitWidgetState extends State<PitWidget> {
                   boxShadow:
                       widget.lastMove
                           ? [
-                              BoxShadow(
-                                color: const Color(0xFFC69C6D).withOpacity(0.8),
-                                blurRadius: 8,
-                              ),
-                            ]
+                            BoxShadow(
+                              color: const Color(0xFFC69C6D).withOpacity(0.8),
+                              blurRadius: 8,
+                            ),
+                          ]
                           : null,
                 ),
                 child: ClipOval(child: Stack(children: _pebbles)),
@@ -1704,9 +1926,7 @@ class GameOverDialog extends StatelessWidget {
                     color: resultColor,
                     fontSize: 24,
                     fontWeight: FontWeight.w900,
-                    shadows: const [
-                      Shadow(color: Colors.black, blurRadius: 2)
-                    ],
+                    shadows: const [Shadow(color: Colors.black, blurRadius: 2)],
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -1730,9 +1950,17 @@ class GameOverDialog extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _ScoreItem(label: 'Your Score', score: playerScore, isWinner: isWin),
+                      _ScoreItem(
+                        label: 'Your Score',
+                        score: playerScore,
+                        isWinner: isWin,
+                      ),
                       Container(width: 1, height: 40, color: Colors.white10),
-                      _ScoreItem(label: 'Bot Score', score: botScore, isWinner: !isWin),
+                      _ScoreItem(
+                        label: 'Bot Score',
+                        score: botScore,
+                        isWinner: !isWin,
+                      ),
                     ],
                   ),
                 ),
@@ -1769,7 +1997,11 @@ class _ScoreItem extends StatelessWidget {
   final int score;
   final bool isWinner;
 
-  const _ScoreItem({required this.label, required this.score, required this.isWinner});
+  const _ScoreItem({
+    required this.label,
+    required this.score,
+    required this.isWinner,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1798,7 +2030,11 @@ class _DialogButton extends StatelessWidget {
   final Color color;
   final VoidCallback onPressed;
 
-  const _DialogButton({required this.text, required this.color, required this.onPressed});
+  const _DialogButton({
+    required this.text,
+    required this.color,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1807,9 +2043,7 @@ class _DialogButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         minimumSize: const Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         elevation: 5,
       ),
       child: Text(

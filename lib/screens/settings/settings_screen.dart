@@ -15,11 +15,13 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
   final BuildContext? flutterContext;
+  final AudioPlayer bgmPlayer;
 
   SettingsGame({
     required this.navigateToScreen,
     required this.showError,
     this.flutterContext,
+    required this.bgmPlayer
   });
 
   double soundLevel = 0.8;
@@ -79,8 +81,6 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
     anchor: Anchor.center,
   );
 
-  final AudioPlayer _audioPlayer = AudioPlayer();
-
   @override
   Color backgroundColor() => const Color(0xFF101010);
 
@@ -115,6 +115,7 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
         navigateToScreen(
           GameWidget(
             game: HomeGame(
+              bgmPlayer: bgmPlayer,
               navigateToScreen: navigateToScreen,
               showError: showError,
             ),
@@ -130,7 +131,7 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
       onPressed: () async {
         await FirebaseAuth.instance.signOut();
         navigateToScreen(
-          AuthScreen(navigateToScreen: navigateToScreen, showError: showError),
+          AuthScreen(navigateToScreen: navigateToScreen, showError: showError, bgmPlayer: bgmPlayer,),
         );
       },
       backgroundColor: Colors.redAccent,
@@ -146,10 +147,8 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
     add(soundKnob);
     add(musicKnob);
 
-    await _audioPlayer.setSource(AssetSource('audio/sunngka_music.mp3'));
-    _audioPlayer.setReleaseMode(ReleaseMode.loop);
-    _audioPlayer.setVolume(musicLevel);
-    await _audioPlayer.resume();
+    
+    bgmPlayer.setVolume(musicLevel);
   }
 
   @override
@@ -213,7 +212,7 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
             musicBar.size.x * musicLevel,
         musicBar.position.y,
       );
-      _audioPlayer.setVolume(musicLevel);
+      bgmPlayer.setVolume(musicLevel);
     }
   }
 

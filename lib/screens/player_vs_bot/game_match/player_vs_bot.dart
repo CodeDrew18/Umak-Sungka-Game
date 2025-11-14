@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,8 +8,11 @@ import 'package:sungka/screens/player_vs_bot/on_match/match_game_screen.dart';
 
 class PlayerVsBot extends StatefulWidget {
   final dynamic difficulty;
+  final Function(Widget screen) navigateToScreen;
+  final Function(String message) showError;
+  final AudioPlayer bgmPlayer;
 
-  const PlayerVsBot({Key? key, required this.difficulty}) : super(key: key);
+  const PlayerVsBot({Key? key, required this.difficulty, required this.bgmPlayer, required this.navigateToScreen, required this.showError}) : super(key: key);
 
   @override
   State<PlayerVsBot> createState() => _PlayerVsBotState();
@@ -82,7 +86,7 @@ class _PlayerVsBotState extends State<PlayerVsBot>
           PageRouteBuilder(
             transitionDuration: const Duration(milliseconds: 800),
             pageBuilder: (_, __, ___) =>
-                SungkaBoardScreen(difficulty: widget.difficulty),
+                SungkaBoardScreen(difficulty: widget.difficulty, bgmPlayer: widget.bgmPlayer, navigateToScreen: widget.navigateToScreen, showError: widget.showError,),
             transitionsBuilder: (_, animation, __, child) =>
                 FadeTransition(opacity: animation, child: child),
           ),

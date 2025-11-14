@@ -64,6 +64,7 @@
 
 
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
@@ -76,7 +77,8 @@ import 'dart:math';
 class StartMenuGame extends FlameGame with TapCallbacks {
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
-  StartMenuGame({required this.navigateToScreen, required this.showError});
+  final AudioPlayer bgmPlayer;
+  StartMenuGame({required this.navigateToScreen, required this.showError, required this.bgmPlayer});
 
   late PlayButton playButtonComponent;
 
@@ -86,6 +88,7 @@ class StartMenuGame extends FlameGame with TapCallbacks {
     'assets/pebble2.png',
     'assets/pebble3.png',
   ];
+  
 
   late Timer pebbleSpawnTimer;
   final Random _rng = Random();
@@ -126,6 +129,7 @@ class StartMenuGame extends FlameGame with TapCallbacks {
           Scaffold(
             body: GameWidget(
               game: HomeGame(
+                bgmPlayer: bgmPlayer,
                 navigateToScreen: navigateToScreen,
                 showError: showError,
               ),

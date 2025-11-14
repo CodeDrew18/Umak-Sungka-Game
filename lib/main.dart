@@ -110,6 +110,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             return Scaffold(
               body: GameWidget(
                 game: StartMenuGame(
+                  bgmPlayer: _bgmPlayer,
                   navigateToScreen: _navigateToScreen,
                   showError: _showError,
                 ),
@@ -117,7 +118,11 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             );
           }
 
-          return const Scaffold(body: Splashscreen());
+          return  Scaffold(body: Splashscreen(
+            bgmPlayer: _bgmPlayer,
+            navigateToScreen: _navigateToScreen,
+            showError: _showError,
+          ));
         },
       ),
     );

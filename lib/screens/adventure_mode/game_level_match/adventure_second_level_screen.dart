@@ -1360,12 +1360,225 @@ class _AdventureSecondLevelScreenState extends State<AdventureSecondLevelScreen>
                           IconButton(
                             icon: const Icon(Icons.home, color: Colors.white),
                             iconSize: 30,
-                            onPressed: () {
-                              Navigator.of(context).pop(false); 
+                            onPressed: () async {
+                              bool? exitGame = await showGeneralDialog<bool>(
+                                context: context,
+                                barrierDismissible: false,
+                                barrierLabel: 'Exit Game',
+                                transitionDuration: const Duration(
+                                  milliseconds: 300,
+                                ),
+                                // The pageBuilder is simplified as the content is in transitionBuilder
+                                pageBuilder: (context, anim1, anim2) {
+                                  return const SizedBox.shrink();
+                                },
+                                transitionBuilder: (
+                                  context,
+                                  anim1,
+                                  anim2,
+                                  child,
+                                ) {
+                                  return Transform.scale(
+                                    // Use an interpolated scale for a smoother, more 'poppy' effect
+                                    scale: 0.8 + (anim1.value * 0.2),
+                                    child: Opacity(
+                                      opacity: anim1.value,
+                                      child: Center(
+                                        child: Container(
+                                          width:
+                                              320, // Slightly wider for better presentation
+                                          padding: const EdgeInsets.all(
+                                            24,
+                                          ), // Increased padding
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ), // More rounded corners
+                                            // Use a deeper, more sophisticated dark gradient
+                                            gradient: const LinearGradient(
+                                              colors: [
+                                                Color(0xFF1E1E1E),
+                                                Color(0xFF0F0F0F),
+                                              ],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ),
+                                            // Enhanced box shadow for depth
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(
+                                                  0.8,
+                                                ),
+                                                offset: const Offset(0, 10),
+                                                blurRadius: 20,
+                                              ),
+                                            ],
+                                            // Use a subtle, vibrant border color
+                                            border: Border.all(
+                                              color: const Color(0xFF4A4A4A),
+                                              width: 1.5,
+                                            ),
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              // Larger, more dramatic warning icon
+                                              const Icon(
+                                                Icons
+                                                    .exit_to_app, // A more relevant icon for "Exit"
+                                                color: Color(
+                                                  0xFFFFA726,
+                                                ), // Orange/Amber for warning but more contrast
+                                                size: 60,
+                                              ),
+                                              const SizedBox(height: 15),
+                                              const Text(
+                                                "EXIT GAME?",
+                                                style: TextStyle(
+                                                  color: Color(
+                                                    0xFFFFA726,
+                                                  ), // Matching the icon color
+                                                  fontSize:
+                                                      26, // Larger heading
+                                                  fontWeight:
+                                                      FontWeight
+                                                          .w900, // Extra bold
+                                                  letterSpacing:
+                                                      1.5, // Spacing for a more aggressive look
+                                                  decoration:
+                                                      TextDecoration.none,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              const Text(
+                                                "Unsaved progress will be lost. Are you sure you want to return to the Selection Mode?",
+                                                style: TextStyle(
+                                                  color: Colors.white70,
+                                                  fontSize:
+                                                      14, // Slightly smaller body text for hierarchy
+                                                  decoration:
+                                                      TextDecoration.none,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              const SizedBox(height: 30),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  // --- Cancel Button (Secondary/Passive) ---
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 5,
+                                                          ),
+                                                      child: ElevatedButton(
+                                                        onPressed:
+                                                            () => Navigator.of(
+                                                              context,
+                                                            ).pop(false),
+                                                        style: ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                              const Color(
+                                                                0xFF4A4A4A,
+                                                              ), // Deep grey/neutral
+                                                          elevation: 0,
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                vertical: 14,
+                                                              ),
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  10,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        child: const Text(
+                                                          "CANCEL",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            letterSpacing: 1,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 5,
+                                                          ),
+                                                      child: ElevatedButton(
+                                                        onPressed:
+                                                            () => Navigator.of(
+                                                              context,
+                                                            ).pop(true),
+                                                        style: ElevatedButton.styleFrom(
+                                                          // Use a more aggressive game red/orange
+                                                          backgroundColor:
+                                                              const Color(
+                                                                0xFFC62828,
+                                                              ),
+                                                          elevation: 5,
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                vertical: 14,
+                                                              ),
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  10,
+                                                                ),
+                                                            side: const BorderSide(
+                                                              color: Color(
+                                                                0xFFFF5252,
+                                                              ),
+                                                              width: 1.5,
+                                                            ), // Accent border
+                                                          ),
+                                                        ),
+                                                        child: const Text(
+                                                          "EXIT",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.w900,
+                                                            letterSpacing: 1,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+
+                              if (exitGame == true) {
+                                Navigator.of(context).pop(false);
+                              }
                             },
                             style: IconButton.styleFrom(
-                              backgroundColor: Colors.red,
+                              backgroundColor: const Color(
+                                0xFFC62828,
+                              ), // Consistent primary color
                               padding: const EdgeInsets.all(12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
                           ),
                       ],

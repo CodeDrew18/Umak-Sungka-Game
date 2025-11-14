@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -12,13 +13,13 @@ import 'package:sungka/screens/components/game_back_button.dart';
 import 'package:sungka/screens/components/leaderboard_button.dart';
 import 'package:sungka/screens/leaderboards/leaderboards_screen.dart';
 import 'package:sungka/screens/components/settings_button.dart';
-import 'package:sungka/screens/online/online_game_screen.dart';
 import 'package:sungka/screens/online/waiting_for_opponent_screen.dart';
 import 'package:sungka/screens/play_with_friends/play_with_friends_screen.dart';
 import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
 import 'package:sungka/screens/settings/settings_screen.dart';
 import 'package:sungka/screens/start_game_screen.dart';
 import 'package:sungka/screens/components/image_game_button.dart';
+import 'dart:async' as async;
 
 class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
   SpriteComponent? backgroundImage;
@@ -30,10 +31,11 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
   final Function(Widget screen) navigateToScreen;
   LeaderboardButton? leaderboardButton;
   final Function(String message) showError;
-
+  final AudioPlayer bgmPlayer;
+  bool _isOnlineButtonProcessing = false;
   final firestoreService = FirebaseFirestoreService();
 
-  HomeGame({required this.navigateToScreen, required this.showError});
+  HomeGame({required this.navigateToScreen, required this.showError, required this.bgmPlayer});
 
   @override
   Color backgroundColor() => const Color(0xFF1E1E1E);
@@ -65,6 +67,7 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
         navigateToScreen(
           GameWidget(
             game: StartMenuGame(
+              bgmPlayer: bgmPlayer,
               navigateToScreen: navigateToScreen,
               showError: showError,
             ),
@@ -81,6 +84,7 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
         navigateToScreen(
           GameWidget(
             game: SettingsGame(
+              bgmPlayer: bgmPlayer,
               navigateToScreen: navigateToScreen,
               showError: showError,
             ),
@@ -96,6 +100,7 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
     leaderboardButton = LeaderboardButton(
       onPressed: () {
         navigateToScreen( LeaderboardScreen(
+          bgmPlayer: bgmPlayer,
               navigateToScreen: navigateToScreen,
               showError: showError,
         ));
@@ -109,8 +114,14 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
     modeButtons = [
       ImageGameButton(
         spritePath: 'assets/p2p.png',
-        onPressed: () {
-          online();
+        onPressed: () async{
+        if (!_isOnlineButtonProcessing) {
+      _isOnlineButtonProcessing = true;
+       async.Timer(const Duration(seconds: 3), () {
+        _isOnlineButtonProcessing = false;
+      });
+      await online();
+     }
         },
       ),
       ImageGameButton(
@@ -211,6 +222,7 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
     switch (mode) {
       case 'adventure':
         navigateToScreen( SungkaAdventureScreen(
+          bgmPlayer: bgmPlayer,
               navigateToScreen: navigateToScreen,
               showError: showError,
         ));
@@ -218,6 +230,7 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
     case 'friends':
   navigateToScreen(
     AvatarSelectionScreen(
+      bgmPlayer: bgmPlayer,
       navigateToScreen: navigateToScreen,
       showError: showError,
     ),
@@ -226,6 +239,7 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
       case 'bot':
         navigateToScreen(
           SelectionMode(
+            bgmPlayer: bgmPlayer,
             navigateToScreen: navigateToScreen,
             showError: showError,
           ),
@@ -282,7 +296,8 @@ Future<void> online() async {
         rating: userRating,
       );
       navigateToScreen(
-        OnlineGameScreen(
+        WaitingForOpponentScreen(
+          bgmPlayer: bgmPlayer,
           matchId: match.id,
           navigateToScreen: navigateToScreen,
           showError: showError,
@@ -294,7 +309,7 @@ Future<void> online() async {
         userName: userName,
         userRating: userRating,
       );
-      navigateToScreen(WaitingForOpponentScreen(matchId: newMatch.id));
+      navigateToScreen(WaitingForOpponentScreen(navigateToScreen: navigateToScreen, showError: showError, bgmPlayer: bgmPlayer, matchId: newMatch.id));
     }
   } catch (e) {
     QuickAlert.show(

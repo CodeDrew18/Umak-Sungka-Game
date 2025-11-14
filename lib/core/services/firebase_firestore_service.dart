@@ -316,7 +316,7 @@ class FirebaseFirestoreService {
     required int userRating,
   }) async {
     return await firestore.collection('matches').add({
-      'board': [7, 7, 7, 7, 7, 7, 7, 0, 7, 7, 7, 7, 7, 7, 7, 0],
+      'board': [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0],
       'turnId': userId,
       'player1Id': userId,
       'player1Name': userName,

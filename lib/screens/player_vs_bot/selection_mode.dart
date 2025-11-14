@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
@@ -36,6 +37,7 @@ class FallingEmojiManager extends Component with HasGameRef<SelectionModeGame> {
   List<String> emojis;
   final Random random = Random();
   double timer = 0;
+
 
   FallingEmojiManager(this.emojis);
 
@@ -85,11 +87,13 @@ class FallingEmoji extends TextComponent with HasGameRef<SelectionModeGame> {
 class SelectionMode extends StatefulWidget {
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
+  final AudioPlayer bgmPlayer;
 
   const SelectionMode({
     super.key,
     required this.navigateToScreen,
     required this.showError,
+    required this.bgmPlayer
   });
 
   @override
@@ -151,6 +155,7 @@ class _SelectionModeState extends State<SelectionMode> {
           MaterialPageRoute(
             builder: (_) => GameWidget(
               game: StartMenuGame(
+                bgmPlayer: widget.bgmPlayer,
                 navigateToScreen: widget.navigateToScreen,
                 showError: widget.showError,
               ),
@@ -243,7 +248,11 @@ class _SelectionModeState extends State<SelectionMode> {
                                               MaterialPageRoute(
                                                 builder: (_) =>
                                                     PlayerVsBot(
-                                                        difficulty: difficulty),
+                                                        difficulty: difficulty, 
+                                                        bgmPlayer: widget.bgmPlayer,
+                                                        navigateToScreen: widget.navigateToScreen,
+                                                        showError: widget.showError,
+                                                        ),
                                               ),
                                             );
 
@@ -311,6 +320,7 @@ class _SelectionModeState extends State<SelectionMode> {
                             widget.navigateToScreen(
                               GameWidget(
                                 game: HomeGame(
+                                  bgmPlayer: widget.bgmPlayer,
                                   navigateToScreen: widget.navigateToScreen,
                                   showError: widget.showError,
                                 ),

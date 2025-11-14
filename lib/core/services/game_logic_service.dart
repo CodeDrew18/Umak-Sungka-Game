@@ -67,4 +67,12 @@ class GameLogic {
     if (botScore > playerScore) return 'bot';
     return 'tie';
   }
+
+    static String getWinnerPlayer(List<int> board) {
+    final player1Score = board[7];
+    final player2Score = board[15];
+    if (player1Score > player2Score) return 'player1';
+    if (player2Score > player1Score) return 'player2';
+    return 'tie';
+  }
 }
