@@ -11,12 +11,13 @@ class AuthScreen extends StatefulWidget {
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
   final AudioPlayer bgmPlayer;
-
+  final musicLevel;
   const AuthScreen({
     super.key,
     required this.navigateToScreen,
     required this.showError,
-    required this.bgmPlayer
+    required this.bgmPlayer,
+    required this.musicLevel
   });
 
   @override
@@ -58,6 +59,7 @@ class _AuthScreenState extends State<AuthScreen> {
               bgmPlayer: widget.bgmPlayer,
               navigateToScreen: widget.navigateToScreen,
               showError: widget.showError,
+              musiclevel: widget.musicLevel
             ),
           );
 
@@ -74,7 +76,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> _handleGuestSignIn() async {
-     if (!mounted) return;
+    if (!mounted) return;
     try {
       final userCredential = await authService.signInAsGuest();
       final user = userCredential.user;
@@ -82,17 +84,15 @@ class _AuthScreenState extends State<AuthScreen> {
       if (user != null) {
         await firestoreService.saveUser(user.uid, null);
 
-        if(mounted){
-        final nextScreen = UsernameScreen(
-          bgmPlayer: widget.bgmPlayer,
-          navigateToScreen: widget.navigateToScreen,
-          showError: widget.showError,
-        );
-                widget.navigateToScreen(nextScreen);
+        if (mounted) {
+          final nextScreen = UsernameScreen(
+            bgmPlayer: widget.bgmPlayer,
+            navigateToScreen: widget.navigateToScreen,
+            showError: widget.showError,
+            musicLevel: widget.musicLevel,
+          );
+          widget.navigateToScreen(nextScreen);
         }
-
-
-
       }
     } catch (e) {
       print('Guest Sign-In Error: $e');

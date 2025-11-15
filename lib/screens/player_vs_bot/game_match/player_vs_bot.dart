@@ -11,8 +11,15 @@ class PlayerVsBot extends StatefulWidget {
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
   final AudioPlayer bgmPlayer;
-
-  const PlayerVsBot({Key? key, required this.difficulty, required this.bgmPlayer, required this.navigateToScreen, required this.showError}) : super(key: key);
+  final musicLevel;
+  const PlayerVsBot({
+    Key? key,
+    required this.difficulty,
+    required this.bgmPlayer,
+    required this.navigateToScreen,
+    required this.showError,
+    required this.musicLevel
+  }) : super(key: key);
 
   @override
   State<PlayerVsBot> createState() => _PlayerVsBotState();
@@ -85,10 +92,17 @@ class _PlayerVsBotState extends State<PlayerVsBot>
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
             transitionDuration: const Duration(milliseconds: 800),
-            pageBuilder: (_, __, ___) =>
-                SungkaBoardScreen(difficulty: widget.difficulty, bgmPlayer: widget.bgmPlayer, navigateToScreen: widget.navigateToScreen, showError: widget.showError,),
-            transitionsBuilder: (_, animation, __, child) =>
-                FadeTransition(opacity: animation, child: child),
+            pageBuilder:
+                (_, __, ___) => SungkaBoardScreen(
+                  difficulty: widget.difficulty,
+                  bgmPlayer: widget.bgmPlayer,
+                  navigateToScreen: widget.navigateToScreen,
+                  showError: widget.showError,
+                  musicLevel: widget.musicLevel,
+                ),
+            transitionsBuilder:
+                (_, animation, __, child) =>
+                    FadeTransition(opacity: animation, child: child),
           ),
         );
       }
@@ -101,7 +115,6 @@ class _PlayerVsBotState extends State<PlayerVsBot>
 
   @override
   void dispose() {
-
     _controller.removeStatusListener(_animationListener);
     _controller.dispose();
     super.dispose();

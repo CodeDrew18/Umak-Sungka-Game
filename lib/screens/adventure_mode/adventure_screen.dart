@@ -661,9 +661,6 @@
 //   }
 // }
 
-
-
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -685,13 +682,14 @@ class SungkaAdventureScreen extends StatefulWidget {
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
   final AudioPlayer bgmPlayer;
-
+  final musicLevel;
 
   const SungkaAdventureScreen({
     super.key,
     required this.navigateToScreen,
     required this.showError,
-    required this.bgmPlayer
+    required this.bgmPlayer,
+    required this.musicLevel
   });
 
   @override
@@ -789,13 +787,13 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
   }
 
   LinearGradient _lockedGradientFallback() => LinearGradient(
-        colors: [
-          AppColors.grey800.withOpacity(0.9),
-          AppColors.grey700.withOpacity(0.9),
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      );
+    colors: [
+      AppColors.grey800.withOpacity(0.9),
+      AppColors.grey700.withOpacity(0.9),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 
   Stream<List<int>> completedLevelsStream() {
     final user = auth.currentUser;
@@ -815,12 +813,9 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
 
     final userDoc = firestore.collection('users').doc(user.uid);
     // Ensure the document exists before trying to merge
-    await userDoc.set(
-      {
-        'completedLevels': FieldValue.arrayUnion([levelNumber]),
-      },
-      SetOptions(merge: true),
-    );
+    await userDoc.set({
+      'completedLevels': FieldValue.arrayUnion([levelNumber]),
+    }, SetOptions(merge: true));
   }
 
   String _getLevelImagePath(int levelNumber) {
@@ -844,20 +839,19 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
                 final completedLevels = snapshot.data ?? [];
 
                 // Corrected and cleaned up the unlocking logic
-                final updatedLevels = levels.map((level) {
-                  final levelNumber = level['number'] as int;
-                  bool unlocked = levelNumber == 1; // Level 1 is always unlocked
+                final updatedLevels =
+                    levels.map((level) {
+                      final levelNumber = level['number'] as int;
+                      bool unlocked =
+                          levelNumber == 1; // Level 1 is always unlocked
 
-                  if (levelNumber > 1) {
-                    // Unlock Level N if Level N-1 is in the completed list
-                    unlocked = completedLevels.contains(levelNumber - 1);
-                  }
+                      if (levelNumber > 1) {
+                        // Unlock Level N if Level N-1 is in the completed list
+                        unlocked = completedLevels.contains(levelNumber - 1);
+                      }
 
-                  return {
-                    ...level,
-                    'unlocked': unlocked,
-                  };
-                }).toList();
+                      return {...level, 'unlocked': unlocked};
+                    }).toList();
 
                 return SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
@@ -947,6 +941,7 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
                             bgmPlayer: widget.bgmPlayer,
                             navigateToScreen: widget.navigateToScreen,
                             showError: widget.showError,
+                            musicLevel: widget.musicLevel,
                           ),
                         ),
                       );
@@ -1179,10 +1174,11 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
       final result = await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => AdventurePlayerVsBot(
-            difficulty: difficulty,
-            level: levelNumber,
-          ),
+          builder:
+              (_) => AdventurePlayerVsBot(
+                difficulty: difficulty,
+                level: levelNumber,
+              ),
         ),
       );
 
@@ -1231,19 +1227,20 @@ class _SungkaAdventureScreenState extends State<SungkaAdventureScreen> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: unlocked
-                        ? const Color.fromARGB(
-                            255,
-                            122,
-                            116,
-                            14,
-                          ).withOpacity(0.5)
-                        : const Color.fromARGB(
-                            255,
-                            180,
-                            158,
-                            30,
-                          ).withOpacity(0.35),
+                    color:
+                        unlocked
+                            ? const Color.fromARGB(
+                              255,
+                              122,
+                              116,
+                              14,
+                            ).withOpacity(0.5)
+                            : const Color.fromARGB(
+                              255,
+                              180,
+                              158,
+                              30,
+                            ).withOpacity(0.35),
                     blurRadius: 15,
                     offset: const Offset(0, 6),
                   ),

@@ -96,6 +96,7 @@ flutter:
     - assets/images/assets/texture_test.jpg
     - assets/images/assets/texture_light.jpg
     - assets/images/assets/texture_plain.jpg
+    - assets/images/assets/leaderboard_test.png
 
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see

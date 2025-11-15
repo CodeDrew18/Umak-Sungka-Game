@@ -33,16 +33,23 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
   final Function(String message) showError;
   final AudioPlayer bgmPlayer;
   bool _isOnlineButtonProcessing = false;
+
+  final musicLevel;
   final firestoreService = FirebaseFirestoreService();
 
-  HomeGame({required this.navigateToScreen, required this.showError, required this.bgmPlayer});
+  HomeGame({
+    required this.navigateToScreen,
+    required this.showError,
+    required this.bgmPlayer,
+    required this.musicLevel
+  });
 
   @override
   Color backgroundColor() => const Color(0xFF1E1E1E);
 
   @override
   Future<void> onLoad() async {
-        SystemChrome.setPreferredOrientations([
+    SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
@@ -70,6 +77,7 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
               bgmPlayer: bgmPlayer,
               navigateToScreen: navigateToScreen,
               showError: showError,
+              musiclevel: musicLevel
             ),
           ),
         );
@@ -87,6 +95,7 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
               bgmPlayer: bgmPlayer,
               navigateToScreen: navigateToScreen,
               showError: showError,
+              musicLevel: musicLevel
             ),
           ),
         );
@@ -99,11 +108,14 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
 
     leaderboardButton = LeaderboardButton(
       onPressed: () {
-        navigateToScreen( LeaderboardScreen(
-          bgmPlayer: bgmPlayer,
-              navigateToScreen: navigateToScreen,
-              showError: showError,
-        ));
+        navigateToScreen(
+          LeaderboardScreen(
+            bgmPlayer: bgmPlayer,
+            navigateToScreen: navigateToScreen,
+            showError: showError,
+            musicLevel: musicLevel,
+          ),
+        );
       },
       primaryColor: AppColors.titleColor,
       accentColor: AppColors.primary,
@@ -114,14 +126,14 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
     modeButtons = [
       ImageGameButton(
         spritePath: 'assets/p2p.png',
-        onPressed: () async{
-        if (!_isOnlineButtonProcessing) {
-      _isOnlineButtonProcessing = true;
-       async.Timer(const Duration(seconds: 3), () {
-        _isOnlineButtonProcessing = false;
-      });
-      await online();
-     }
+        onPressed: () async {
+          if (!_isOnlineButtonProcessing) {
+            _isOnlineButtonProcessing = true;
+            async.Timer(const Duration(seconds: 3), () {
+              _isOnlineButtonProcessing = false;
+            });
+            await online();
+          }
         },
       ),
       ImageGameButton(
@@ -221,105 +233,116 @@ class HomeGame extends FlameGame with TapCallbacks, HoverCallbacks {
   void _onModeSelected(String mode) {
     switch (mode) {
       case 'adventure':
-        navigateToScreen( SungkaAdventureScreen(
-          bgmPlayer: bgmPlayer,
-              navigateToScreen: navigateToScreen,
-              showError: showError,
-        ));
+        navigateToScreen(
+          SungkaAdventureScreen(
+            bgmPlayer: bgmPlayer,
+            navigateToScreen: navigateToScreen,
+            showError: showError,
+            musicLevel: musicLevel,
+          ),
+        );
         break;
-    case 'friends':
-  navigateToScreen(
-    AvatarSelectionScreen(
-      bgmPlayer: bgmPlayer,
-      navigateToScreen: navigateToScreen,
-      showError: showError,
-    ),
-  );
-  break;
+      case 'friends':
+        navigateToScreen(
+          AvatarSelectionScreen(
+            bgmPlayer: bgmPlayer,
+            navigateToScreen: navigateToScreen,
+            showError: showError,
+            musicLevel: musicLevel,
+          ),
+        );
+        break;
       case 'bot':
         navigateToScreen(
           SelectionMode(
             bgmPlayer: bgmPlayer,
             navigateToScreen: navigateToScreen,
             showError: showError,
+            musicLevel: musicLevel,
           ),
         );
         break;
     }
   }
 
+  Future<void> online() async {
+    final user = FirebaseAuth.instance.currentUser;
 
-Future<void> online() async {
-  final user = FirebaseAuth.instance.currentUser;
-
-  if (user == null) {
-    QuickAlert.show(
-      context: buildContext!,
-      type: QuickAlertType.error,
-      title: "Sign In Required",
-      text: "Please log in with your account to play online.",
-      confirmBtnText: "OK",
-    );
-    return;
-  }
-
-  try {
-    final userDoc = await firestoreService.getUser(user: user);
-
-    if (!userDoc.exists) {
+    if (user == null) {
       QuickAlert.show(
         context: buildContext!,
         type: QuickAlertType.error,
-        title: "User Not Found",
-        text: "User data not found. Please contact support.",
+        title: "Sign In Required",
+        text: "Please log in with your account to play online.",
+        confirmBtnText: "OK",
       );
       return;
     }
 
-    final userData = userDoc.data() as Map<String, dynamic>;
-    final userName = userData["name"];
-    final userRating = userData['rating'] ?? 800;
-    final minRating = userRating - 100;
-    final maxRating = userRating + 100;
+    try {
+      final userDoc = await firestoreService.getUser(user: user);
 
-    final findMatch = await firestoreService.findMatch(
-      minRating: minRating,
-      maxRating: maxRating,
-    );
+      if (!userDoc.exists) {
+        QuickAlert.show(
+          context: buildContext!,
+          type: QuickAlertType.error,
+          title: "User Not Found",
+          text: "User data not found. Please contact support.",
+        );
+        return;
+      }
 
-    if (findMatch.docs.isNotEmpty) {
-      final match = findMatch.docs.first;
-      await firestoreService.joinMatch(
-        matchId: match.id,
-        userId: user.uid,
-        userName: userName,
-        rating: userRating,
+      final userData = userDoc.data() as Map<String, dynamic>;
+      final userName = userData["name"];
+      final userRating = userData['rating'] ?? 800;
+      final minRating = userRating - 100;
+      final maxRating = userRating + 100;
+
+      final findMatch = await firestoreService.findMatch(
+        minRating: minRating,
+        maxRating: maxRating,
       );
-      navigateToScreen(
-        WaitingForOpponentScreen(
-          bgmPlayer: bgmPlayer,
+
+      if (findMatch.docs.isNotEmpty) {
+        final match = findMatch.docs.first;
+        await firestoreService.joinMatch(
           matchId: match.id,
-          navigateToScreen: navigateToScreen,
-          showError: showError,
-        ),
+          userId: user.uid,
+          userName: userName,
+          rating: userRating,
+        );
+        navigateToScreen(
+          WaitingForOpponentScreen(
+            bgmPlayer: bgmPlayer,
+            matchId: match.id,
+            navigateToScreen: navigateToScreen,
+            showError: showError,
+            musicLevel: musicLevel,
+          ),
+        );
+      } else {
+        final newMatch = await firestoreService.newMatch(
+          userId: user.uid,
+          userName: userName,
+          userRating: userRating,
+        );
+        navigateToScreen(
+          WaitingForOpponentScreen(
+            navigateToScreen: navigateToScreen,
+            showError: showError,
+            bgmPlayer: bgmPlayer,
+            matchId: newMatch.id,
+            musicLevel: musicLevel,
+          ),
+        );
+      }
+    } catch (e) {
+      QuickAlert.show(
+        context: buildContext!,
+        type: QuickAlertType.error,
+        title: "Error",
+        text: e.toString(),
       );
-    } else {
-      final newMatch = await firestoreService.newMatch(
-        userId: user.uid,
-        userName: userName,
-        userRating: userRating,
-      );
-      navigateToScreen(WaitingForOpponentScreen(navigateToScreen: navigateToScreen, showError: showError, bgmPlayer: bgmPlayer, matchId: newMatch.id));
     }
-  } catch (e) {
-    QuickAlert.show(
-      context: buildContext!,
-      type: QuickAlertType.error,
-      title: "Error",
-      text: e.toString(),
-    );
   }
-
-
-}
 }

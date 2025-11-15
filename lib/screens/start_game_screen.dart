@@ -1,4 +1,3 @@
-
 // import 'package:flame/components.dart';
 // import 'package:flame/events.dart';
 // import 'package:flame/game.dart';
@@ -61,9 +60,6 @@
 // }
 // }
 
-
-
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -78,7 +74,13 @@ class StartMenuGame extends FlameGame with TapCallbacks {
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
   final AudioPlayer bgmPlayer;
-  StartMenuGame({required this.navigateToScreen, required this.showError, required this.bgmPlayer});
+  final musiclevel;
+  StartMenuGame({
+    required this.navigateToScreen,
+    required this.showError,
+    required this.bgmPlayer,
+    required this.musiclevel
+  });
 
   late PlayButton playButtonComponent;
 
@@ -88,7 +90,6 @@ class StartMenuGame extends FlameGame with TapCallbacks {
     'assets/pebble2.png',
     'assets/pebble3.png',
   ];
-  
 
   late Timer pebbleSpawnTimer;
   final Random _rng = Random();
@@ -132,6 +133,7 @@ class StartMenuGame extends FlameGame with TapCallbacks {
                 bgmPlayer: bgmPlayer,
                 navigateToScreen: navigateToScreen,
                 showError: showError,
+                musicLevel: musiclevel
               ),
             ),
           ),
@@ -154,7 +156,7 @@ class StartMenuGame extends FlameGame with TapCallbacks {
   }
 
   // Function to spawn a new pebble
-void _spawnPebble() {
+  void _spawnPebble() {
     final String imagePath =
         pebbleImagePaths[_rng.nextInt(pebbleImagePaths.length)];
 
@@ -167,13 +169,10 @@ void _spawnPebble() {
     pebble.onLoad().then((_) {
       // randomX is a double, which is correct
       final double randomX = _rng.nextDouble() * size.x;
-      
+
       // Vector2 takes doubles, which is correct.
-      pebble.position = Vector2(
-        randomX,
-        -pebble.size.y,
-      );
-      
+      pebble.position = Vector2(randomX, -pebble.size.y);
+
       pebble.priority = -1;
     });
   }

@@ -1,5 +1,3 @@
-
-
 // // // // //Runnable but need to fix
 
 // // // // import 'dart:async';
@@ -119,8 +117,8 @@
 // // // //   Offset _getPitPosition(int pitIndex, double pitSize, double boardWidth) {
 // // // //     // These constants are estimated based on typical Sungka board layout
 // // // //     const storeWidth = 58.0;
-// // // //     const sidePadding = 8.0; 
-// // // //     const verticalPadding = 24.0; 
+// // // //     const sidePadding = 8.0;
+// // // //     const verticalPadding = 24.0;
 
 // // // //     bool isTop = pitIndex > 7;
 // // // //     // Map pit index (0-6 for player bottom, 8-14 for player top/opponent bottom) to column index (0-6)
@@ -135,7 +133,7 @@
 
 // // // //     double x = boardContainerPadding + storeWidth + sidePadding + (col * pitSpacing) + (pitSpacing / 2);
 
-// // // //     // Calculate Y position 
+// // // //     // Calculate Y position
 // // // //     double y = isTop
 // // // //         ? (boardContainerPadding + verticalPadding + pitSize / 2)
 // // // //         : (boardContainerPadding + verticalPadding * 2 + pitSize + pitSize / 2);
@@ -514,7 +512,6 @@
 // // // //       }
 // // // //     }
 // // // //   }
-
 
 // // // //   // MODIFIED: Calls _handlePitTap instead of direct board update
 // // // //   Future<void> _botPlay(
@@ -1125,7 +1122,6 @@
 // // // //   }
 // // // // }
 
-
 // // // import 'dart:async';
 // // // import 'dart:math';
 // // // import 'dart:ui'; // Added for CustomPaint
@@ -1244,8 +1240,8 @@
 // // //   Offset _getPitPosition(int pitIndex, double pitSize, double boardWidth) {
 // // //     // These constants are estimated based on typical Sungka board layout
 // // //     const storeWidth = 58.0;
-// // //     const sidePadding = 8.0; 
-// // //     const verticalPadding = 24.0; 
+// // //     const sidePadding = 8.0;
+// // //     const verticalPadding = 24.0;
 
 // // //     bool isTop = pitIndex > 7;
 // // //     // Map pit index (0-6 for player bottom, 8-14 for player top/opponent bottom) to column index (0-6)
@@ -1260,7 +1256,7 @@
 
 // // //     double x = boardContainerPadding + storeWidth + sidePadding + (col * pitSpacing) + (pitSpacing / 2);
 
-// // //     // Calculate Y position 
+// // //     // Calculate Y position
 // // //     double y = isTop
 // // //         ? (boardContainerPadding + verticalPadding + pitSize / 2)
 // // //         : (boardContainerPadding + verticalPadding * 2 + pitSize + pitSize / 2);
@@ -1505,7 +1501,7 @@
 // // //             //   ),
 // // //             //   child: const Text("Resign"),
 // // //             // ),
-  
+
 // // //             GestureDetector(
 // // //   onTap: () => showResignDialog(
 // // //     player1Id,
@@ -1598,7 +1594,7 @@
 // // //     if (matchData!['turnId'] == currentUser!.uid) {
 // // //       setState(() => isMakingMove = true);
 // // //     }
-    
+
 // // //     // --- Start Animation Logic ---
 // // //     setState(() {
 // // //       animatingPit = pit;
@@ -1655,13 +1651,12 @@
 // // //       await Future.delayed(const Duration(milliseconds: 300));
 
 // // //       // --- Apply Full Game Logic and Update Firestore ---
-      
+
 // // //       // Determine if the move is from P1's side (0-6) or P2's side (8-14).
-// // //       final isPlayer1SideMove = pit >= 0 && pit <= 6; 
-      
+// // //       final isPlayer1SideMove = pit >= 0 && pit <= 6;
+
 // // //       // The game logic service expects "isPlayer1Turn" to be true if the move is from P1's side (0-6).
 // // //       final isLogicPlayer1Turn = isPlayer1SideMove;
-
 
 // // //       final resultBoard = GameLogic.makeMove(currentBoard, pit, isLogicPlayer1Turn);
 // // //       final result = GameLogic.checkEndGame(resultBoard);
@@ -1690,7 +1685,7 @@
 // // //         );
 // // //       } else { // Normal turn change
 // // //         final nextTurnId = isBotTurn ? player1Id : player2Id; // Simple switch (Bot -> P1, P1 -> P2/Bot)
-        
+
 // // //         await firestoreService.updateBoardAndTurn(
 // // //           matchId: widget.matchId,
 // // //           newBoard: resultBoard,
@@ -1711,7 +1706,6 @@
 // // //     }
 // // //   }
 
-
 // // //   // CORRECTED: Set isMakingMove and locally update turnId to 'bot_1' before starting the move
 // // //   Future<void> _botPlay(
 // // //     List<int> board, Map<String, dynamic> data, String difficulty) async {
@@ -1725,7 +1719,7 @@
 // // //         isMakingMove = true;
 // // //         matchData!['turnId'] = 'bot_1'; // Ensures the animation logic runs for the bot's pits (8-14)
 // // //       });
-      
+
 // // //       final diff = {
 // // //         'easy': Difficulty.easy,
 // // //         'medium': Difficulty.medium,
@@ -2369,7 +2363,7 @@
 // // //               Text(
 // // //                 message,
 // // //                 textAlign: TextAlign.center,
-// // //                 style: const TextStyle(color: Colors.white70, fontSize: 16, decoration: TextDecoration.none,),   
+// // //                 style: const TextStyle(color: Colors.white70, fontSize: 16, decoration: TextDecoration.none,),
 // // //               ),
 // // //               const SizedBox(height: 10),
 // // //               Container(
@@ -2465,11 +2459,6 @@
 // // //     );
 // // //   }
 // // // }
-
-
-
-
-
 
 // // // //Runnable but need to fix
 
@@ -2590,8 +2579,8 @@
 // // //   Offset _getPitPosition(int pitIndex, double pitSize, double boardWidth) {
 // // //     // These constants are estimated based on typical Sungka board layout
 // // //     const storeWidth = 58.0;
-// // //     const sidePadding = 8.0; 
-// // //     const verticalPadding = 24.0; 
+// // //     const sidePadding = 8.0;
+// // //     const verticalPadding = 24.0;
 
 // // //     bool isTop = pitIndex > 7;
 // // //     // Map pit index (0-6 for player bottom, 8-14 for player top/opponent bottom) to column index (0-6)
@@ -2606,7 +2595,7 @@
 
 // // //     double x = boardContainerPadding + storeWidth + sidePadding + (col * pitSpacing) + (pitSpacing / 2);
 
-// // //     // Calculate Y position 
+// // //     // Calculate Y position
 // // //     double y = isTop
 // // //         ? (boardContainerPadding + verticalPadding + pitSize / 2)
 // // //         : (boardContainerPadding + verticalPadding * 2 + pitSize + pitSize / 2);
@@ -2985,7 +2974,6 @@
 // // //       }
 // // //     }
 // // //   }
-
 
 // // //   // MODIFIED: Calls _handlePitTap instead of direct board update
 // // //   Future<void> _botPlay(
@@ -3596,7 +3584,6 @@
 // // //   }
 // // // }
 
-
 // // import 'dart:async';
 // // import 'dart:math';
 // // import 'package:audioplayers/audioplayers.dart';
@@ -3612,7 +3599,6 @@
 // // import 'package:sungka/screens/home_screen.dart';
 // // import 'package:sungka/screens/player_vs_bot/on_match/player_card.dart';
 // // import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
-
 
 // // class OnlineGameScreen extends StatefulWidget {
 // //   const OnlineGameScreen({
@@ -3707,15 +3693,13 @@
 // //     _matchSub?.cancel();
 // //     super.dispose();
 
-    
 // //   }
-
 
 // //   Offset _getPitPosition(
 // //       int pitIndex,
 // //       double pitSize,
 // //       double boardWidth,
-// //       bool isCurrentUserPlayer1) { 
+// //       bool isCurrentUserPlayer1) {
 // //     const storeWidth = 58.0;
 // //     const sidePadding = 8.0;
 // //     const verticalPadding = 24.0;
@@ -3986,7 +3970,7 @@
 // //                 ),
 // //               ),
 // //             ),
-  
+
 // //             GestureDetector(
 // //   onTap: () => showResignDialog(
 // //     player1Id,
@@ -4125,10 +4109,9 @@
 
 // //       await Future.delayed(const Duration(milliseconds: 300));
 
-// //       final isPlayer1SideMove = pit >= 0 && pit <= 6; 
+// //       final isPlayer1SideMove = pit >= 0 && pit <= 6;
 
 // //       final isLogicPlayer1Turn = isPlayer1SideMove;
-
 
 // //       final resultBoard = GameLogic.makeMove(currentBoard, pit, isLogicPlayer1Turn);
 // //       final result = GameLogic.checkEndGame(resultBoard);
@@ -4160,7 +4143,6 @@
 // //             ? player2Id
 // //             : player1Id;
 
-
 // //         await firestoreService.updateBoardAndTurn(
 // //           matchId: widget.matchId,
 // //           newBoard: resultBoard,
@@ -4191,7 +4173,7 @@
 // //         isMakingMove = true;
 // //         matchData!['turnId'] = 'bot_1';
 // //       });
-      
+
 // //       final diff = {
 // //         'easy': Difficulty.easy,
 // //         'medium': Difficulty.medium,
@@ -4429,7 +4411,7 @@
 // //     transitionBuilder: (context, anim1, anim2, child) {
 // //       return Transform.scale(
 // //         // Scale for a smooth 'pop' effect
-// //         scale: 0.8 + (anim1.value * 0.2), 
+// //         scale: 0.8 + (anim1.value * 0.2),
 // //         child: Opacity(
 // //           opacity: anim1.value,
 // //           child: Center(
@@ -4452,7 +4434,7 @@
 // //                   ),
 // //                 ],
 // //                 // Subtle border for definition
-// //                 border: Border.all(color: const Color(0xFF4A4A4A), width: 1.5), 
+// //                 border: Border.all(color: const Color(0xFF4A4A4A), width: 1.5),
 // //               ),
 // //               child: Column(
 // //                 mainAxisSize: MainAxisSize.min,
@@ -4467,7 +4449,7 @@
 // //                   const Text(
 // //                     "RESIGN GAME?",
 // //                     style: TextStyle(
-// //                       color: Color(0xFFEF5350), 
+// //                       color: Color(0xFFEF5350),
 // //                       fontSize: 26,
 // //                       fontWeight: FontWeight.w900,
 // //                       letterSpacing: 1.5,
@@ -4503,17 +4485,17 @@
 // //                               ),
 // //                             ),
 // //                             child: const Text(
-// //                               "CANCEL", 
+// //                               "CANCEL",
 // //                               style: TextStyle(
-// //                                 color: Colors.white, 
-// //                                 fontWeight: FontWeight.bold, 
+// //                                 color: Colors.white,
+// //                                 fontWeight: FontWeight.bold,
 // //                                 letterSpacing: 1
 // //                               )
 // //                             ),
 // //                           ),
 // //                         ),
 // //                       ),
-                      
+
 // //                       // --- Resign Button (Primary/Warning) ---
 // //                       Expanded(
 // //                         child: Padding(
@@ -4532,7 +4514,7 @@
 // //                             },
 // //                             style: ElevatedButton.styleFrom(
 // //                               // Use a strong, high-contrast red
-// //                               backgroundColor: const Color(0xFFC62828), 
+// //                               backgroundColor: const Color(0xFFC62828),
 // //                               elevation: 5,
 // //                               padding: const EdgeInsets.symmetric(vertical: 14),
 // //                               shape: RoundedRectangleBorder(
@@ -4541,10 +4523,10 @@
 // //                               ),
 // //                             ),
 // //                             child: const Text(
-// //                               "RESIGN", 
+// //                               "RESIGN",
 // //                               style: TextStyle(
-// //                                 color: Colors.white, 
-// //                                 fontWeight: FontWeight.w900, 
+// //                                 color: Colors.white,
+// //                                 fontWeight: FontWeight.w900,
 // //                                 letterSpacing: 1
 // //                               )
 // //                             ),
@@ -4989,7 +4971,7 @@
 // //               Text(
 // //                 message,
 // //                 textAlign: TextAlign.center,
-// //                 style: const TextStyle(color: Colors.white70, fontSize: 16, decoration: TextDecoration.none,),   
+// //                 style: const TextStyle(color: Colors.white70, fontSize: 16, decoration: TextDecoration.none,),
 // //               ),
 // //               const SizedBox(height: 10),
 // //               Container(
@@ -5092,8 +5074,6 @@
 // //   }
 // // }
 
-
-
 // import 'dart:async';
 // import 'dart:math';
 // import 'package:audioplayers/audioplayers.dart';
@@ -5109,7 +5089,6 @@
 // import 'package:sungka/screens/home_screen.dart';
 // import 'package:sungka/screens/player_vs_bot/on_match/player_card.dart';
 // import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
-
 
 // class OnlineGameScreen extends StatefulWidget {
 //   const OnlineGameScreen({
@@ -5204,15 +5183,13 @@
 //     _matchSub?.cancel();
 //     super.dispose();
 
-    
 //   }
-
 
 //   Offset _getPitPosition(
 //       int pitIndex,
 //       double pitSize,
 //       double boardWidth,
-//       bool isCurrentUserPlayer1) { 
+//       bool isCurrentUserPlayer1) {
 //     const storeWidth = 58.0;
 //     const sidePadding = 8.0;
 //     const verticalPadding = 24.0;
@@ -5485,7 +5462,7 @@
 //                 ),
 //               ),
 //             ),
-  
+
 //             GestureDetector(
 //   onTap: () => showResignDialog(
 //     player1Id,
@@ -5624,10 +5601,9 @@
 
 //       await Future.delayed(const Duration(milliseconds: 300));
 
-//       final isPlayer1SideMove = pit >= 0 && pit <= 6; 
+//       final isPlayer1SideMove = pit >= 0 && pit <= 6;
 
 //       final isLogicPlayer1Turn = isPlayer1SideMove;
-
 
 //       final resultBoard = GameLogic.makeMove(currentBoard, pit, isLogicPlayer1Turn);
 //       final result = GameLogic.checkEndGame(resultBoard);
@@ -5659,7 +5635,6 @@
 //             ? player2Id
 //             : player1Id;
 
-
 //         await firestoreService.updateBoardAndTurn(
 //           matchId: widget.matchId,
 //           newBoard: resultBoard,
@@ -5690,7 +5665,7 @@
 //         isMakingMove = true;
 //         matchData!['turnId'] = 'bot_1';
 //       });
-      
+
 //       final diff = {
 //         'easy': Difficulty.easy,
 //         'medium': Difficulty.medium,
@@ -5832,7 +5807,7 @@
 //       transitionBuilder: (context, anim1, anim2, child) {
 //         return Transform.scale(
 //           // Scale for a smooth 'pop' effect
-//           scale: 0.8 + (anim1.value * 0.2), 
+//           scale: 0.8 + (anim1.value * 0.2),
 //           child: Opacity(
 //             opacity: anim1.value,
 //             child: Center(
@@ -5855,7 +5830,7 @@
 //                     ),
 //                   ],
 //                   // Subtle border for definition
-//                   border: Border.all(color: const Color(0xFF4A4A4A), width: 1.5), 
+//                   border: Border.all(color: const Color(0xFF4A4A4A), width: 1.5),
 //                 ),
 //                 child: Column(
 //                   mainAxisSize: MainAxisSize.min,
@@ -5870,7 +5845,7 @@
 //                     const Text(
 //                       "RESIGN GAME?",
 //                       style: TextStyle(
-//                         color: Color(0xFFEF5350), 
+//                         color: Color(0xFFEF5350),
 //                         fontSize: 26,
 //                         fontWeight: FontWeight.w900,
 //                         letterSpacing: 1.5,
@@ -5906,17 +5881,17 @@
 //                                 ),
 //                               ),
 //                               child: const Text(
-//                                 "CANCEL", 
+//                                 "CANCEL",
 //                                 style: TextStyle(
-//                                   color: Colors.white, 
-//                                   fontWeight: FontWeight.bold, 
+//                                   color: Colors.white,
+//                                   fontWeight: FontWeight.bold,
 //                                   letterSpacing: 1
 //                                 )
 //                               ),
 //                             ),
 //                           ),
 //                         ),
-                        
+
 //                         // --- Resign Button (Primary/Warning) ---
 //                         Expanded(
 //                           child: Padding(
@@ -5935,7 +5910,7 @@
 //                               },
 //                               style: ElevatedButton.styleFrom(
 //                                 // Use a strong, high-contrast red
-//                                 backgroundColor: const Color(0xFFC62828), 
+//                                 backgroundColor: const Color(0xFFC62828),
 //                                 elevation: 5,
 //                                 padding: const EdgeInsets.symmetric(vertical: 14),
 //                                 shape: RoundedRectangleBorder(
@@ -5944,10 +5919,10 @@
 //                                 ),
 //                               ),
 //                               child: const Text(
-//                                 "RESIGN", 
+//                                 "RESIGN",
 //                                 style: TextStyle(
-//                                   color: Colors.white, 
-//                                   fontWeight: FontWeight.w900, 
+//                                   color: Colors.white,
+//                                   fontWeight: FontWeight.w900,
 //                                   letterSpacing: 1
 //                                 )
 //                               ),
@@ -6553,7 +6528,6 @@
 //   }
 // }
 
-
 import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
@@ -6570,20 +6544,21 @@ import 'package:sungka/screens/home_screen.dart';
 import 'package:sungka/screens/player_vs_bot/on_match/player_card.dart';
 import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
 
-
 class OnlineGameScreen extends StatefulWidget {
   const OnlineGameScreen({
     super.key,
     required this.matchId,
     required this.navigateToScreen,
     required this.showError,
-    required this.bgmPlayer
+    required this.bgmPlayer,
+    required this.musicLevel,
   });
 
   final String matchId;
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
   final AudioPlayer bgmPlayer;
+  final musicLevel;
 
   @override
   State<OnlineGameScreen> createState() => _OnlineGameScreenState();
@@ -6596,7 +6571,7 @@ class _OnlineGameScreenState extends State<OnlineGameScreen>
 
   Map<String, dynamic>? matchData;
   StreamSubscription? _matchSub;
-String? _pendingRematchId;
+  String? _pendingRematchId;
 
   bool isMakingMove = false;
   bool botThinking = false;
@@ -6620,47 +6595,53 @@ String? _pendingRematchId;
   }
 
   void _startMatchSubscription() {
-    _matchSub = firestoreService.getMatch(matchId: widget.matchId).listen(
-      (snapshot) {
-        if (!snapshot.exists) return;
-        final data = snapshot.data() as Map<String, dynamic>?;
-        if (data == null) return;
+    _matchSub = firestoreService
+        .getMatch(matchId: widget.matchId)
+        .listen(
+          (snapshot) {
+            if (!snapshot.exists) return;
+            final data = snapshot.data() as Map<String, dynamic>?;
+            if (data == null) return;
 
-        final prevData = matchData;
-        final prevBoard = matchData != null ? List<int>.from(matchData!['board']) : null;
-        matchData = data;
+            final prevData = matchData;
+            final prevBoard =
+                matchData != null ? List<int>.from(matchData!['board']) : null;
+            matchData = data;
 
-        final turnId = data['turnId'];
-        final player2Id = data['player2Id'];
-        final difficulty = data['difficulty'] ?? 'easy';
-        final board = List<int>.from(data['board']);
+            final turnId = data['turnId'];
+            final player2Id = data['player2Id'];
+            final difficulty = data['difficulty'] ?? 'easy';
+            final board = List<int>.from(data['board']);
 
-        final turnChanged = turnId != _lastTurnId;
-        _lastTurnId = turnId;
+            final turnChanged = turnId != _lastTurnId;
+            _lastTurnId = turnId;
 
-        // <CHANGE> When receiving board update from opponent, animate the pebble movement
-        if (prevBoard != null && !listEquals(prevBoard, board) && !isMakingMove) {
-          _animateBoardChange(prevBoard, board);
-        }
+            // <CHANGE> When receiving board update from opponent, animate the pebble movement
+            if (prevBoard != null &&
+                !listEquals(prevBoard, board) &&
+                !isMakingMove) {
+              _animateBoardChange(prevBoard, board);
+            }
 
-        if (player2Id == 'bot_1' && turnChanged && turnId == 'bot_1') {
-          if (!botThinking) {
+            if (player2Id == 'bot_1' && turnChanged && turnId == 'bot_1') {
+              if (!botThinking) {
+                Future.delayed(const Duration(milliseconds: 900), () {
+                  if (!mounted) return;
+                  _botPlay(board, data, difficulty);
+                });
+              }
+            }
 
-            Future.delayed(const Duration(milliseconds: 900), () {
-              if (!mounted) return;
-              _botPlay(board, data, difficulty);
-            });
-          }
-        }
-
-        if (mounted && (!mapEquals(prevData, matchData) || animatingPebbles.isNotEmpty)) {
-          setState(() {});
-        }
-      },
-      onError: (e) {
-        widget.showError("Match stream error: $e");
-      },
-    );
+            if (mounted &&
+                (!mapEquals(prevData, matchData) ||
+                    animatingPebbles.isNotEmpty)) {
+              setState(() {});
+            }
+          },
+          onError: (e) {
+            widget.showError("Match stream error: $e");
+          },
+        );
   }
 
   // <CHANGE> New method to animate board changes from other players
@@ -6668,7 +6649,7 @@ String? _pendingRematchId;
     // Find which pit the move came from (pit with decreased count in player's rows)
     int sourcePit = -1;
     final isPlayer1 = currentUser!.uid == matchData!['player1Id'];
-    
+
     // Check player 1's side (pits 0-6 and store at 7)
     for (int i = 0; i < 8; i++) {
       if (prevBoard[i] > newBoard[i]) {
@@ -6676,7 +6657,7 @@ String? _pendingRematchId;
         break;
       }
     }
-    
+
     // Check player 2's side (pits 8-14 and store at 15)
     if (sourcePit == -1) {
       for (int i = 8; i < 16; i++) {
@@ -6717,12 +6698,14 @@ String? _pendingRematchId;
 
       if (mounted) {
         setState(() {
-          animatingPebbles.add(AnimatingPebbleData(
-            fromPit: index,
-            toPit: nextIndex,
-            startTime: DateTime.now(),
-            duration: const Duration(milliseconds: 600),
-          ));
+          animatingPebbles.add(
+            AnimatingPebbleData(
+              fromPit: index,
+              toPit: nextIndex,
+              startTime: DateTime.now(),
+              duration: const Duration(milliseconds: 600),
+            ),
+          );
         });
       }
 
@@ -6739,7 +6722,7 @@ String? _pendingRematchId;
     }
 
     await Future.delayed(const Duration(milliseconds: 300));
-    
+
     if (mounted) {
       setState(() {
         animatingPebbles = [];
@@ -6749,22 +6732,20 @@ String? _pendingRematchId;
 
   @override
   void dispose() {
-        SystemChrome.setPreferredOrientations([
+    SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
     _matchSub?.cancel();
     super.dispose();
-
-    
   }
 
-
   Offset _getPitPosition(
-      int pitIndex,
-      double pitSize,
-      double boardWidth,
-      bool isCurrentUserPlayer1) { 
+    int pitIndex,
+    double pitSize,
+    double boardWidth,
+    bool isCurrentUserPlayer1,
+  ) {
     const storeWidth = 58.0;
     const sidePadding = 8.0;
     const verticalPadding = 24.0;
@@ -6796,10 +6777,19 @@ String? _pendingRematchId;
     // Calculate X position
     const boardContainerPadding = 12.0;
 
-    double x = boardContainerPadding + storeWidth + sidePadding + (col * pitSpacing) + (pitSpacing / 2);
-    double y = isTopRowPit
-        ? (boardContainerPadding + verticalPadding + pitSize / 2)
-        : (boardContainerPadding + verticalPadding * 2 + pitSize + pitSize / 2);
+    double x =
+        boardContainerPadding +
+        storeWidth +
+        sidePadding +
+        (col * pitSpacing) +
+        (pitSpacing / 2);
+    double y =
+        isTopRowPit
+            ? (boardContainerPadding + verticalPadding + pitSize / 2)
+            : (boardContainerPadding +
+                verticalPadding * 2 +
+                pitSize +
+                pitSize / 2);
 
     return Offset(x, y);
   }
@@ -6877,24 +6867,30 @@ String? _pendingRematchId;
                 PlayerCards(
                   name: isPlayer1 ? player2Name : player1Name,
                   score: isPlayer1 ? board[15] : board[7],
-                  isActive: isPlayer1 ? turnId == player2Id : turnId == player1Id,
+                  isActive:
+                      isPlayer1 ? turnId == player2Id : turnId == player1Id,
                   avatarIcon:
-                      (isPlayer1 && player2Id == 'bot_1') || !isPlayer1 ? Icons.smart_toy : Icons.person,
+                      (isPlayer1 && player2Id == 'bot_1') || !isPlayer1
+                          ? Icons.smart_toy
+                          : Icons.person,
                 ),
 
-                       Text(
-                              turnId == player1Id ? "$player1Name Turn" : "$player2Name Turn",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 21,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                Text(
+                  turnId == player1Id
+                      ? "$player1Name Turn"
+                      : "$player2Name Turn",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 21,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
 
                 PlayerCards(
                   name: isPlayer1 ? player1Name : player2Name,
                   score: isPlayer1 ? board[7] : board[15],
-                  isActive: isPlayer1 ? turnId == player1Id : turnId == player2Id,
+                  isActive:
+                      isPlayer1 ? turnId == player1Id : turnId == player2Id,
                   avatarIcon: Icons.person,
                 ),
               ],
@@ -6904,7 +6900,8 @@ String? _pendingRematchId;
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 900),
-                  child: LayoutBuilder( // NEW: LayoutBuilder to get board width
+                  child: LayoutBuilder(
+                    // NEW: LayoutBuilder to get board width
                     builder: (context, constraints) {
                       final effectiveBoardWidth = constraints.maxWidth;
                       return Stack(
@@ -6914,9 +6911,16 @@ String? _pendingRematchId;
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(24),
-                              border: Border.all(color: const Color(0xFF4B3219), width: 5),
+                              border: Border.all(
+                                color: const Color(0xFF4B3219),
+                                width: 5,
+                              ),
                               boxShadow: const [
-                                BoxShadow(color: Colors.black45, blurRadius: 10.0, offset: Offset(0, 5)),
+                                BoxShadow(
+                                  color: Colors.black45,
+                                  blurRadius: 10.0,
+                                  offset: Offset(0, 5),
+                                ),
                               ],
                               image: _boardTexture,
                             ),
@@ -6926,7 +6930,8 @@ String? _pendingRematchId;
                                 // Opponent Store (left)
                                 StoreWidget(
                                   count: isPlayer1 ? board[15] : board[7],
-                                  label: '${isPlayer1 ? player2Name : player1Name}\'s Store',
+                                  label:
+                                      '${isPlayer1 ? player2Name : player1Name}\'s Store',
                                   height: 210,
                                   woodenTexture: _pitStoreTexture,
                                 ),
@@ -6938,27 +6943,33 @@ String? _pendingRematchId;
                                     children: [
                                       // Top row (opponent's side)
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: List.generate(7, (i) {
-                                          final index = isPlayer1 ? 14 - i : 6 - i;
+                                          final index =
+                                              isPlayer1 ? 14 - i : 6 - i;
                                           return PitWidget(
                                             count: board[index],
                                             size: pitSize,
                                             isTop: true,
                                             // enabled: !isPlayer1 && isMyTurn && !isMakingMove && board[index] > 0,
                                             enabled: false,
-                                            animating: animatingPit == index, // UPDATED
-                                            lastMove: lastMove == index, // UPDATED
-                                            onTap: () => _handlePitTap(
-                                              index,
-                                              board,
-                                              player1Id,
-                                              player2Id,
-                                              player1Rating,
-                                              player2Rating,
-                                              player1Score,
-                                              player2Score,
-                                            ),
+                                            animating:
+                                                animatingPit ==
+                                                index, // UPDATED
+                                            lastMove:
+                                                lastMove == index, // UPDATED
+                                            onTap:
+                                                () => _handlePitTap(
+                                                  index,
+                                                  board,
+                                                  player1Id,
+                                                  player2Id,
+                                                  player1Rating,
+                                                  player2Rating,
+                                                  player1Score,
+                                                  player2Score,
+                                                ),
                                             woodenTexture: _pitStoreTexture,
                                           );
                                         }),
@@ -6966,7 +6977,9 @@ String? _pendingRematchId;
                                       // Divider
                                       Container(
                                         height: 1.5,
-                                        margin: const EdgeInsets.symmetric(vertical: 8),
+                                        margin: const EdgeInsets.symmetric(
+                                          vertical: 8,
+                                        ),
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                             colors: [
@@ -6979,7 +6992,8 @@ String? _pendingRematchId;
                                       ),
                                       // Bottom row (player's side)
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: List.generate(7, (i) {
                                           final index = isPlayer1 ? i : 8 + i;
                                           return PitWidget(
@@ -6987,19 +7001,26 @@ String? _pendingRematchId;
                                             size: pitSize,
                                             isTop: false,
                                             // enabled: isPlayer1 && isMyTurn && !isMakingMove && board[index] > 0,
-                                            enabled: isMyTurn && !isMakingMove && board[index] > 0,
-                                            animating: animatingPit == index, // UPDATED
-                                            lastMove: lastMove == index, // UPDATED
-                                            onTap: () => _handlePitTap(
-                                              index,
-                                              board,
-                                              player1Id,
-                                              player2Id,
-                                              player1Rating,
-                                              player2Rating,
-                                              player1Score,
-                                              player2Score,
-                                            ),
+                                            enabled:
+                                                isMyTurn &&
+                                                !isMakingMove &&
+                                                board[index] > 0,
+                                            animating:
+                                                animatingPit ==
+                                                index, // UPDATED
+                                            lastMove:
+                                                lastMove == index, // UPDATED
+                                            onTap:
+                                                () => _handlePitTap(
+                                                  index,
+                                                  board,
+                                                  player1Id,
+                                                  player2Id,
+                                                  player1Rating,
+                                                  player2Rating,
+                                                  player1Score,
+                                                  player2Score,
+                                                ),
                                             woodenTexture: _pitStoreTexture,
                                           );
                                         }),
@@ -7011,7 +7032,8 @@ String? _pendingRematchId;
                                 // Player Store (right)
                                 StoreWidget(
                                   count: isPlayer1 ? board[7] : board[15],
-                                  label: '${isPlayer1 ? player1Name : player2Name}\'s Store',
+                                  label:
+                                      '${isPlayer1 ? player1Name : player2Name}\'s Store',
                                   height: 210,
                                   woodenTexture: _pitStoreTexture,
                                 ),
@@ -7025,8 +7047,13 @@ String? _pendingRematchId;
                                 child: CustomPaint(
                                   painter: AnimatedPebblesPainter(
                                     pebbles: animatingPebbles,
-                                    getPitPosition: (pit) =>
-                                        _getPitPosition(pit, pitSize, effectiveBoardWidth, isPlayer1),
+                                    getPitPosition:
+                                        (pit) => _getPitPosition(
+                                          pit,
+                                          pitSize,
+                                          effectiveBoardWidth,
+                                          isPlayer1,
+                                        ),
                                   ),
                                 ),
                               ),
@@ -7038,62 +7065,66 @@ String? _pendingRematchId;
                 ),
               ),
             ),
-  
+
             GestureDetector(
-  onTap: () => showResignDialog(
-    player1Id,
-    player2Id,
-    player1Rating,
-    player2Rating,
-    player1Score,
-    player2Score,
-  ),
-  child: Container(
-    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
-    decoration: BoxDecoration(
-      gradient: const LinearGradient(
-        colors: [Color(0xFFFF4B5C), Color(0xFFDB2B39)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.4),
-          offset: const Offset(4, 4),
-          blurRadius: 8,
-        ),
-        BoxShadow(
-          color: Colors.white.withOpacity(0.15),
-          offset: const Offset(-4, -4),
-          blurRadius: 8,
-        ),
-      ],
-    ),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: const [
-        Icon(Icons.flag, color: Colors.white, size: 20),
-        SizedBox(width: 10),
-        Text(
-          "Resign",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-            shadows: [
-              Shadow(
-                color: Colors.black26,
-                offset: Offset(1, 1),
-                blurRadius: 2,
+              onTap:
+                  () => showResignDialog(
+                    player1Id,
+                    player2Id,
+                    player1Rating,
+                    player2Rating,
+                    player1Score,
+                    player2Score,
+                  ),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 28,
+                  vertical: 16,
+                ),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFFF4B5C), Color(0xFFDB2B39)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      offset: const Offset(4, 4),
+                      blurRadius: 8,
+                    ),
+                    BoxShadow(
+                      color: Colors.white.withOpacity(0.15),
+                      offset: const Offset(-4, -4),
+                      blurRadius: 8,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.flag, color: Colors.white, size: 20),
+                    SizedBox(width: 10),
+                    Text(
+                      "Resign",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black26,
+                            offset: Offset(1, 1),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  ),
-),
+            ),
           ],
         ),
       ),
@@ -7110,8 +7141,10 @@ String? _pendingRematchId;
     int player1Score,
     int player2Score,
   ) async {
-
-    if (isMakingMove && matchData!['turnId'] != currentUser!.uid && matchData!['turnId'] != 'bot_1') return;
+    if (isMakingMove &&
+        matchData!['turnId'] != currentUser!.uid &&
+        matchData!['turnId'] != 'bot_1')
+      return;
 
     final isPlayer1Turn = matchData!['turnId'] == player1Id;
     final isBotTurn = matchData!['turnId'] == 'bot_1';
@@ -7152,12 +7185,14 @@ String? _pendingRematchId;
         // Add pebble animation data
         if (mounted) {
           setState(() {
-            animatingPebbles.add(AnimatingPebbleData(
-              fromPit: index,
-              toPit: nextIndex,
-              startTime: DateTime.now(),
-              duration: const Duration(milliseconds: 600),
-            ));
+            animatingPebbles.add(
+              AnimatingPebbleData(
+                fromPit: index,
+                toPit: nextIndex,
+                startTime: DateTime.now(),
+                duration: const Duration(milliseconds: 600),
+              ),
+            );
           });
         }
 
@@ -7177,12 +7212,15 @@ String? _pendingRematchId;
 
       await Future.delayed(const Duration(milliseconds: 300));
 
-      final isPlayer1SideMove = pit >= 0 && pit <= 6; 
+      final isPlayer1SideMove = pit >= 0 && pit <= 6;
 
       final isLogicPlayer1Turn = isPlayer1SideMove;
 
-
-      final resultBoard = GameLogic.makeMove(currentBoard, pit, isLogicPlayer1Turn);
+      final resultBoard = GameLogic.makeMove(
+        currentBoard,
+        pit,
+        isLogicPlayer1Turn,
+      );
       final result = GameLogic.checkEndGame(resultBoard);
 
       if (mounted) {
@@ -7208,10 +7246,7 @@ String? _pendingRematchId;
         );
       } else {
         final currentTurnId = matchData!['turnId'];
-        final nextTurnId = (currentTurnId == player1Id)
-            ? player2Id
-            : player1Id;
-
+        final nextTurnId = (currentTurnId == player1Id) ? player2Id : player1Id;
 
         await firestoreService.updateBoardAndTurn(
           matchId: widget.matchId,
@@ -7233,7 +7268,10 @@ String? _pendingRematchId;
   }
 
   Future<void> _botPlay(
-    List<int> board, Map<String, dynamic> data, String difficulty) async {
+    List<int> board,
+    Map<String, dynamic> data,
+    String difficulty,
+  ) async {
     if (!mounted) return;
     if (botThinking) return;
 
@@ -7243,12 +7281,14 @@ String? _pendingRematchId;
         isMakingMove = true;
         matchData!['turnId'] = 'bot_1';
       });
-      
-      final diff = {
-        'easy': Difficulty.easy,
-        'medium': Difficulty.medium,
-        'hard': Difficulty.hard,
-      }[difficulty] ?? Difficulty.easy;
+
+      final diff =
+          {
+            'easy': Difficulty.easy,
+            'medium': Difficulty.medium,
+            'hard': Difficulty.hard,
+          }[difficulty] ??
+          Difficulty.easy;
 
       // ✅ let bot think a bit
       await Future.delayed(const Duration(milliseconds: 400));
@@ -7275,7 +7315,6 @@ String? _pendingRematchId;
         data['player1Score'] ?? 0,
         data['player2Score'] ?? 0,
       );
-
     } catch (e) {
       widget.showError("Bot move failed: $e");
     } finally {
@@ -7385,7 +7424,7 @@ String? _pendingRematchId;
       transitionBuilder: (context, anim1, anim2, child) {
         return Transform.scale(
           // Scale for a smooth 'pop' effect
-          scale: 0.8 + (anim1.value * 0.2), 
+          scale: 0.8 + (anim1.value * 0.2),
           child: Opacity(
             opacity: anim1.value,
             child: Center(
@@ -7408,7 +7447,10 @@ String? _pendingRematchId;
                     ),
                   ],
                   // Subtle border for definition
-                  border: Border.all(color: const Color(0xFF4A4A4A), width: 1.5), 
+                  border: Border.all(
+                    color: const Color(0xFF4A4A4A),
+                    width: 1.5,
+                  ),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -7416,18 +7458,22 @@ String? _pendingRematchId;
                     // Prominent, red warning icon
                     const Icon(
                       Icons.flag, // Icon for 'Resign' or 'Surrender'
-                      color: Color(0xFFEF5350), // Standard material red for warning
+                      color: Color(
+                        0xFFEF5350,
+                      ), // Standard material red for warning
                       size: 60,
                     ),
                     const SizedBox(height: 15),
                     const Text(
                       "RESIGN GAME?",
                       style: TextStyle(
-                        color: Color(0xFFEF5350), 
+                        color: Color(0xFFEF5350),
                         fontSize: 26,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 1.5,
-                        decoration: TextDecoration.none // Important for custom Text in a dialog
+                        decoration:
+                            TextDecoration
+                                .none, // Important for custom Text in a dialog
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -7436,7 +7482,7 @@ String? _pendingRematchId;
                       style: TextStyle(
                         color: Colors.white70,
                         fontSize: 14,
-                        decoration: TextDecoration.none
+                        decoration: TextDecoration.none,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -7451,25 +7497,29 @@ String? _pendingRematchId;
                             child: ElevatedButton(
                               onPressed: () => Navigator.of(context).pop(),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF4A4A4A), // Deep grey/neutral
+                                backgroundColor: const Color(
+                                  0xFF4A4A4A,
+                                ), // Deep grey/neutral
                                 elevation: 0,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
                               child: const Text(
-                                "CANCEL", 
+                                "CANCEL",
                                 style: TextStyle(
-                                  color: Colors.white, 
-                                  fontWeight: FontWeight.bold, 
-                                  letterSpacing: 1
-                                )
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                        
+
                         // --- Resign Button (Primary/Warning) ---
                         Expanded(
                           child: Padding(
@@ -7488,21 +7538,26 @@ String? _pendingRematchId;
                               },
                               style: ElevatedButton.styleFrom(
                                 // Use a strong, high-contrast red
-                                backgroundColor: const Color(0xFFC62828), 
+                                backgroundColor: const Color(0xFFC62828),
                                 elevation: 5,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  side: const BorderSide(color: Color(0xFFFF5252), width: 1.5),
+                                  side: const BorderSide(
+                                    color: Color(0xFFFF5252),
+                                    width: 1.5,
+                                  ),
                                 ),
                               ),
                               child: const Text(
-                                "RESIGN", 
+                                "RESIGN",
                                 style: TextStyle(
-                                  color: Colors.white, 
-                                  fontWeight: FontWeight.w900, 
-                                  letterSpacing: 1
-                                )
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 1,
+                                ),
                               ),
                             ),
                           ),
@@ -7632,13 +7687,21 @@ String? _pendingRematchId;
                             _ScoreItem(
                               label: player1Name,
                               score: player1BoardScore,
-                              isWinner: localWinnerId == player1Id || localWinnerId == 'draw',
+                              isWinner:
+                                  localWinnerId == player1Id ||
+                                  localWinnerId == 'draw',
                             ),
-                            Container(width: 1, height: 50, color: Colors.white10),
+                            Container(
+                              width: 1,
+                              height: 50,
+                              color: Colors.white10,
+                            ),
                             _ScoreItem(
                               label: player2Name,
                               score: player2BoardScore,
-                              isWinner: localWinnerId == player2Id || localWinnerId == 'draw',
+                              isWinner:
+                                  localWinnerId == player2Id ||
+                                  localWinnerId == 'draw',
                             ),
                           ],
                         ),
@@ -7654,7 +7717,9 @@ String? _pendingRematchId;
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFC93030),
-                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -7684,8 +7749,10 @@ String? _pendingRematchId;
                                       GameWidget(
                                         game: HomeGame(
                                           bgmPlayer: widget.bgmPlayer,
-                                          navigateToScreen: widget.navigateToScreen,
+                                          navigateToScreen:
+                                              widget.navigateToScreen,
                                           showError: widget.showError,
+                                          musicLevel: widget.musicLevel,
                                         ),
                                       ),
                                     );
@@ -7695,7 +7762,9 @@ String? _pendingRematchId;
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.transparent,
                                 side: const BorderSide(color: Colors.white30),
-                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -7798,10 +7867,7 @@ class AnimatedPebblesPainter extends CustomPainter {
   final List<AnimatingPebbleData> pebbles;
   final Offset Function(int) getPitPosition;
 
-  AnimatedPebblesPainter({
-    required this.pebbles,
-    required this.getPitPosition,
-  });
+  AnimatedPebblesPainter({required this.pebbles, required this.getPitPosition});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -7820,16 +7886,19 @@ class AnimatedPebblesPainter extends CustomPainter {
       const arcHeight = 40.0;
       final verticalArc = sin(progress * pi) * arcHeight;
 
-      final paint = Paint()
-        ..shader = const RadialGradient(
-          colors: [Color(0xFFF8F8F8), Color(0xFFCCC0AA)],
-          center: Alignment.topLeft,
-          radius: 0.8,
-        ).createShader(Rect.fromCircle(
-          center: Offset(currentX, currentY - verticalArc),
-          radius: 6,
-        ))
-        ..style = PaintingStyle.fill;
+      final paint =
+          Paint()
+            ..shader = const RadialGradient(
+              colors: [Color(0xFFF8F8F8), Color(0xFFCCC0AA)],
+              center: Alignment.topLeft,
+              radius: 0.8,
+            ).createShader(
+              Rect.fromCircle(
+                center: Offset(currentX, currentY - verticalArc),
+                radius: 6,
+              ),
+            )
+            ..style = PaintingStyle.fill;
 
       // Draw shadow
       canvas.drawCircle(
@@ -7841,11 +7910,7 @@ class AnimatedPebblesPainter extends CustomPainter {
       );
 
       // Draw pebble
-      canvas.drawCircle(
-        Offset(currentX, currentY - verticalArc),
-        6,
-        paint,
-      );
+      canvas.drawCircle(Offset(currentX, currentY - verticalArc), 6, paint);
     }
   }
 
@@ -7980,11 +8045,11 @@ class _PitWidgetState extends State<PitWidget> {
                   boxShadow:
                       widget.lastMove
                           ? [
-                              BoxShadow(
-                                color: const Color(0xFFC69C6D).withOpacity(0.8),
-                                blurRadius: 8,
-                              ),
-                            ]
+                            BoxShadow(
+                              color: const Color(0xFFC69C6D).withOpacity(0.8),
+                              blurRadius: 8,
+                            ),
+                          ]
                           : null,
                 ),
                 child: ClipOval(child: Stack(children: _pebbles)),
@@ -8008,11 +8073,14 @@ class CountBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       margin: const EdgeInsets.only(bottom: 4, top: 4),
       decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.75),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white10)),
-      child: Text(count.toString(),
-          style: const TextStyle(color: Colors.white, fontSize: 11))
+        color: Colors.black.withOpacity(0.75),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Text(
+        count.toString(),
+        style: const TextStyle(color: Colors.white, fontSize: 11),
+      ),
     );
   }
 }
@@ -8097,10 +8165,24 @@ class _ScoreItem extends StatelessWidget {
     final scoreColor = isWinner ? const Color(0xFFFACC15) : Colors.white70;
     return Column(
       children: [
-        Text(label, style: const TextStyle(color: Colors.white54, fontSize: 12, decoration: TextDecoration.none)),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white54,
+            fontSize: 12,
+            decoration: TextDecoration.none,
+          ),
+        ),
         const SizedBox(height: 4),
-        Text(score.toString(),
-            style: TextStyle(color: scoreColor, fontSize: 24, fontWeight: FontWeight.bold, decoration: TextDecoration.none)),
+        Text(
+          score.toString(),
+          style: TextStyle(
+            color: scoreColor,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.none,
+          ),
+        ),
       ],
     );
   }

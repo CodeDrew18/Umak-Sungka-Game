@@ -304,12 +304,13 @@ class WaitingForOpponentScreen extends StatefulWidget {
     required this.bgmPlayer,
     required this.navigateToScreen,
     required this.showError,
+    required this.musicLevel,
   });
   final AudioPlayer bgmPlayer;
   final String matchId;
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
-
+  final musicLevel;
   @override
   State<WaitingForOpponentScreen> createState() =>
       _WaitingForOpponentScreenState();
@@ -423,6 +424,7 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
                         matchId: widget.matchId,
                         navigateToScreen: widget.navigateToScreen,
                         showError: widget.showError,
+                        musicLevel: widget.musicLevel,
                       ),
                 ),
               );
@@ -535,6 +537,7 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
                         bgmPlayer: widget.bgmPlayer,
                         navigateToScreen: widget.navigateToScreen,
                         showError: widget.showError,
+                        musicLevel: widget.musicLevel,
                       ),
                     ),
                   );

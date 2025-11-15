@@ -16,16 +16,16 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
   final Function(String message) showError;
   final BuildContext? flutterContext;
   final AudioPlayer bgmPlayer;
-
+  var musicLevel;
   SettingsGame({
     required this.navigateToScreen,
     required this.showError,
     this.flutterContext,
-    required this.bgmPlayer
+    required this.bgmPlayer,
+    required this.musicLevel
   });
 
   double soundLevel = 0.8;
-  double musicLevel = 1.0;
 
   GameBackButton? backButton;
   LogoutButton? logoutButton;
@@ -118,6 +118,7 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
               bgmPlayer: bgmPlayer,
               navigateToScreen: navigateToScreen,
               showError: showError,
+              musicLevel: musicLevel
             ),
           ),
         );
@@ -131,7 +132,7 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
       onPressed: () async {
         await FirebaseAuth.instance.signOut();
         navigateToScreen(
-          AuthScreen(navigateToScreen: navigateToScreen, showError: showError, bgmPlayer: bgmPlayer,),
+          AuthScreen(navigateToScreen: navigateToScreen, showError: showError, bgmPlayer: bgmPlayer, musicLevel: musicLevel,),
         );
       },
       backgroundColor: Colors.redAccent,
@@ -205,7 +206,7 @@ class SettingsGame extends FlameGame with TapDetector, PanDetector {
     if (_isInBar(pos, musicBar)) {
       musicLevel = ((pos.x - (musicBar.position.x - musicBar.size.x / 2)) /
               musicBar.size.x)
-          .clamp(0.0, 1.0);
+          .clamp(0, 1);
       musicKnob.position = Vector2(
         musicBar.position.x -
             musicBar.size.x / 2 +

@@ -9,12 +9,14 @@ class Splashscreen extends StatefulWidget {
     super.key,
     required this.navigateToScreen,
     required this.showError,
-    required this.bgmPlayer
+    required this.bgmPlayer,
+    required this.musicLevel,
   });
 
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
   final AudioPlayer bgmPlayer;
+  final musicLevel;
   @override
   State<Splashscreen> createState() => _SplashscreenState();
 }
@@ -45,6 +47,7 @@ class _SplashscreenState extends State<Splashscreen> {
                   navigateToScreen: widget.navigateToScreen,
                   showError: widget.showError,
                   bgmPlayer: widget.bgmPlayer,
+                  musicLevel: widget.musicLevel,
                 ),
           ),
         );
@@ -81,9 +84,9 @@ class _SplashscreenState extends State<Splashscreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-                    "assets/splashscreen_bg.png",
-                    height: 200,
-                    fit: BoxFit.contain,
+                  "assets/splashscreen_bg.png",
+                  height: 200,
+                  fit: BoxFit.contain,
                 )
                 .animate()
                 .fadeIn(duration: 800.ms)

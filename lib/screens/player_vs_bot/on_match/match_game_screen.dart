@@ -239,8 +239,6 @@
 //       ),
 //     );
 
-
-
 //     return Scaffold(
 //       backgroundColor: Colors.transparent,
 //       body: Column(
@@ -279,7 +277,7 @@
 //                               fontSize: 18,
 //                             ),
 //                           ),
-                          
+
 //                           SizedBox(width: 8),
 
 //                             PlayerCards(
@@ -289,7 +287,7 @@
 //                               ),
 //                             ],
 //                           )
-                       
+
 //                         ],
 //                       )
 //                     else
@@ -350,7 +348,7 @@
 //                                           lastMove: lastMove == index,
 //                                           onTap: () => _handlePitTap(index),
 //                                           woodenTexture: _pitStoreTexture,
-                                          
+
 //                                         );
 //                                       }),
 //                                     ),
@@ -847,9 +845,6 @@
 //   }
 // }
 
-
-
-
 import 'dart:async';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
@@ -862,20 +857,27 @@ import 'package:sungka/screens/home_screen.dart';
 import 'package:sungka/screens/player_vs_bot/on_match/player_card.dart';
 import 'package:sungka/screens/player_vs_bot/selection_mode.dart';
 
-
-
 class SungkaBoardScreen extends StatefulWidget {
   final Difficulty difficulty;
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
   final AudioPlayer bgmPlayer;
-  const SungkaBoardScreen({Key? key, required this.difficulty, required this.navigateToScreen, required this.showError, required this.bgmPlayer}) : super(key: key);
+  final musicLevel;
+  const SungkaBoardScreen({
+    Key? key,
+    required this.difficulty,
+    required this.navigateToScreen,
+    required this.showError,
+    required this.bgmPlayer,
+    required this.musicLevel
+  }) : super(key: key);
 
   @override
   State<SungkaBoardScreen> createState() => _SungkaBoardScreenState();
 }
 
-class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProviderStateMixin {
+class _SungkaBoardScreenState extends State<SungkaBoardScreen>
+    with TickerProviderStateMixin {
   late List<int> board;
   bool isPlayerTurn = true;
   bool gameEnded = false;
@@ -886,7 +888,8 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
   List<AnimatingPebbleData> animatingPebbles = [];
   late AnimationController _masterController;
 
-  static const String _woodenTexturePath = 'assets/images/assets/texture_test.jpg';
+  static const String _woodenTexturePath =
+      'assets/images/assets/texture_test.jpg';
 
   @override
   void initState() {
@@ -905,7 +908,7 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
       DeviceOrientation.portraitDown,
     ]);
     _masterController.dispose();
-    _botTimer?.cancel(); 
+    _botTimer?.cancel();
     super.dispose();
   }
 
@@ -923,7 +926,7 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
   void _showGameOverDialog() {
     String title;
     String message;
-    
+
     if (winner == 'player') {
       title = 'VICTORY!';
       message = 'Congratulations! You Won!';
@@ -946,14 +949,14 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
           botScore: board[15],
           onPlayAgain: () {
             // 1. Dismiss the dialog
-            Navigator.of(context).pop(); 
+            Navigator.of(context).pop();
             // 2. Reset the game board
-            _resetBoard(); 
+            _resetBoard();
           },
           onGoHome: () {
             // 1. Dismiss the dialog
-            Navigator.of(context).pop(); 
-            Navigator.of(context).pop(); 
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
           },
         );
       },
@@ -961,7 +964,7 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
   }
 
   void _handlePitTap(int pit) async {
-    if (gameEnded || animatingPit != null) return; 
+    if (gameEnded || animatingPit != null) return;
     // Player turn check (pits 0-6)
     if (isPlayerTurn && (pit < 0 || pit > 6 || board[pit] == 0)) return;
     // Bot turn check (pits 8-14)
@@ -989,12 +992,14 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
       }
 
       setState(() {
-        animatingPebbles.add(AnimatingPebbleData(
-          fromPit: index,
-          toPit: nextIndex,
-          startTime: DateTime.now(),
-          duration: const Duration(milliseconds: 600),
-        ));
+        animatingPebbles.add(
+          AnimatingPebbleData(
+            fromPit: index,
+            toPit: nextIndex,
+            startTime: DateTime.now(),
+            duration: const Duration(milliseconds: 600),
+          ),
+        );
       });
 
       // Delay between pebble drops
@@ -1061,7 +1066,10 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
     double pitSpacing = gridWidth / 7;
 
     double x = storeWidth + sidePadding + (col * pitSpacing) + (pitSpacing / 2);
-    double y = isTop ? (verticalPadding + pitSize / 2) : (verticalPadding * 2 + pitSize + pitSize / 2);
+    double y =
+        isTop
+            ? (verticalPadding + pitSize / 2)
+            : (verticalPadding * 2 + pitSize + pitSize / 2);
 
     return Offset(x, y);
   }
@@ -1089,13 +1097,19 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
       backgroundColor: Colors.transparent,
       body: Column(
         children: [
-          Expanded( // Use Expanded to ensure the content is confined and handles vertical space
-            child: SingleChildScrollView( // Add SingleChildScrollView for screen size robustness
+          Expanded(
+            // Use Expanded to ensure the content is confined and handles vertical space
+            child: SingleChildScrollView(
+              // Add SingleChildScrollView for screen size robustness
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFF0A0A1A), Color(0xFF1C0435), Color(0xFF2B0018)],
+                    colors: [
+                      Color(0xFF0A0A1A),
+                      Color(0xFF1C0435),
+                      Color(0xFF2B0018),
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -1110,7 +1124,8 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
                           Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   PlayerCards(
                                     name: 'You',
@@ -1119,34 +1134,42 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
                                     avatarIcon: Icons.person,
                                   ),
                                   const SizedBox(width: 8),
-                                     Text(
-                                       isPlayerTurn ? "Your Turn" : "Bot's Turn...",
-                                       style: const TextStyle(
-                                         color: Colors.white,
-                                         fontSize: 21,
-                                         fontWeight: FontWeight.bold
-                                       ),
-                                     ),
-                                  
+                                  Text(
+                                    isPlayerTurn
+                                        ? "Your Turn"
+                                        : "Bot's Turn...",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 21,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+
                                   const SizedBox(width: 8),
 
-                                     PlayerCards(
-                                       name: 'Bot',
-                                       score: board[15],
-                                       isActive: !isPlayerTurn,
-                                       avatarIcon: Icons.smart_toy,
-                                     ),
+                                  PlayerCards(
+                                    name: 'Bot',
+                                    score: board[15],
+                                    isActive: !isPlayerTurn,
+                                    avatarIcon: Icons.smart_toy,
+                                  ),
                                 ],
-                              )
-                            
+                              ),
                             ],
                           )
                         else
                           Column(
                             children: [
                               Text(
-                                winner == 'player' ? 'You Win! ' : (winner == 'bot' ? 'Bot Wins! ' : "It's a Tie! "),
-                                style: const TextStyle(color: Colors.white, fontSize: 22),
+                                winner == 'player'
+                                    ? 'You Win! '
+                                    : (winner == 'bot'
+                                        ? 'Bot Wins! '
+                                        : "It's a Tie! "),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                ),
                               ),
                               const SizedBox(height: 12),
                             ],
@@ -1175,7 +1198,8 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
                                     image: _boardTexture,
                                   ),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       StoreWidget(
                                         count: board[15],
@@ -1188,52 +1212,70 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
                                         child: Column(
                                           children: [
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: List.generate(7, (i) {
                                                 final index = 14 - i;
                                                 return PitWidget(
                                                   count: board[index],
                                                   size: pitSize,
                                                   isTop: true,
-                                                  enabled: !isPlayerTurn &&
+                                                  enabled:
+                                                      !isPlayerTurn &&
                                                       !gameEnded &&
                                                       board[index] > 0,
-                                                  animating: animatingPit == index,
+                                                  animating:
+                                                      animatingPit == index,
                                                   lastMove: lastMove == index,
-                                                  onTap: () => _handlePitTap(index),
-                                                  woodenTexture: _pitStoreTexture,
-                                                  
+                                                  onTap:
+                                                      () =>
+                                                          _handlePitTap(index),
+                                                  woodenTexture:
+                                                      _pitStoreTexture,
                                                 );
                                               }),
                                             ),
                                             Container(
                                               height: 1.5,
-                                              margin: const EdgeInsets.symmetric(vertical: 8),
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 8,
+                                                  ),
                                               decoration: BoxDecoration(
                                                 gradient: LinearGradient(
                                                   colors: [
                                                     Colors.transparent,
-                                                    Colors.purple.withOpacity(0.45),
+                                                    Colors.purple.withOpacity(
+                                                      0.45,
+                                                    ),
                                                     Colors.transparent,
                                                   ],
                                                 ),
                                               ),
                                             ),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: List.generate(7, (i) {
                                                 final index = i;
                                                 return PitWidget(
                                                   count: board[index],
                                                   size: pitSize,
                                                   isTop: false,
-                                                  enabled: isPlayerTurn &&
+                                                  enabled:
+                                                      isPlayerTurn &&
                                                       !gameEnded &&
                                                       board[index] > 0,
-                                                  animating: animatingPit == index,
+                                                  animating:
+                                                      animatingPit == index,
                                                   lastMove: lastMove == index,
-                                                  onTap: () => _handlePitTap(index),
-                                                  woodenTexture: _pitStoreTexture,
+                                                  onTap:
+                                                      () =>
+                                                          _handlePitTap(index),
+                                                  woodenTexture:
+                                                      _pitStoreTexture,
                                                 );
                                               }),
                                             ),
@@ -1256,16 +1298,22 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
                                       child: CustomPaint(
                                         painter: AnimatedPebblesPainter(
                                           pebbles: animatingPebbles,
-                                          getPitPosition: (pit) => _getPitPosition(pit, pitSize, effectiveBoardWidth),
+                                          getPitPosition:
+                                              (pit) => _getPitPosition(
+                                                pit,
+                                                pitSize,
+                                                effectiveBoardWidth,
+                                              ),
                                         ),
                                       ),
                                     ),
                                   ),
                               ],
                             );
-                          }
+                          },
                         ),
                         const SizedBox(height: 12),
+
                         // IconButton(
                         //   icon: const Icon(Icons.home, color: Colors.white),
                         //   iconSize: 30,
@@ -1275,169 +1323,240 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
                         //     padding: const EdgeInsets.all(12),
                         //   ),
                         // ),
+                        IconButton(
+                          icon: const Icon(Icons.home, color: Colors.white),
+                          iconSize: 30,
+                          onPressed: () async {
+                            bool? exitGame = await showGeneralDialog<bool>(
+                              context: context,
+                              barrierDismissible: false,
+                              barrierLabel: 'Exit Game',
+                              transitionDuration: const Duration(
+                                milliseconds: 300,
+                              ),
+                              // The pageBuilder is simplified as the content is in transitionBuilder
+                              pageBuilder: (context, anim1, anim2) {
+                                return const SizedBox.shrink();
+                              },
+                              transitionBuilder: (
+                                context,
+                                anim1,
+                                anim2,
+                                child,
+                              ) {
+                                return Transform.scale(
+                                  // Use an interpolated scale for a smoother, more 'poppy' effect
+                                  scale: 0.8 + (anim1.value * 0.2),
+                                  child: Opacity(
+                                    opacity: anim1.value,
+                                    child: Center(
+                                      child: Container(
+                                        width:
+                                            320, // Slightly wider for better presentation
+                                        padding: const EdgeInsets.all(
+                                          24,
+                                        ), // Increased padding
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ), // More rounded corners
+                                          // Use a deeper, more sophisticated dark gradient
+                                          gradient: const LinearGradient(
+                                            colors: [
+                                              Color(0xFF1E1E1E),
+                                              Color(0xFF0F0F0F),
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          // Enhanced box shadow for depth
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(
+                                                0.8,
+                                              ),
+                                              offset: const Offset(0, 10),
+                                              blurRadius: 20,
+                                            ),
+                                          ],
+                                          // Use a subtle, vibrant border color
+                                          border: Border.all(
+                                            color: const Color(0xFF4A4A4A),
+                                            width: 1.5,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            // Larger, more dramatic warning icon
+                                            const Icon(
+                                              Icons
+                                                  .exit_to_app, // A more relevant icon for "Exit"
+                                              color: Color(
+                                                0xFFFFA726,
+                                              ), // Orange/Amber for warning but more contrast
+                                              size: 60,
+                                            ),
+                                            const SizedBox(height: 15),
+                                            const Text(
+                                              "EXIT GAME?",
+                                              style: TextStyle(
+                                                color: Color(
+                                                  0xFFFFA726,
+                                                ), // Matching the icon color
+                                                fontSize: 26, // Larger heading
+                                                fontWeight:
+                                                    FontWeight
+                                                        .w900, // Extra bold
+                                                letterSpacing:
+                                                    1.5, // Spacing for a more aggressive look
+                                                decoration: TextDecoration.none,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            const Text(
+                                              "Unsaved progress will be lost. Are you sure you want to return to the Home screen?",
+                                              style: TextStyle(
+                                                color: Colors.white70,
+                                                fontSize:
+                                                    14, // Slightly smaller body text for hierarchy
+                                                decoration: TextDecoration.none,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            const SizedBox(height: 30),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                // --- Cancel Button (Secondary/Passive) ---
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 5,
+                                                        ),
+                                                    child: ElevatedButton(
+                                                      onPressed:
+                                                          () => Navigator.of(
+                                                            context,
+                                                          ).pop(false),
+                                                      style: ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            const Color(
+                                                              0xFF4A4A4A,
+                                                            ), // Deep grey/neutral
+                                                        elevation: 0,
+                                                        padding:
+                                                            const EdgeInsets.symmetric(
+                                                              vertical: 14,
+                                                            ),
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                10,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                      child: const Text(
+                                                        "CANCEL",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          letterSpacing: 1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
 
-                                            IconButton(
-  icon: const Icon(Icons.home, color: Colors.white),
-  iconSize: 30,
-  onPressed: () async {
-    bool? exitGame = await showGeneralDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      barrierLabel: 'Exit Game',
-      transitionDuration: const Duration(milliseconds: 300),
-      // The pageBuilder is simplified as the content is in transitionBuilder
-      pageBuilder: (context, anim1, anim2) {
-        return const SizedBox.shrink(); 
-      },
-      transitionBuilder: (context, anim1, anim2, child) {
-        return Transform.scale(
-          // Use an interpolated scale for a smoother, more 'poppy' effect
-          scale: 0.8 + (anim1.value * 0.2), 
-          child: Opacity(
-            opacity: anim1.value,
-            child: Center(
-              child: Container(
-                width: 320, // Slightly wider for better presentation
-                padding: const EdgeInsets.all(24), // Increased padding
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20), // More rounded corners
-                  // Use a deeper, more sophisticated dark gradient
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF1E1E1E), Color(0xFF0F0F0F)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  // Enhanced box shadow for depth
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.8),
-                      offset: const Offset(0, 10),
-                      blurRadius: 20,
-                    ),
-                  ],
-                  // Use a subtle, vibrant border color
-                  border: Border.all(color: const Color(0xFF4A4A4A), width: 1.5),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Larger, more dramatic warning icon
-                    const Icon(
-                      Icons.exit_to_app, // A more relevant icon for "Exit"
-                      color: Color(0xFFFFA726), // Orange/Amber for warning but more contrast
-                      size: 60,
-                    ),
-                    const SizedBox(height: 15),
-                    const Text(
-                      "EXIT GAME?",
-                      style: TextStyle(
-                        color: Color(0xFFFFA726), // Matching the icon color
-                        fontSize: 26, // Larger heading
-                        fontWeight: FontWeight.w900, // Extra bold
-                        letterSpacing: 1.5, // Spacing for a more aggressive look
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      "Unsaved progress will be lost. Are you sure you want to return to the Home screen?",
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14, // Slightly smaller body text for hierarchy
-                        decoration: TextDecoration.none,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        // --- Cancel Button (Secondary/Passive) ---
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: ElevatedButton(
-                              onPressed: () => Navigator.of(context).pop(false),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF4A4A4A), // Deep grey/neutral
-                                elevation: 0,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 5,
+                                                        ),
+                                                    child: ElevatedButton(
+                                                      onPressed:
+                                                          () => Navigator.of(
+                                                            context,
+                                                          ).pop(true),
+                                                      style: ElevatedButton.styleFrom(
+                                                        // Use a more aggressive game red/orange
+                                                        backgroundColor:
+                                                            const Color(
+                                                              0xFFC62828,
+                                                            ),
+                                                        elevation: 5,
+                                                        padding:
+                                                            const EdgeInsets.symmetric(
+                                                              vertical: 14,
+                                                            ),
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                10,
+                                                              ),
+                                                          side: const BorderSide(
+                                                            color: Color(
+                                                              0xFFFF5252,
+                                                            ),
+                                                            width: 1.5,
+                                                          ), // Accent border
+                                                        ),
+                                                      ),
+                                                      child: const Text(
+                                                        "EXIT",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w900,
+                                                          letterSpacing: 1,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+
+                            if (exitGame == true) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => GameWidget(
+                                        game: HomeGame(
+                                          bgmPlayer: widget.bgmPlayer,
+                                          navigateToScreen:
+                                              widget.navigateToScreen,
+                                          showError: widget.showError,
+                                          musicLevel: widget.musicLevel
+                                        ),
+                                      ),
                                 ),
-                              ),
-                              child: const Text(
-                                "CANCEL", 
-                                style: TextStyle(
-                                  color: Colors.white, 
-                                  fontWeight: FontWeight.bold, 
-                                  letterSpacing: 1
-                                )
-                              ),
+                              );
+                            }
+                          },
+                          style: IconButton.styleFrom(
+                            backgroundColor: const Color(
+                              0xFFC62828,
+                            ), // Consistent primary color
+                            padding: const EdgeInsets.all(12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                         ),
-
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: ElevatedButton(
-                              onPressed: () => Navigator.of(context).pop(true),
-                              style: ElevatedButton.styleFrom(
-                                // Use a more aggressive game red/orange
-                                backgroundColor: const Color(0xFFC62828), 
-                                elevation: 5,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  side: const BorderSide(color: Color(0xFFFF5252), width: 1.5), // Accent border
-                                ),
-                              ),
-                              child: const Text(
-                                "EXIT", 
-                                style: TextStyle(
-                                  color: Colors.white, 
-                                  fontWeight: FontWeight.w900, 
-                                  letterSpacing: 1
-                                )
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-
-    if (exitGame == true) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => GameWidget(
-            game: HomeGame(
-              bgmPlayer: widget.bgmPlayer,
-              navigateToScreen: widget.navigateToScreen,
-              showError: widget.showError,
-            ),
-          ),
-        ),
-      );
-    }
-  },
-  style: IconButton.styleFrom(
-    backgroundColor: const Color(0xFFC62828), // Consistent primary color
-    padding: const EdgeInsets.all(12),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
-  ),
-),
                         const SizedBox(height: 20), // Extra space at bottom
                       ],
                     ),
@@ -1451,7 +1570,6 @@ class _SungkaBoardScreenState extends State<SungkaBoardScreen> with TickerProvid
     );
   }
 }
-
 
 class GameOverDialog extends StatelessWidget {
   final String title;
@@ -1479,7 +1597,7 @@ class GameOverDialog extends StatelessWidget {
 
     return Center(
       // Ensure the dialog content is scrollable if needed
-      child: SingleChildScrollView( 
+      child: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 400),
           child: Dialog(
@@ -1511,7 +1629,7 @@ class GameOverDialog extends StatelessWidget {
                       fontSize: 22,
                       fontWeight: FontWeight.w900,
                       shadows: const [
-                        Shadow(color: Colors.black, blurRadius: 2)
+                        Shadow(color: Colors.black, blurRadius: 2),
                       ],
                     ),
                   ),
@@ -1536,9 +1654,17 @@ class GameOverDialog extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _ScoreItem(label: 'Your Score', score: playerScore, isWinner: isWin), 
+                        _ScoreItem(
+                          label: 'Your Score',
+                          score: playerScore,
+                          isWinner: isWin,
+                        ),
                         Container(width: 1, height: 40, color: Colors.white10),
-                        _ScoreItem(label: 'Bot Score', score: botScore, isWinner: !isWin),
+                        _ScoreItem(
+                          label: 'Bot Score',
+                          score: botScore,
+                          isWinner: !isWin,
+                        ),
                       ],
                     ),
                   ),
@@ -1572,7 +1698,6 @@ class GameOverDialog extends StatelessWidget {
   }
 }
 
-
 class AnimatingPebbleData {
   final int fromPit;
   final int toPit;
@@ -1598,10 +1723,7 @@ class AnimatedPebblesPainter extends CustomPainter {
   final List<AnimatingPebbleData> pebbles;
   final Offset Function(int) getPitPosition;
 
-  AnimatedPebblesPainter({
-    required this.pebbles,
-    required this.getPitPosition,
-  });
+  AnimatedPebblesPainter({required this.pebbles, required this.getPitPosition});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1618,16 +1740,19 @@ class AnimatedPebblesPainter extends CustomPainter {
       final arcHeight = 40.0;
       final verticalArc = sin(progress * pi) * arcHeight;
 
-      final paint = Paint()
-        ..shader = RadialGradient(
-          colors: const [Color(0xFFF8F8F8), Color(0xFFCCC0AA)],
-          center: Alignment.topLeft,
-          radius: 0.8,
-        ).createShader(Rect.fromCircle(
-          center: Offset(currentX, currentY - verticalArc),
-          radius: 6,
-        ))
-        ..style = PaintingStyle.fill;
+      final paint =
+          Paint()
+            ..shader = RadialGradient(
+              colors: const [Color(0xFFF8F8F8), Color(0xFFCCC0AA)],
+              center: Alignment.topLeft,
+              radius: 0.8,
+            ).createShader(
+              Rect.fromCircle(
+                center: Offset(currentX, currentY - verticalArc),
+                radius: 6,
+              ),
+            )
+            ..style = PaintingStyle.fill;
 
       canvas.drawCircle(
         Offset(currentX + 1, currentY - verticalArc + 1),
@@ -1637,11 +1762,7 @@ class AnimatedPebblesPainter extends CustomPainter {
           ..style = PaintingStyle.fill,
       );
 
-      canvas.drawCircle(
-        Offset(currentX, currentY - verticalArc),
-        6,
-        paint,
-      );
+      canvas.drawCircle(Offset(currentX, currentY - verticalArc), 6, paint);
     }
   }
 
@@ -1776,11 +1897,11 @@ class _PitWidgetState extends State<PitWidget> {
                   boxShadow:
                       widget.lastMove
                           ? [
-                              BoxShadow(
-                                color: const Color(0xFFC69C6D).withOpacity(0.8),
-                                blurRadius: 8,
-                              ),
-                            ]
+                            BoxShadow(
+                              color: const Color(0xFFC69C6D).withOpacity(0.8),
+                              blurRadius: 8,
+                            ),
+                          ]
                           : null,
                 ),
                 child: ClipOval(child: Stack(children: _pebbles)),
@@ -1854,7 +1975,6 @@ class StoreWidget extends StatelessWidget {
   }
 }
 
-
 class CountBadge extends StatelessWidget {
   final int count;
   const CountBadge({Key? key, required this.count}) : super(key: key);
@@ -1865,15 +1985,17 @@ class CountBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       margin: const EdgeInsets.only(bottom: 4, top: 4),
       decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.75),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white10)),
-      child: Text(count.toString(),
-          style: const TextStyle(color: Colors.white, fontSize: 11)),
+        color: Colors.black.withOpacity(0.75),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Text(
+        count.toString(),
+        style: const TextStyle(color: Colors.white, fontSize: 11),
+      ),
     );
   }
 }
-
 
 class _ScoreItem extends StatelessWidget {
   final String label;

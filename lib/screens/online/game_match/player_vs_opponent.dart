@@ -13,6 +13,7 @@ class PlayerVsOpponent extends StatefulWidget {
     required this.navigateToScreen,
     required this.showError,
     required this.bgmPlayer,
+    required this.musicLevel,
     super.key,
   });
 
@@ -20,6 +21,7 @@ class PlayerVsOpponent extends StatefulWidget {
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
   final AudioPlayer bgmPlayer;
+  final musicLevel;
 
 
   @override
@@ -102,6 +104,7 @@ class _PlayerVsOpponentState extends State<PlayerVsOpponent>
                   matchId: widget.matchId,
                   navigateToScreen: widget.navigateToScreen,
                   showError: widget.showError,
+                  musicLevel: widget.musicLevel,
                 ),
             transitionsBuilder:
                 (_, animation, __, child) =>

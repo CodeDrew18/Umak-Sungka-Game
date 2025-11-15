@@ -88,12 +88,13 @@ class SelectionMode extends StatefulWidget {
   final Function(Widget screen) navigateToScreen;
   final Function(String message) showError;
   final AudioPlayer bgmPlayer;
-
+  final musicLevel;
   const SelectionMode({
     super.key,
     required this.navigateToScreen,
     required this.showError,
-    required this.bgmPlayer
+    required this.bgmPlayer,
+    required this.musicLevel
   });
 
   @override
@@ -158,6 +159,7 @@ class _SelectionModeState extends State<SelectionMode> {
                 bgmPlayer: widget.bgmPlayer,
                 navigateToScreen: widget.navigateToScreen,
                 showError: widget.showError,
+                musiclevel: widget.musicLevel
               ),
             ),
           ),
@@ -252,6 +254,7 @@ class _SelectionModeState extends State<SelectionMode> {
                                                         bgmPlayer: widget.bgmPlayer,
                                                         navigateToScreen: widget.navigateToScreen,
                                                         showError: widget.showError,
+                                                        musicLevel: widget.musicLevel,
                                                         ),
                                               ),
                                             );
@@ -323,6 +326,7 @@ class _SelectionModeState extends State<SelectionMode> {
                                   bgmPlayer: widget.bgmPlayer,
                                   navigateToScreen: widget.navigateToScreen,
                                   showError: widget.showError,
+                                  musicLevel: widget.musicLevel
                                 ),
                               ),
                             );

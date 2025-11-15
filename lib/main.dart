@@ -37,7 +37,7 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> with WidgetsBindingObserver {
   final AudioPlayer _bgmPlayer = AudioPlayer();
-
+  double musicLevel = 1;
   @override
   void initState() {
     super.initState();
@@ -48,7 +48,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   Future<void> _startBackgroundMusic() async {
     try {
       await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
-      await _bgmPlayer.play(AssetSource('audio/sunngka_music.mp3'), volume: 1);
+      await _bgmPlayer.play(AssetSource('audio/sunngka_music.mp3'), volume: musicLevel);
     } catch (e) {
       _showError('Error playing music: $e');
     }
@@ -113,6 +113,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
                   bgmPlayer: _bgmPlayer,
                   navigateToScreen: _navigateToScreen,
                   showError: _showError,
+                  musiclevel: musicLevel
                 ),
               ),
             );
@@ -122,6 +123,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             bgmPlayer: _bgmPlayer,
             navigateToScreen: _navigateToScreen,
             showError: _showError,
+            musicLevel: musicLevel,
           ));
         },
       ),
