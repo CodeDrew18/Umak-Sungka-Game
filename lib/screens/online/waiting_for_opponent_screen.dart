@@ -325,6 +325,19 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
   Timer? botTimer;
   bool botJoined = false;
 
+  List<String> names = [
+    'Alice',
+    'Bob',
+    'Charlie',
+    'David',
+    'Eve',
+    'Frank',
+    'Grace',
+    'Hannah',
+    'Ian',
+    'Jack',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -376,13 +389,14 @@ class _WaitingForOpponentScreenState extends State<WaitingForOpponentScreen>
         } else {
           difficulty = 'hard';
         }
-
+        names.shuffle(Random());
+        String randName = names.first;
         await FirebaseFirestore.instance
             .collection('matches')
             .doc(widget.matchId)
             .update({
               'player2Id': 'bot_1',
-              'player2Name': 'Bot 1',
+              'player2Name': randName,
               'player2Rating': player1Rating,
               'difficulty': difficulty,
               'status': 'playing',
